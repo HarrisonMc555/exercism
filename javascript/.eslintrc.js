@@ -4,6 +4,7 @@ module.exports = {
     "import"
   ],
   "rules": {
-    "indent": ["warn", 2, {"SwitchCase": 1}]
+    "indent": ["warn", 2, {"SwitchCase": 1}],
+    "no-else-return": "off"
   }
 };
