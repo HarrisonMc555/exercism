@@ -5,7 +5,7 @@ const Pangram = function Pangram(input) {
 };
 
 Pangram.prototype.alphabet = (function createAlphabet() {
-  const result = [];
+  var result = [];
   for (let i = 'a'.charCodeAt(0); i <= 'z'.charCodeAt(0); i += 1) {
     result.push(String.fromCharCode(i));
   }
