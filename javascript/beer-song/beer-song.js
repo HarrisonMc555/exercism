@@ -33,7 +33,7 @@ BeerSong.prototype.takeOrGet = function takeOrGet(n) {
   if (n === 0) {
     return 'Go to the store and buy some more';
   } else {
-    return `Take ${BeerSong.prototype.possiblyPluralize('one', n)} down and pass it around`;
+    return `Take ${this.possiblyPluralize('one', n)} down and pass it around`;
   }
 };
 
@@ -41,12 +41,12 @@ BeerSong.prototype.takeOrGet = function takeOrGet(n) {
 BeerSong.prototype.verse = function verse(n) {
   const first = n;
   const second = (n - 1 + 100) % 100;
-  const firstNum = BeerSong.prototype.getNumString(first);
-  const secondNum = BeerSong.prototype.getNumString(second);
-  const firstBottle = BeerSong.prototype.possiblyPluralize('bottle', first);
-  const secondBottle = BeerSong.prototype.possiblyPluralize('bottle', second);
-  return `${BeerSong.prototype.capitalizeFirstLetter(firstNum)} ${firstBottle} of beer on the wall, ${firstNum} ${firstBottle} of beer.
-${BeerSong.prototype.takeOrGet(first)}, ${secondNum} ${secondBottle} of beer on the wall.
+  const firstNum = this.getNumString(first);
+  const secondNum = this.getNumString(second);
+  const firstBottle = this.possiblyPluralize('bottle', first);
+  const secondBottle = this.possiblyPluralize('bottle', second);
+  return `${this.capitalizeFirstLetter(firstNum)} ${firstBottle} of beer on the wall, ${firstNum} ${firstBottle} of beer.
+${this.takeOrGet(first)}, ${secondNum} ${secondBottle} of beer on the wall.
 `;
 };
 
@@ -57,7 +57,7 @@ BeerSong.prototype.sing = function sing(a, b) {
   var verses = [];
   /* Loop through the verses */
   while (aa >= bb) {
-    verses.push(BeerSong.prototype.verse(aa));
+    verses.push(this.verse(aa));
     aa -= 1;
   }
   return verses.join('\n');
