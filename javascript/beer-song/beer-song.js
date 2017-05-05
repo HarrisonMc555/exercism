@@ -1,51 +1,56 @@
 const BeerSong = function BeerSong() {};
 
-const capitalizeFirstLetter = function capitalizeFirstLetter(s) {
+/* Use pluralize library */
+var pluralize = require('pluralize');
+pluralize.addSingularRule(/^one$/i, 'it');
+pluralize.addPluralRule(/^one$/i, 'one');
+
+/* Capitalize the first letter */
+BeerSong.prototype.capitalizeFirstLetter = function capitalizeFirstLetter(s) {
   return s.charAt(0).toUpperCase() + s.slice(1);
 };
 
-BeerSong.prototype.verse = function verse(n) {
-  var first = n;
-  var second = (n - 1 + 100) % 100;
-  var firstNum;
-  var firstBottle;
-  var takeOrGet;
-  var secondNum;
-  var secondBottle;
-  /* Numbers */
-  if (first === 0) {
-    firstNum = 'no more';
+/* Pluralize if n > 1 */
+BeerSong.prototype.possiblyPluralize = function possiblyPluralize(s, n) {
+  if (n === 1) {
+    return pluralize.singular(s);
   } else {
-    firstNum = first.toString();
+    return pluralize.plural(s);
   }
-  if (second === 0) {
-    secondNum = 'no more';
-  } else {
-    secondNum = second.toString();
-  }
-  /* Bottles */
-  if (first === 1) {
-    firstBottle = 'bottle';
-  } else {
-    firstBottle = 'bottles';
-  }
-  if (second === 1) {
-    secondBottle = 'bottle';
-  } else {
-    secondBottle = 'bottles';
-  }
-  /* What's next? Take some down or get some more */
-  if (first === 1) {
-    takeOrGet = 'Take it down and pass it around';
-  } else if (first === 0) {
-    takeOrGet = 'Go to the store and buy some more';
-  } else {
-    takeOrGet = 'Take one down and pass it around';
-  }
-  /* Combine results */
-  return `${capitalizeFirstLetter(firstNum)} ${firstBottle} of beer on the wall, ${firstNum} ${firstBottle} of beer.\n${takeOrGet}, ${secondNum} ${secondBottle} of beer on the wall.\n`;
 };
 
+/* Get the string for a number or 'no more' if it's 0 */
+BeerSong.prototype.getNumString = function getNumString(n) {
+  if (n === 0) {
+    return 'no more';
+  } else {
+    return n.toString();
+  }
+};
+
+/* Get the closing line of the beer song for the number */
+BeerSong.prototype.takeOrGet = function takeOrGet(n) {
+  if (n === 0) {
+    return 'Go to the store and buy some more';
+  } else {
+    return `Take ${BeerSong.prototype.possiblyPluralize('one', n)} down and pass it around`;
+  }
+};
+
+/* Get a verse of the beer song */
+BeerSong.prototype.verse = function verse(n) {
+  const first = n;
+  const second = (n - 1 + 100) % 100;
+  const firstNum = BeerSong.prototype.getNumString(first);
+  const secondNum = BeerSong.prototype.getNumString(second);
+  const firstBottle = BeerSong.prototype.possiblyPluralize('bottle', first);
+  const secondBottle = BeerSong.prototype.possiblyPluralize('bottle', second);
+  return `${BeerSong.prototype.capitalizeFirstLetter(firstNum)} ${firstBottle} of beer on the wall, ${firstNum} ${firstBottle} of beer.
+${BeerSong.prototype.takeOrGet(first)}, ${secondNum} ${secondBottle} of beer on the wall.
+`;
+};
+
+/* Sing a range of verses, default to going to the end */
 BeerSong.prototype.sing = function sing(a, b) {
   var aa = a;
   const bb = b || 0;
