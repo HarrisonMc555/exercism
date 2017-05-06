@@ -57,4 +57,27 @@ describe('School', function() {
     expect(school.roster()).toEqual(sorted);
   });
 
+  it('Shouldn\'t be able to internally access the database', function() {
+    school.add('Bob', 5);
+    school.students = { 4 : [ 'Hacked' ] };
+    var expectedDb = { 5 : [ 'Bob' ] };
+    expect(school.roster()).toEqual(expectedDb);
+  });
+
+  it('Shouldn\'t be able to override functions', function() {
+    School.prototype.add = function hackedAdd(name, gradeNum) {
+      let hackedName = `Hacked ${name}`;
+      let hackedGradeNum = gradeNum + 1;
+      if (!this.students[hackedGradeNum]) {
+        this.students[hackedGradeNum] = [];
+      }
+      this.students[hackedGradeNum].push(hackedName);
+      this.students[hackedGradeNum].sort();
+    };
+    school = new School();
+    school.add('Mary', 9);
+    var expectedDb = { 9 : [ 'Mary' ] };
+    expect(school.roster()).toEqual(expectedDb);
+  });
+
 });
