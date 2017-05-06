@@ -1,3 +1,5 @@
+'use strict';
+
 const HelloWorld = function HelloWorld() {};
 
 HelloWorld.prototype.hello = function hello(input) {

@@ -1,3 +1,5 @@
+'use strict';
+
 const Isogram = function Isogram(word) {
   this.word = word;
 };
@@ -10,7 +12,7 @@ function hasDuplicates(array) {
 
 /* Create a regex that matches all non-letters, treating unicode characters
    correctly */
-var xRegExp = require('xregexp');
+let xRegExp = require('xregexp');
 /* Use global flag to match all */
 const allNonlettersRegexp = xRegExp('\\PL', 'g');
 

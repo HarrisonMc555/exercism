@@ -1,7 +1,9 @@
+'use strict';
+
 const BeerSong = function BeerSong() {};
 
 /* Use pluralize library */
-var pluralize = require('pluralize');
+let pluralize = require('pluralize');
 pluralize.addSingularRule(/^one$/i, 'it');
 pluralize.addPluralRule(/^one$/i, 'one');
 
@@ -52,9 +54,9 @@ ${this.takeOrGet(first)}, ${secondNum} ${secondBottle} of beer on the wall.
 
 /* Sing a range of verses, default to going to the end */
 BeerSong.prototype.sing = function sing(a, b) {
-  var aa = a;
+  let aa = a;
   const bb = b || 0;
-  var verses = [];
+  let verses = [];
   /* Loop through the verses */
   while (aa >= bb) {
     verses.push(this.verse(aa));

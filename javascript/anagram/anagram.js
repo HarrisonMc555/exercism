@@ -1,14 +1,16 @@
+'use strict';
+
 const Anagram = function Anagram(subject) {
   /* Store the original word and the letters */
   this.subject = subject;
   this.letters = this.toLetters(subject);
 };
 
-var _ = require('underscore');
+let _ = require('underscore');
 
 /* Return an array of anagram matches */
 Anagram.prototype.matches = function matches(input) {
-  var words;
+  let words;
   /* If the argument is an array, use as is, else spread the arguments */
   if (input.constructor === Array) {
     words = input;

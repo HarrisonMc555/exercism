@@ -14,7 +14,7 @@ Pangram.prototype.isPangram = function isPangram() {
 
 /* Create an array with all lower case letters */
 Pangram.prototype.alphabet = (function createAlphabet() {
-  var result = [];
+  let result = [];
   for (let i = 'a'.charCodeAt(0); i <= 'z'.charCodeAt(0); i += 1) {
     result.push(String.fromCharCode(i));
   }

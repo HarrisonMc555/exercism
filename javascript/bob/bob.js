@@ -1,3 +1,5 @@
+'use strict';
+
 const Bob = function Bob() {};
 
 /* Mimic default implementation of Python's strip */

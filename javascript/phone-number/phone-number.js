@@ -1,8 +1,10 @@
+'use strict';
+
 /* Phone number for NANP number */
 const PhoneNumber = function PhoneNumber(s) {
   /* Extract the numbers */
   const dirtyNums = s.replace(/[^0-9]/g, '');
-  var cleanNums;
+  let cleanNums;
   if (this.isValidPhoneNumber(dirtyNums)) {
     cleanNums = dirtyNums.substr(dirtyNums.length - 10);
   } else {
