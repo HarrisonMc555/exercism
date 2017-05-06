@@ -23,11 +23,11 @@ Anagram.prototype.isAnagram = function isAnagram(word) {
   /* Must have the same letters but not be the same word */
   return _.isEqual(this.letters, this.toLetters(word)) &&
          word.toLowerCase() !== this.subject;
-}
+};
 
 /* Extracts a sorted array of letters from a string */
 Anagram.prototype.toLetters = function toLetters(word) {
   return word.toLowerCase().split('').sort();
-}
+};
 
 module.exports = Anagram;
