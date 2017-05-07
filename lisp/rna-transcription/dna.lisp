@@ -1,7 +1,6 @@
 (in-package #:cl-user)
 (defpackage #:dna
   (:use #:cl)
-  (:export #:convert-base)
   (:export #:to-rna))
 (in-package #:dna)
 
