@@ -33,16 +33,13 @@
 (defclass robot ()
   ;; Initialize name to an unused name
   ((robot-name
-    :initform (get-unused-name))))
+    :initform (get-unused-name)
+    :reader robot-name
+    :documentation "Robot's name")))
 
-;; (:export #:build-robot #:robot-name #:reset-name))
 ;; Build a robot
 (defun build-robot ()
   (make-instance 'robot))
-
-;; Get a robot's name
-(defun robot-name (robot-obj)
-  (slot-value robot-obj 'robot-name))
 
 ;; Reset a robot's name
 (defun reset-name (robot-obj)
