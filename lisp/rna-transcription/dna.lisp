@@ -6,12 +6,11 @@
 
 (defun convert-base (base)
   "Transform a DNA nucleotide to an RNA nucleotide"
-  (case base
+  (ecase base
     (#\G #\C)
     (#\C #\G)
     (#\T #\A)
-    (#\A #\U)
-    (otherwise (throw :dna-error "Invalid DNA nucleotide"))))
+    (#\A #\U)))
 
 (defun to-rna (str)
   "Transcribe a string representing DNA nucleotides to RNA."
