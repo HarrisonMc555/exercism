@@ -8,6 +8,7 @@
 ;; Shared set of all used names
 (defvar *used-names* ())
 
+;; Get a random valid name (two capital letters, three digits)
 (defun get-random-name ()
   (let* ((chars "ABCDEFGHIJKLMNOPQRSTUVWXYZ")
          (digits "0123456789")
@@ -19,14 +20,30 @@
                   (funcall random-digit)
                   (funcall random-digit)) 'string)))
 
+;; Get a valid unused name
 (defun get-unused-name ()
+  ;; Create random names until you find one that hasn't been used yet
   (let ((name (get-random-name)))
     (loop while (member name *used-names*)
-       do (setq name (get-random-name))
-       collect (progn (push name *used-names*)
-                      name))))
+       do (setq name (get-random-name)))
+    (push name *used-names*)
+    name))
 
-;; Build a robot
+;; Robot class
 (defclass robot ()
+  ;; Initialize name to an unused name
   ((robot-name
     :initform (get-unused-name))))
+
+;; (:export #:build-robot #:robot-name #:reset-name))
+;; Build a robot
+(defun build-robot ()
+  (make-instance 'robot))
+
+;; Get a robot's name
+(defun robot-name (robot-obj)
+  (slot-value robot-obj 'robot-name))
+
+;; Reset a robot's name
+(defun reset-name (robot-obj)
+  (setf (slot-value robot-obj 'robot-name) (get-unused-name)))
