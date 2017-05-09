@@ -5,42 +5,42 @@
 
 (in-package #:robot)
 
-;; Shared set of all used names
-(defvar *used-names* ())
+(defvar *used-names* ()
+  "Shared set of all used names.")
 
-;; Get a random valid name (two capital letters, three digits)
+(defun random-char (str)
+  "Gets a random character out of a string."
+  (char str (random (length str))))
+
 (defun get-random-name ()
-  (let* ((chars "ABCDEFGHIJKLMNOPQRSTUVWXYZ")
-         (digits "0123456789")
-         (random-char (lambda () (char chars (random 26))))
-         (random-digit (lambda () (char digits (random 10)))))
-    (coerce (list (funcall random-char)
-                  (funcall random-char)
-                  (funcall random-digit)
-                  (funcall random-digit)
-                  (funcall random-digit)) 'string)))
+  "Get a random valid name (two capital letters, three digits)."
+  (let ((chars "ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+         (digits "0123456789"))
+    (coerce (list (random-char chars)
+                  (random-char chars)
+                  (random-char digits)
+                  (random-char digits)
+                  (random-char digits)) 'string)))
 
-;; Get a valid unused name
 (defun get-unused-name ()
-  ;; Create random names until you find one that hasn't been used yet
+  "Get a valid but unused robot name."
   (let ((name (get-random-name)))
     (loop while (member name *used-names*)
        do (setq name (get-random-name)))
     (push name *used-names*)
     name))
 
-;; Robot class
 (defclass robot ()
-  ;; Initialize name to an unused name
   ((robot-name
     :initform (get-unused-name)
     :reader robot-name
-    :documentation "Robot's name")))
+    :documentation "Unique name"))
+  (:documentation "Robot with unique name."))
 
-;; Build a robot
 (defun build-robot ()
+  "Creates a new robot object."
   (make-instance 'robot))
 
-;; Reset a robot's name
 (defun reset-name (robot-obj)
+  "Creates a new and unique name for robot."
   (setf (slot-value robot-obj 'robot-name) (get-unused-name)))
