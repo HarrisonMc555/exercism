@@ -1,7 +1,6 @@
 (in-package #:cl-user)
 (defpackage #:bob
   (:use #:cl)
-  (:export #:input-type)
   (:export #:response-for))
 (in-package #:bob)
 
