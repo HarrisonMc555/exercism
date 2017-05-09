@@ -21,4 +21,4 @@
   (cond ((silence-p input) "Fine. Be that way!")
         ((yell-p input) "Whoa, chill out!")
         ((question-p input) "Sure.")
-        (:else "Whatever.")))
+        (t "Whatever.")))
