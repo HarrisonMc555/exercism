@@ -4,18 +4,15 @@
   (:export #:from))
 (in-package #:gigasecond)
 
-(defun encode-universal-time* (time-values)
-  (apply #'encode-universal-time (reverse time-values)))
-
-(defun decode-universal-time* (universal-time tz)
-  (reverse (subseq (multiple-value-list
-                    (decode-universal-time universal-time tz)) 0 6)))
+(defun from-standardized (second minute hour day month year)
+  (let* ((gigasecond (expt 10 9))
+         (gmt 0)
+         (cur-seconds (encode-universal-time second minute hour day month year
+                                             gmt)))
+    (decode-universal-time (+ gigasecond cur-seconds) gmt)))
 
 (defun from (year month day hour minute second)
-  "Returns date 1 gigasecond from given date"
-  ;; Use gmt time zone to avoid time zone pitfalls
-  (let* ((gmt 0)
-         (time-values (list gmt year month day hour minute second)))
-     (decode-universal-time*
-      (+ (expt 10 9) (encode-universal-time* time-values))
-      gmt)))
+  (multiple-value-bind (second minute hour day month year)
+      (from-standardized second minute hour day month year)
+    (list year month day hour minute second)))
+
