@@ -5,30 +5,21 @@
   (:export #:response-for))
 (in-package #:bob)
 
-;; Create the appropriate response type for input
-(defun response-type (input)
-  (let ((trimmed-input (string-trim " " input)))
-    (cond
-      ;; Is it all spaces or empty string?
-      ((string= "" trimmed-input)
-       :silence)
-      ;; Are all the letters uppercase (and actually contain letters)?
-      ((and
-        ;; Contains letters
-        (some #'alpha-char-p trimmed-input)
-        ;; All upper case
-        (string= input (string-upcase trimmed-input)))
-       :yell)
-      ;; Is the last character a question mark?
-      ((eql #\? (char trimmed-input (1- (length trimmed-input))))
-       :question)
-      ;; Default
-      (t :default))))
+(defun yell-p (input)
+  "Yelling contains letters, all of which are upper case."
+  (and (some #'upper-case-p input) (notany #'lower-case-p input)))
 
-;; Create the appropriate response given the response type
+(defun question-p (input)
+  "A question ends in a question mark."
+  (eql #\? (char input (1- (length input)))))
+
+(defun silence-p (input)
+  "Silence is zero or more spaces."
+  (string= "" (string-trim " " input)))
+
 (defun response-for (input)
-  (case (response-type input)
-    (:yell "Whoa, chill out!")
-    (:question "Sure.")
-    (:silence "Fine. Be that way!")
-    (otherwise "Whatever.")))
+  "Create the appropriate response for input."
+  (cond ((silence-p input) "Fine. Be that way!")
+        ((yell-p input) "Whoa, chill out!")
+        ((question-p input) "Sure.")
+        (:else "Whatever.")))
