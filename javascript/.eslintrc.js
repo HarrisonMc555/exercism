@@ -8,7 +8,8 @@ module.exports = {
   ],
   "rules": {
     "indent": ["warn", 2, {"SwitchCase": 1}],
-    "no-else-return": "off"
+    "no-else-return": "off",
+    "quotes" : "off"
   },
   "globals": {
     "Set": true

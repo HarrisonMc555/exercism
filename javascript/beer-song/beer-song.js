@@ -47,9 +47,10 @@ BeerSong.prototype.verse = function verse(n) {
   const secondNum = this.getNumString(second);
   const firstBottle = this.possiblyPluralize('bottle', first);
   const secondBottle = this.possiblyPluralize('bottle', second);
-  return `${this.capitalizeFirstLetter(firstNum)} ${firstBottle} of beer on the wall, ${firstNum} ${firstBottle} of beer.
-${this.takeOrGet(first)}, ${secondNum} ${secondBottle} of beer on the wall.
-`;
+  return `${this.capitalizeFirstLetter(firstNum)} ${firstBottle} ` +
+    `of beer on the wall, ${firstNum} ${firstBottle} of beer.\n` +
+    `${this.takeOrGet(first)}, ${secondNum} ${secondBottle} ` +
+    `of beer on the wall.\n`;
 };
 
 /* Sing a range of verses, default to going to the end */
