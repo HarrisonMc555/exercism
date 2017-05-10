@@ -14,21 +14,21 @@
 
 (defun get-random-name ()
   "Get a random valid name (two capital letters, three digits)."
-  (let ((chars "ABCDEFGHIJKLMNOPQRSTUVWXYZ")
-         (digits "0123456789"))
-    (coerce (list (random-char chars)
-                  (random-char chars)
+  (let ((capital-letters "ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+        (digits "0123456789"))
+    (coerce (list (random-char capital-letters)
+                  (random-char capital-letters)
                   (random-char digits)
                   (random-char digits)
                   (random-char digits)) 'string)))
 
 (defun get-unused-name ()
   "Get a valid but unused robot name."
-  (let ((name (get-random-name)))
-    (loop while (member name *used-names*)
-       do (setq name (get-random-name)))
-    (push name *used-names*)
-    name))
+  (loop
+     for name = (get-random-name) then (get-random-name)
+     while (member name *used-names*)
+     finally (progn (push name *used-names*)
+                    (return name))))
 
 (defclass robot ()
   ((robot-name
