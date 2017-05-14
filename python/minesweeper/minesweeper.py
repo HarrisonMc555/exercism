@@ -7,8 +7,6 @@ def board(text):
     for r in range(len(board)):
         for c in range(len(board[0])):
             if board[r][c] == ' ':
-                # print('board[{}][{}] = '.format(r, c), end='')
-                # print(num_neighboring_mines(board, r, c))
                 num_mines = num_neighboring_mines(board, r, c)
                 if num_mines > 0:
                     board[r][c] = str(num_mines)
@@ -50,78 +48,3 @@ def is_valid_board(text):
     if not all([re.match(row_pattern, row)
                 for row in text[1:-1]]): return False
     return True
-
-# board1 = ["+------+",
-#           "| *  * |",
-#           "|  *   |",
-#           "|    * |",
-#           "|   * *|",
-#           "| *  * |",
-#           "|      |",
-#           "+------+"]
-# board2 = ["+-----+",
-#           "| * * |",
-#           "|     |",
-#           "|   * |",
-#           "|  * *|",
-#           "| * * |",
-#           "+-----+"]
-# board3 = ["+-----+",
-#           "| * * |",
-#           "+-----+"]
-# board4 = ["+-+",
-#           "|*|",
-#           "| |",
-#           "|*|",
-#           "| |",
-#           "| |",
-#           "+-+"]
-# board5 = ["+-+",
-#           "|*|",
-#           "+-+"]
-# board6 = ["+--+",
-#           "|**|",
-#           "|**|",
-#           "+--+"]
-# board7 = ["+--+",
-#           "|**|",
-#           "|**|",
-#           "+--+"]
-# bad1 = ["+-+",
-#         "| |",
-#         "|*  |",
-#         "|  |",
-#         "+-+"]
-# bad2 = ["+-----+",
-#         "*   * |",
-#         "+-- --+"]
-# bad3 = ["+-----+",
-#         "|X  * |",
-#         "+-----+"]
-# print(is_valid_board(board1))
-# print(is_valid_board(board2))
-# print(is_valid_board(board3))
-# print(is_valid_board(board4))
-# print(is_valid_board(board5))
-# print(is_valid_board(board6))
-# print(is_valid_board(bad1))
-# print(is_valid_board(bad2))
-# print(is_valid_board(bad3))
-# print(extract_board(board1))
-# print(extract_board(board2))
-# print(extract_board(board3))
-# print(extract_board(board4))
-# print(extract_board(board5))
-# print(extract_board(board6))
-# print(output_board(extract_board(board1)))
-# print(output_board(extract_board(board2)))
-# print(output_board(extract_board(board3)))
-# print(output_board(extract_board(board4)))
-# print(output_board(extract_board(board5)))
-# print(output_board(extract_board(board6)))
-# print(board(board1))
-# print(board(board2))
-# print(board(board3))
-# print(board(board4))
-# print(board(board5))
-# print(board(board6))
