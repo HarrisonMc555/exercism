@@ -1,0 +1,27 @@
+(in-package #:cl-user)
+(defpackage #:phrase
+  (:use #:cl)
+  (:export #:word-count))
+(in-package #:phrase)
+
+(defun count-occurences (strings)
+  (let ((sortedStrings (sort strings #'string<)))
+    (loop :for curWord = (first sortedStrings)
+       :then (nth beg sortedStrings)
+       :for beg = (when (not (null strings)) 0)
+       :then (1+ end)
+       :for sameWord = (lambda (word) (string= word curWord))
+       :for end = (and beg (position-if-not sameWord sortedStrings :start beg))
+       :for num = (1+ (- end beg))
+       :when curWord :collect (cons curWord (1+ (- end beg)))
+       :while end)))
+
+(defun delimiterp (c)
+  (not (alphanumericp c)))
+
+(defun split-sequence (string &key (delimiterp #'delimiterp))
+  (loop :for beg = (position-if-not delimiterp string)
+     :then (position-if-not delimiterp string :start (1+ end))
+     :for end = (and beg (position-if delimiterp string :start beg))
+     :when beg :collect (subseq string beg end)
+     :while end))
