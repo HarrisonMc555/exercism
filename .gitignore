@@ -3,3 +3,8 @@
 *.fasl
 *.cabal
 *.out
+*.cmake
+CMakeFiles
+CMakeCache.txt
+cpp/*/Makefile
+*.o

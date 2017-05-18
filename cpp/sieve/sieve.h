@@ -3,8 +3,8 @@
 
 #include <vector>
 
-using namespace std;
-
-vector<int> primes(int max);
+namespace sieve {
+    std::vector<int> primes(int max);
+}
 
 #endif
