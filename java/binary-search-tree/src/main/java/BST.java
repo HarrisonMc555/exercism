@@ -1,22 +1,32 @@
 
+import java.util.List;
+
 public class BST<T> {
 
-    private Node root;
+    private Node<T> root;
 
-    public class Node {
+    public static class Node<TT> {
 
-        protected Node left;
-        protected Node right;
-        protected T data;
+        protected Node<TT> left;
+        protected Node<TT> right;
+        protected TT data;
 
-        public Node(T data) {
+        public Node(TT data) {
             this.left = null;
             this.left = null;
             this.data = data;
         }
 
-        public T getData() {
+        public TT getData() {
             return this.data;
+        }
+
+        public Node<TT> getLeft() {
+            return this.left;
+        }
+
+        public Node<TT> getRight() {
+            return this.right;
         }
 
     }
@@ -25,12 +35,20 @@ public class BST<T> {
         this.root = null;
     }
 
-    public Node getRoot() {
+    public Node<T> getRoot() {
         return this.root;
     }
 
     public void insert(T data) {
-        root = new Node(data);
+        this.root = new Node<T>(data);
+    }
+
+    public List<Integer> getAsLevelOrderList() {
+        return null;
+    }
+
+    public List<Integer> getAsSortedList() {
+        return null;
     }
 
 }
