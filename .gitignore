@@ -8,3 +8,6 @@ CMakeFiles
 CMakeCache.txt
 cpp/*/Makefile
 *.o
+.gradle/
+build/
+*.class
