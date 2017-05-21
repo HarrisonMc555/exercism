@@ -1,13 +1,26 @@
+### emacs backup, temporary ###
 *~
-.stack-work
-*.fasl
-*.cabal
+\#*
+.#*
+
+### Several languages ###
+build/
+
+### C++ ###
 *.out
 *.cmake
 CMakeFiles
 CMakeCache.txt
 cpp/*/Makefile
 *.o
-.gradle/
-build/
+
+### Java ###
 *.class
+.gradle/
+
+### Lisp ###
+*.fasl
+
+### Haskell ###
+.stack-work
+*.cabal
