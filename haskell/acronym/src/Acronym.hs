@@ -3,7 +3,7 @@ module Acronym (abbreviate) where
 import Data.Char (isAlphaNum, toUpper)
 
 abbreviate :: String -> String
-abbreviate xs = map toUpper $ map head $ wordsNoSymbols xs
+abbreviate xs = map (toUpper . head) $ wordsNoSymbols xs
 
 wordsNoSymbols :: String -> [String]
 wordsNoSymbols = map (filter isAlphaNum) . words
@@ -12,7 +12,7 @@ wordsNoSymbols = map (filter isAlphaNum) . words
 split :: (a -> Bool) -> [a] -> [[a]]
 split f [] = []
 split f xs = if hasThis
-             then [this] ++ (split f next)
+             then this : split f next
              else []
   where this = takeWhile f xs'
         next = dropWhile f xs'

@@ -32,4 +32,4 @@ encodePortion text = (numStr ++ [firstChar], remainingText)
         numStr = if numChars == 1 then "" else show numChars
         numChars = length $ takeWhile isFirstChar text
         remainingText = dropWhile isFirstChar text
-        isFirstChar = \c -> c == firstChar
+        isFirstChar c = c == firstChar

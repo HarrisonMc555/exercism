@@ -8,4 +8,4 @@ square n = if 0 < n && n <= 64
            else Nothing
 
 total :: Integer
-total = sum $ map fromJust $ map square [1..64]
+total = sum $ map (fromJust . square) [1..64]

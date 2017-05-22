@@ -7,7 +7,7 @@ sumOfMultiples factors limit = sum $ listOfMultiples factors limit
 
 listOfMultiples :: [Integer] -> Integer -> [Integer]
 listOfMultiples factors limit = unique allMultiples
-  where allMultiples = concat $ map (\factor -> multiples factor limit) factors
+  where allMultiples = concatMap (`multiples` limit) factors
 
 multiples :: Integer -> Integer -> [Integer]
 multiples factor limit = takeWhile withinLimit $ stride intFactor [factor..]

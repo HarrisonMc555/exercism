@@ -10,7 +10,7 @@ responseFor input | isSilence  input = "Fine. Be that way!"
 
 isYelling input = any isAlpha input && input == map toUpper input
 
-isQuestion input = (last $ strip input) == '?'
+isQuestion input = last (strip input) == '?'
 
 isSilence input = strip input == ""
 
