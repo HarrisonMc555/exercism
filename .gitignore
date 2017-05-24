@@ -24,3 +24,5 @@ cpp/*/Makefile
 ### Haskell ###
 .stack-work
 *.cabal
+__pycache__/
+*.pyc
