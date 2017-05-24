@@ -1,0 +1,2 @@
+pep8 $(find /home/harrison/exercism/python/ -name '*.py' \
+            -not -name '*_test.py')

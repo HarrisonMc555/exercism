@@ -1,5 +1,6 @@
 import re
 
+
 def board(text):
     if not is_valid_board(text):
         raise ValueError('Not a valid board')
@@ -11,6 +12,7 @@ def board(text):
                 if num_mines > 0:
                     board[r][c] = str(num_mines)
     return output_board(board)
+
 
 def num_neighboring_mines(board, row, col):
     min_row = row-1 if row != 0 else 0
@@ -24,27 +26,35 @@ def num_neighboring_mines(board, row, col):
                 if board[r][c] == '*':
                     num_mines += 1
     return num_mines
-    
+
 
 def extract_board(text):
     return [list(row[1:-1]) for row in text[1:-1]]
 
+
 def output_board(board):
     num_cols = len(board[0])
     border = '+{}+'.format('-'*(num_cols))
+
     def output_row(row):
         return '|{}|'.format(''.join(row))
     return [border] + [output_row(row) for row in board] + [border]
 
+
 def is_valid_board(text):
-    if type(text) != type([]): return False
-    if len(text) < 3: return false
+    if not isinstance(text, list):
+        return False
+    if len(text) < 3:
+        return false
     lenFirstRow = len(text[0])
-    if not all([len(row) == lenFirstRow for row in text]): return False
+    if not all([len(row) == lenFirstRow for row in text]):
+        return False
     border_pattern = '\++'
     if not (re.match(border_pattern, text[0]) and
-            re.match(border_pattern, text[-1])): return False
+            re.match(border_pattern, text[-1])):
+        return False
     row_pattern = '\|[ *]+\|'
     if not all([re.match(row_pattern, row)
-                for row in text[1:-1]]): return False
+                for row in text[1:-1]]):
+        return False
     return True
