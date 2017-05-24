@@ -26,3 +26,4 @@ cpp/*/Makefile
 *.cabal
 __pycache__/
 *.pyc
+.cache
