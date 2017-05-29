@@ -68,7 +68,7 @@ def empty_results():
 
 
 def team_sort(tup):
-    """Order team from most to fewest points then alphabetically"""
+    """Order team from most to fewest points then alphabetically."""
     name, result = tup
     # Negate points to make higher points come first while keeping name
     # alphabetical
