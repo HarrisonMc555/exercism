@@ -1,17 +1,13 @@
 module DNA (toRNA) where
 
-import Data.Maybe
-
 toRNA :: String -> Maybe String
-toRNA dna = if all isJust rna
-            then Just (map fromJust rna)
-            else Nothing
-  where rna = map baseToRNA dna
+toRNA ""     = Just ""
+toRNA (x:xs) = fmap (:) (baseToRNA x) <*> toRNA xs
 
 baseToRNA :: Char -> Maybe Char
-baseToRNA c | c == 'G'  = Just 'C'
-            | c == 'C'  = Just 'G'
-            | c == 'T'  = Just 'A'
-            | c == 'A'  = Just 'U'
-            | otherwise = Nothing
-
+baseToRNA c = case c of
+                'G' -> Just 'C'
+                'C' -> Just 'G'
+                'T' -> Just 'A'
+                'A' -> Just 'U'
+                _   -> Nothing
