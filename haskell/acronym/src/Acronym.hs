@@ -1,20 +1,20 @@
 module Acronym (abbreviate) where
 
-import Data.Char (isAlphaNum, toUpper)
+import Data.Char (isAlpha, isUpper, toUpper)
 
 abbreviate :: String -> String
-abbreviate xs = map (toUpper . head) $ wordsNoSymbols xs
+abbreviate xs = map toUpper $ concat $ map acronymLetters $ split xs
 
-wordsNoSymbols :: String -> [String]
-wordsNoSymbols = map (filter isAlphaNum) . words
+split :: String -> [String]
+split s = words $ map nonLetterToSpace s
 
--- This was my first try
-split :: (a -> Bool) -> [a] -> [[a]]
-split f [] = []
-split f xs = if hasThis
-             then this : split f next
-             else []
-  where this = takeWhile f xs'
-        next = dropWhile f xs'
-        hasThis = not $ null this
-        xs'  = dropWhile (not . f) xs
+nonLetterToSpace :: Char -> Char
+nonLetterToSpace c
+  | isAlpha c = c
+  | otherwise = ' '
+
+acronymLetters :: String -> String
+acronymLetters s
+  | all isUpper s = [head s]
+  | any isUpper s = filter isUpper s
+  | otherwise     = [head s]
