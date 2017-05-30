@@ -9,6 +9,7 @@ data Planet = Mercury
             | Uranus
             | Neptune
 
+planetYearsPerEarthYear :: Fractional a => Planet -> a
 planetYearsPerEarthYear planet = case planet of
   Mercury -> 0.2408467
   Venus   -> 0.61519726
@@ -18,8 +19,8 @@ planetYearsPerEarthYear planet = case planet of
   Saturn  -> 29.447498
   Uranus  -> 84.016846
   Neptune -> 164.79132
-  _       -> error "Input is not a planet."
 
+earthSecondsPerYear :: Float
 earthSecondsPerYear = 31557600
 
 ageOn :: Planet -> Float -> Float
