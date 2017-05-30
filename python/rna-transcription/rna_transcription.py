@@ -4,14 +4,9 @@ CONVERSION = {'G': 'C',
               'A': 'U'}
 
 
-def convert_base(b):
-    """Returns RNA base complement for DNA base."""
-    return CONVERSION[b]
-
-
 def to_rna(dna_sequence):
     """Returns RNA complement of DNA sequence."""
     try:
-        return ''.join(map(convert_base, dna_sequence))
+        return ''.join(map(CONVERSION.__getitem__, dna_sequence))
     except KeyError:
         return ''
