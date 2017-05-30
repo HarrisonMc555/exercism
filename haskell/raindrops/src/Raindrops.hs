@@ -2,8 +2,8 @@ module Raindrops (convert) where
 
 convert :: Int -> String
 convert n
-  | rains == "" = show n
-  | otherwise   = rains
+  | null rains = show n
+  | otherwise  = rains
   where rains = getRains n
 
 rainList :: [(Int, String)]
