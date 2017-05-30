@@ -27,3 +27,4 @@ cpp/*/Makefile
 __pycache__/
 *.pyc
 .cache
+*.hi
