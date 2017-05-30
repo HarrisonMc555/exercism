@@ -3,7 +3,7 @@ module Acronym (abbreviate) where
 import Data.Char (isAlpha, isUpper, toUpper)
 
 abbreviate :: String -> String
-abbreviate xs = map toUpper $ concat $ map acronymLetters $ split xs
+abbreviate xs = map toUpper $ concatMap acronymLetters $ split xs
 
 split :: String -> [String]
 split s = words $ map nonLetterToSpace s
