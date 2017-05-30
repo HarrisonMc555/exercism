@@ -1,7 +1,6 @@
 module RunLength (decode, encode) where
 
 import Data.Char
-import Text.Read
 
 decode :: String -> String
 decode "" = ""
@@ -10,6 +9,7 @@ decode encodedText = firstPortion ++ decode rest
         rest = snd decodingTuple
         decodingTuple = decodePortion encodedText
 
+decodePortion :: String -> (String, String)
 decodePortion "" = ("", "")
 decodePortion encodedText = (replicate num char, rest)
   where num = if isNumber (head encodedText)
@@ -26,6 +26,7 @@ encode text = firstPortion ++ encode rest
         rest = snd encodingTuple
         encodingTuple = encodePortion text
 
+encodePortion :: String -> (String, String)
 encodePortion "" = ("", "")
 encodePortion text = (numStr ++ [firstChar], remainingText)
   where firstChar = head text

@@ -11,7 +11,7 @@ add :: Int -> String -> School -> School
 add gradeNum student school
   | member gradeNum school = alter (addStudent student) gradeNum school
   | otherwise              = insert gradeNum [student] school
-  where addStudent student = fmap $ sort . (student:)
+  where addStudent s = fmap $ sort . (s:)
 
 empty :: School
 empty = Data.Map.empty
