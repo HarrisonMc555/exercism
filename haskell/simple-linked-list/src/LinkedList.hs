@@ -43,5 +43,4 @@ reverseLinkedList :: LinkedList a -> LinkedList a
 reverseLinkedList = foldl (flip new) Nil
 
 toList :: LinkedList a -> [a]
-toList (Node a rest) = a : toList rest
-toList Nil           = []
+toList = foldr (:) []
