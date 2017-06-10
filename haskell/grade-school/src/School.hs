@@ -1,7 +1,7 @@
 module School (School, add, empty, grade, sorted) where
 
-import Data.Map (Map, member, alter, insert, toList, lookup)
-import qualified Data.Map (empty)
+import Data.Map (Map, member, alter, insert, toList)
+import qualified Data.Map (empty, lookup)
 import Data.List (sort)
 import Data.Maybe (fromMaybe)
 
