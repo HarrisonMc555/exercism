@@ -43,14 +43,10 @@ turnRight direction = case direction of North -> East
                                         West  -> North
 
 advance :: Bearing -> Coordinates -> Coordinates
-advance b c = case b of North -> fsnd inc c
-                        East  -> ffst inc c
-                        South -> fsnd dec c
-                        West  -> ffst dec c
-  where ffst f p = (f $ fst p, snd p)
-        fsnd f p = (fst p, f $ snd p)
-        inc x = x + 1
-        dec x = x - 1
+advance b (x, y) = case b of North -> (x, y+1)
+                             East  -> (x+1, y)
+                             South -> (x, y-1)
+                             West  -> (x-1, y)
 
 iLeft :: Robot -> Robot
 iLeft (Robot b c) = Robot (turnLeft b) c
@@ -66,4 +62,4 @@ instruction r c = case c of 'L' -> iLeft r
                             'R' -> iRight r
                             'A' -> iAdvance r
                             _   -> iNull r
-  where iNull (Robot b c') = Robot b c'
+  where iNull r' = r'
