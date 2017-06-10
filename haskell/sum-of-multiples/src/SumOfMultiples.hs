@@ -10,11 +10,7 @@ listOfMultiples factors limit = unique allMultiples
   where allMultiples = concatMap (`multiples` limit) factors
 
 multiples :: Integer -> Integer -> [Integer]
-multiples factor limit = takeWhile (< limit) $ stride intFactor [factor..]
-  where intFactor = fromIntegral factor
-        stride _ []     = []
-        stride s (x:xs) = x : stride s rest
-          where rest = drop (s-1) xs
+multiples factor limit = takeWhile (< limit) [factor,factor*2..]
 
 unique :: (Ord a) => [a] -> [a]
 unique = map head . group . sort
