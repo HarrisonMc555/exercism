@@ -61,5 +61,4 @@ instruction :: Robot -> Char -> Robot
 instruction r c = case c of 'L' -> iLeft r
                             'R' -> iRight r
                             'A' -> iAdvance r
-                            _   -> iNull r
-  where iNull r' = r'
+                            _   -> r
