@@ -40,8 +40,7 @@ nil :: LinkedList a
 nil = Nil
 
 reverseLinkedList :: LinkedList a -> LinkedList a
-reverseLinkedList = foldl append Nil
-  where append l a = new a l
+reverseLinkedList = foldl (flip new) Nil
 
 toList :: LinkedList a -> [a]
 toList (Node a rest) = a : toList rest
