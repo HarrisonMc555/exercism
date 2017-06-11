@@ -30,8 +30,7 @@ reverse :: [a] -> [a]
 reverse = foldl (flip (:)) []
 
 map :: (a -> b) -> [a] -> [b]
-map f (x:xs) = f x : map f xs
-map _ []     = []
+map f = foldr ((:) . f) []
 
 filter :: (a -> Bool) -> [a] -> [a]
 filter p (x:xs)
@@ -40,8 +39,7 @@ filter p (x:xs)
 filter _ [] = []
 
 (++) :: [a] -> [a] -> [a]
-(x:xs) ++ ys = x : xs ++ ys
-[] ++ ys     = ys
+xs ++ ys = foldr (:) ys xs
 
 concat :: [[a]] -> [a]
 concat = foldr (++) []
