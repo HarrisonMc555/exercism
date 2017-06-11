@@ -1,8 +1,7 @@
 module DNA (toRNA) where
 
 toRNA :: String -> Maybe String
-toRNA ""     = Just ""
-toRNA (x:xs) = fmap (:) (baseToRNA x) <*> toRNA xs
+toRNA = traverse baseToRNA
 
 baseToRNA :: Char -> Maybe Char
 baseToRNA c = case c of
