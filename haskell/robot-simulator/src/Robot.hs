@@ -24,21 +24,14 @@ data Bearing = North
 
 instance Circ Bearing
 
-data Robot = Robot Bearing Coordinates deriving (Show)
+data Robot = Robot { bearing     :: Bearing
+                   , coordinates :: Coordinates
+                   } deriving (Eq, Show)
 
 type Coordinates = (Integer, Integer)
 
-bearing :: Robot -> Bearing
-bearing (Robot b _) = b
-
-coordinates :: Robot -> (Integer, Integer)
-coordinates (Robot _ c) = c
-
-mkRobot :: Bearing -> (Integer, Integer) -> Robot
+mkRobot :: Bearing -> Coordinates -> Robot
 mkRobot = Robot
-
-simulate :: Robot -> String -> Robot
-simulate = foldl instruction
 
 turnLeft :: Bearing -> Bearing
 turnLeft = prev
@@ -52,6 +45,14 @@ advance b (x, y) = case b of North -> (x, y+1)
                              South -> (x, y-1)
                              West  -> (x-1, y)
 
+simulate :: Robot -> String -> Robot
+simulate = foldl instruction
+
+instruction :: Robot -> Char -> Robot
+instruction r c = case c of 'L' -> iLeft r
+                            'R' -> iRight r
+                            'A' -> iAdvance r
+                            _   -> r
 iLeft :: Robot -> Robot
 iLeft (Robot b c) = Robot (turnLeft b) c
 
@@ -60,9 +61,3 @@ iRight (Robot b c) = Robot (turnRight b) c
 
 iAdvance :: Robot -> Robot
 iAdvance (Robot b c) = Robot b (advance b c)
-
-instruction :: Robot -> Char -> Robot
-instruction r c = case c of 'L' -> iLeft r
-                            'R' -> iRight r
-                            'A' -> iAdvance r
-                            _   -> r
