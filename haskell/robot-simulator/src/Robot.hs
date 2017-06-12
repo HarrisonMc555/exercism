@@ -8,11 +8,21 @@ module Robot
     , turnRight
     ) where
 
+-- https://stackoverflow.com/a/20294331/7343786
+class (Enum a, Bounded a, Eq a) => Circ a where
+  next :: a -> a
+  next a = if a == maxBound then minBound else succ a
+
+  prev :: a -> a
+  prev a = if a == minBound then maxBound else pred a
+
 data Bearing = North
              | East
              | South
              | West
-             deriving (Eq, Show)
+             deriving (Enum, Bounded, Eq, Show)
+
+instance Circ Bearing
 
 data Robot = Robot Bearing Coordinates deriving (Show)
 
@@ -31,16 +41,10 @@ simulate :: Robot -> String -> Robot
 simulate = foldl instruction
 
 turnLeft :: Bearing -> Bearing
-turnLeft direction = case direction of North -> West
-                                       East  -> North
-                                       South -> East
-                                       West  -> South
+turnLeft = prev
 
 turnRight :: Bearing -> Bearing
-turnRight direction = case direction of North -> East
-                                        East  -> South
-                                        South -> West
-                                        West  -> North
+turnRight = next
 
 advance :: Bearing -> Coordinates -> Coordinates
 advance b (x, y) = case b of North -> (x, y+1)
