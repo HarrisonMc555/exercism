@@ -54,10 +54,10 @@ instruction r c = case c of 'L' -> iLeft r
                             'A' -> iAdvance r
                             _   -> r
 iLeft :: Robot -> Robot
-iLeft (Robot b c) = Robot (turnLeft b) c
+iLeft r@(Robot b _) = r { bearing = turnLeft b }
 
 iRight :: Robot -> Robot
-iRight (Robot b c) = Robot (turnRight b) c
+iRight r@(Robot b _) = r { bearing = turnRight b }
 
 iAdvance :: Robot -> Robot
-iAdvance (Robot b c) = Robot b (advance b c)
+iAdvance r@(Robot b c) = r { coordinates = advance b c }
