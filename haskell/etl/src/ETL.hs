@@ -7,6 +7,5 @@ transform :: Map a String -> Map Char a
 transform = foldrWithKey insertString empty
 
 insertString :: k -> String -> Map Char k -> Map Char k
-insertString _ ""     m = m
-insertString x (c:cs) m = insertString x cs (insert c' x m)
-  where c' = toLower c
+insertString k s m = foldr acc m s
+  where acc c = insert (toLower c) k
