@@ -1,5 +1,7 @@
 module Raindrops (convert) where
 
+import Data.Foldable (fold)
+
 convert :: Int -> String
 convert n
   | null rains = show n
@@ -12,7 +14,7 @@ rainList = [ (3, "Pling")
            , (7, "Plong")]
 
 getRains :: Int -> String
-getRains n = concatMap snd $ filter (divisibleBy n . fst) rainList
+getRains n = fold [s | (x, s) <- rainList, divisibleBy n x]
 
 divisibleBy :: Integral a => a -> a -> Bool
 divisibleBy num divisor = num `mod` divisor == 0
