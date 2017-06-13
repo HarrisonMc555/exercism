@@ -9,11 +9,9 @@ decode encodedText = firstPortion ++ decode rest
 
 decodePortion :: String -> (String, String)
 decodePortion "" = ("", "")
-decodePortion encodedText = (replicate num char, rest)
-  where num = if isNumber (head encodedText)
-              then read (takeWhile isNumber encodedText) :: Int
-              else 1
-        (char:rest) = dropWhile isNumber encodedText
+decodePortion encodedText@(c:_) = (replicate num letter, rest)
+  where num = if isNumber c then read digits :: Int else 1
+        (digits, letter:rest) = span isNumber encodedText
 
 encode :: String -> String
 encode "" = ""
@@ -22,9 +20,7 @@ encode text = firstPortion ++ encode rest
 
 encodePortion :: String -> (String, String)
 encodePortion "" = ("", "")
-encodePortion text = (numStr ++ [firstChar], remainingText)
-  where firstChar = head text
-        numStr = if numChars == 1 then "" else show numChars
-        numChars = length $ takeWhile isFirstChar text
-        remainingText = dropWhile isFirstChar text
-        isFirstChar c = c == firstChar
+encodePortion s@(c:_) = (numStr ++ [c], remaining)
+  where numStr = if numChars == 1 then "" else show numChars
+        (firsts, remaining) = span (== c) s
+        numChars = length firsts
