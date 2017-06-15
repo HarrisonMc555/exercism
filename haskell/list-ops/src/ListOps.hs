@@ -24,7 +24,7 @@ foldr _ z []     = z
 
 length :: [a] -> Int
 length = foldl' inc 0
-  where inc n _ = n + 1
+  where inc = const . (1+)
 
 reverse :: [a] -> [a]
 reverse = foldl (flip (:)) []
