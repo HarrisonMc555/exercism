@@ -10,10 +10,10 @@ data Allergen = Eggs
               | Chocolate
               | Pollen
               | Cats
-              deriving (Eq, Enum, Show)
+              deriving (Eq, Enum, Bounded, Show)
 
 allergies :: Int -> [Allergen]
-allergies score = filter (`isAllergicTo` score) [Eggs .. Cats]
+allergies score = filter (`isAllergicTo` score) [minBound .. maxBound]
 
 isAllergicTo :: Allergen -> Int -> Bool
 isAllergicTo allergen score = testBit score (fromEnum allergen)
