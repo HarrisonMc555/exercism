@@ -29,4 +29,4 @@ maybeDigit c = if isDigit c
 
 maybeDigits :: String -> Maybe [Integer]
 maybeDigits = foldr acc (Just [])
-  where acc c = ((:) <$> (maybeDigit c) <*>)
+  where acc c = ((:) <$> maybeDigit c <*>)
