@@ -1,20 +1,25 @@
+{-# OPTIONS_GHC -fno-warn-incomplete-patterns #-}
 module PrimeFactors (primeFactors) where
 
 import Data.List (find)
 import Data.Maybe (fromJust)
+-- import Data.Numbers.Primes (primes)
 
 primeFactors :: Integer -> [Integer]
-primeFactors n = snd . fromJust $ find done $ scanl factors (n, []) primes
-  where done = (== 1) . fst
-        -- problem: doesn't deal with repeated factors
-        factors (n, fs) p =
-          let (q, r) = quotRem n p
-          in if r == 0
-             then (q, p:fs)
-             else (n, fs)
+primeFactors n = getResult . find done . scanl addFactors (n, []) $ primes
+  where done = (1 ==) . fst
+        getResult = reverse . snd . fromJust
 
+addFactors :: (Integer, [Integer]) -> Integer -> (Integer, [Integer])
+addFactors (n, fs) p
+  | n == 1    = (n, fs)
+  | composite = addFactors (q, p:fs) p
+  | otherwise = (n, fs)
+  where (q, r)    = n `quotRem` p
+        composite = r == 0
 
+-- Inspired by haskell.org
 primes :: [Integer]
-primes = filterPrime [2..]
-  where filterPrime (p:xs) =
-          p : filterPrime [x | x <- xs, x `mod` p /= 0]
+primes = filterPrimes [2..]
+  where filterPrimes (p:xs) =
+          p : [x | x <- xs, x `mod` p /= 0]
