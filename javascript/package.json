@@ -1,0 +1,19 @@
+{
+  "name": "exercism",
+  "version": "1.0.0",
+  "description": "Harrison McCullough's exercism JavaScript exercises",
+  "main": ".eslintrc.js",
+  "scripts": {
+    "test": "jasmine-node ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HarrisonMc555/exercism.git"
+  },
+  "author": "Harrison McCullough",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HarrisonMc555/exercism/issues"
+  },
+  "homepage": "https://github.com/HarrisonMc555/exercism#readme"
+}
