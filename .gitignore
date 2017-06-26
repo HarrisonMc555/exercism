@@ -28,3 +28,4 @@ __pycache__/
 *.pyc
 .cache
 *.hi
+"node_modules" 
