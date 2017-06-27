@@ -1,5 +1,3 @@
-'use strict';
-
 const Anagram = function Anagram(subject) {
   /* Store the original word and the letters */
   this.subject = subject;

@@ -1,31 +1,3 @@
-### emacs backup, temporary ###
 *~
 \#*
 .#*
-
-### Several languages ###
-build/
-
-### C++ ###
-*.out
-*.cmake
-CMakeFiles
-CMakeCache.txt
-cpp/*/Makefile
-*.o
-
-### Java ###
-*.class
-.gradle/
-
-### Lisp ###
-*.fasl
-
-### Haskell ###
-.stack-work
-*.cabal
-__pycache__/
-*.pyc
-.cache
-*.hi
-"node_modules" 

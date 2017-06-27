@@ -1,4 +1,4 @@
-'use strict';
+/* eslint quotes: ["off"] */
 
 const BeerSong = function BeerSong() {};
 
@@ -16,27 +16,24 @@ BeerSong.prototype.capitalizeFirstLetter = function capitalizeFirstLetter(s) {
 BeerSong.prototype.possiblyPluralize = function possiblyPluralize(s, n) {
   if (n === 1) {
     return pluralize.singular(s);
-  } else {
-    return pluralize.plural(s);
   }
+  return pluralize.plural(s);
 };
 
 /* Get the string for a number or 'no more' if it's 0 */
 BeerSong.prototype.getNumString = function getNumString(n) {
   if (n === 0) {
     return 'no more';
-  } else {
-    return n.toString();
   }
+  return n.toString();
 };
 
 /* Get the closing line of the beer song for the number */
 BeerSong.prototype.takeOrGet = function takeOrGet(n) {
   if (n === 0) {
     return 'Go to the store and buy some more';
-  } else {
-    return `Take ${this.possiblyPluralize('one', n)} down and pass it around`;
   }
+  return `Take ${this.possiblyPluralize('one', n)} down and pass it around`;
 };
 
 /* Get a verse of the beer song */

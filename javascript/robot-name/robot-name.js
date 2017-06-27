@@ -1,5 +1,3 @@
-'use strict';
-
 const Robot = function Robot() {
   /* Resets the robot by giving it a new name */
   this.reset = function reset() {

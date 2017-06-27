@@ -1,6 +1,6 @@
 module Base (rebase) where
 
-import Control.Monad (liftM, (>=>))
+import Control.Monad ((>=>))
 
 rebase :: Integral a => a -> a -> [a] -> Maybe [a]
 rebase inputBase outputBase
@@ -16,7 +16,7 @@ unDigits base = foldl acc (Just 0)
           | otherwise = (x +) . (base *) <$> ds
 
 digits :: Integral a => a -> a -> Maybe [a]
-digits base = liftM reverse . digits'
+digits base = fmap reverse . digits'
   where digits' 0 = Just []
         digits' n = let (q, r) = n `quotRem` base
                     in (r :) <$> digits' q

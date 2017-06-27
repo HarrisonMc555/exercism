@@ -1,5 +1,3 @@
-'use strict';
-
 /* Phone number for NANP number */
 const PhoneNumber = function PhoneNumber(s) {
   /* Extract the numbers */
