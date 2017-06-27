@@ -1,5 +1,3 @@
-// 'use strict';
-
 const bigInt = require('big-integer');
 
 const Grains = function Grains() {

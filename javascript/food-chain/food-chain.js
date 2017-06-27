@@ -1,5 +1,3 @@
-'use strict';
-
 const FoodChain = function FoodChain() {};
 
 /* Text for the verses

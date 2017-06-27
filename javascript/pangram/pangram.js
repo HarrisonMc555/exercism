@@ -1,5 +1,3 @@
-'use strict';
-
 const Pangram = function Pangram(input) {
   this.text = input;
 };

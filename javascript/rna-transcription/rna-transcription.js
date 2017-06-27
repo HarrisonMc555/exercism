@@ -1,5 +1,3 @@
-'use strict';
-
 const DnaTranscriber = function DnaTranscriber() {};
 
 DnaTranscriber.prototype.convertBase = function convertBase(b) {

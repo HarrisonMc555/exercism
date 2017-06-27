@@ -1,5 +1,3 @@
-'use strict';
-
 const BeerSong = function BeerSong() {};
 
 /* Use pluralize library */

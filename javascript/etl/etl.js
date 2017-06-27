@@ -1,5 +1,3 @@
-'use strict';
-
 const ETL = function ETL() {};
 
 ETL.prototype.transform = function transform(oldScores) {

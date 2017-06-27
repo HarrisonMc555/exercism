@@ -1,5 +1,3 @@
-'use strict';
-
 const Hamming = function Hamming() {};
 
 Hamming.prototype.compute = function compute(seqA, seqB) {
