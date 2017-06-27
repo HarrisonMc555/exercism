@@ -1,3 +1,5 @@
+/* eslint quotes: ["off"] */
+
 const BeerSong = function BeerSong() {};
 
 /* Use pluralize library */
