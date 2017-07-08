@@ -4,7 +4,8 @@
   "description": "Harrison McCullough's exercism JavaScript exercises",
   "main": ".eslintrc.js",
   "scripts": {
-    "test": "jasmine-node ."
+    "test": "node_modules/.bin/jasmine-node .",
+    "lint": "node_modules/.bin/eslint ."
   },
   "repository": {
     "type": "git",
@@ -27,8 +28,12 @@
     "eslint-config-airbnb": "^15.0.2",
     "eslint-plugin-import": "^2.6.1",
     "eslint-plugin-jsx-a11y": "^5.1.1",
+    "eslint-plugin-node": "^5.1.0",
     "eslint-plugin-react": "^7.1.0",
     "install-peerdeps": "^1.1.3",
     "jasmine-node": "^1.14.5"
+  },
+  "engines": {
+    "node": "=6.11.0"
   }
 }
