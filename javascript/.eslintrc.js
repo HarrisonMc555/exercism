@@ -11,7 +11,8 @@ module.exports = {
     "plugin:node/recommended",
   ],
   "rules": {
-    "linebreak-style": "off"
+    "linebreak-style": "off",
+    "no-underscore-dangle": "off"
   },
   "parserOptions": {
     "ecmaVersion": 2015
