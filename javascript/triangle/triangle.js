@@ -12,6 +12,6 @@ function Triangle(a, b, c) {
     }
     return 'scalene';
   };
-};
+}
 
 module.exports = Triangle;
