@@ -1,5 +1,3 @@
-'use strict';
-
 const SpaceAge = function SpaceAge(seconds) {
   /* secondsPerEarthYear is number of seconds in an Earth year */
   const secondsPerEarthYear = 31557600;

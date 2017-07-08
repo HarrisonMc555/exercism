@@ -1,5 +1,3 @@
-'use strict';
-
 const Bob = function Bob() {};
 
 /* Mimic default implementation of Python's strip */
@@ -18,10 +16,9 @@ Bob.prototype.hey = function hey(msg) {
   } else if (msg[msg.length - 1] === '?') {
     /* Last character is question mark */
     return 'Sure.';
-  } else {
-    /* Default */
-    return 'Whatever.';
   }
+  /* Default */
+  return 'Whatever.';
 };
 
 module.exports = Bob;

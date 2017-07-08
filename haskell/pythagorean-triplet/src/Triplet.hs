@@ -1,7 +1,7 @@
 module Triplet (isPythagorean, mkTriplet, pythagoreanTriplets) where
 
 isPythagorean :: (Int, Int, Int) -> Bool
-isPythagorean triplet = x^2 + y^2 == z^2
+isPythagorean triplet = square x + square y == square z
   where (x, y, z) = orderedTriplet triplet
 
 mkTriplet :: Int -> Int -> Int -> (Int, Int, Int)
@@ -12,7 +12,7 @@ pythagoreanTriplets minFactor maxFactor =
   [ mkTriplet a b c
   | a <- [minFactor.. maxFactor]
   , b <- [a.. maxFactor]
-  , let c = isqrt $ a^2 + b^2
+  , let c = isqrt $ square a + square b
           , c <= maxFactor
           , isPythagorean $ mkTriplet a b c
   ]
@@ -31,3 +31,6 @@ orderedPair (a, b)
 
 isqrt :: Int -> Int
 isqrt x = floor . sqrt $ (fromIntegral x :: Float)
+
+square :: Int -> Int
+square x = x ^ (2 :: Int)

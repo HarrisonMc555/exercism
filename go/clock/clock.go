@@ -17,6 +17,7 @@ func (c Clock) String() string {
 	return fmt.Sprintf("%02d:%02d", c.hour(), c.minute())
 }
 
+// Add increases the minute value stored in a Clock
 func (c Clock) Add(minute int) Clock {
 	return fromMinute(int(c) + minute)
 }

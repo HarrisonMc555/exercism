@@ -1,5 +1,3 @@
-'use strict';
-
 const Gigasecond = function Gigasecond(start) {
   this.start = start;
 };

@@ -1,5 +1,3 @@
-'use strict';
-
 const School = function School() {
   /* Initialize empty object */
   var students = {};

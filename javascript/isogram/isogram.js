@@ -1,5 +1,3 @@
-'use strict';
-
 const Isogram = function Isogram(word) {
   this.word = word;
 };

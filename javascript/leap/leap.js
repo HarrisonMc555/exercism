@@ -1,5 +1,3 @@
-'use strict';
-
 const Year = function Year(input) {
   this.year = input;
 };
