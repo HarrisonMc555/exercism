@@ -10,12 +10,12 @@ FoodChain.prototype.text = [
   ['dog', 'What a hog, to swallow a dog!\n'],
   ['goat', 'Just opened her throat and swallowed a goat!\n'],
   ['cow', 'I don\'t know how she swallowed a cow!\n'],
-  ['horse', 'She\'s dead, of course!\n']
+  ['horse', 'She\'s dead, of course!\n'],
 ];
 
 /* Return string for a particular verse */
 FoodChain.prototype.verse = function verse(n) {
-  let first = n - 1;
+  const first = n - 1;
   let result = '';
   /* Start with swallowing first animal and comment */
   result += `I know an old lady who swallowed a ${this.text[first][0]}.\n`;
@@ -23,7 +23,7 @@ FoodChain.prototype.verse = function verse(n) {
   /* If this is the last verse, skip next part */
   if (first < this.text.length - 1) {
     /* Keep swallowing other animals */
-    for (let i = first - 1; i >= 0; i--) {
+    for (let i = first - 1; i >= 0; i -= 1) {
       result += `She swallowed the ${this.text[i + 1][0]} to catch the ${this.text[i][2] || this.text[i][0]}.\n`;
     }
     /* Ending statement */
@@ -37,8 +37,8 @@ FoodChain.prototype.verse = function verse(n) {
 /* Return the string for a sequence of verses */
 FoodChain.prototype.verses = function verses(first, last) {
   let results = '';
-  for (let i = first; i <= last; i++) {
-    results += this.verse(i) + '\n';
+  for (let i = first; i <= last; i += 1) {
+    results += `${this.verse(i)}\n`;
   }
   return results;
 };

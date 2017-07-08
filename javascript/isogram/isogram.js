@@ -10,7 +10,7 @@ function hasDuplicates(array) {
 
 /* Create a regex that matches all non-letters, treating unicode characters
    correctly */
-let xRegExp = require('xregexp');
+const xRegExp = require('xregexp');
 /* Use global flag to match all */
 const allNonlettersRegexp = xRegExp('\\PL', 'g');
 

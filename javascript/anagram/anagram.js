@@ -8,7 +8,7 @@ const _ = require('underscore');
 
 /* Return an array of anagram matches */
 Anagram.prototype.matches = function matches(...rest) {
-  let first = rest[0];
+  const first = rest[0];
   let words;
   /* If the argument is an array, use as is, else spread the arguments */
   if (first.constructor === Array) {

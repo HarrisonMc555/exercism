@@ -2,11 +2,11 @@ const DnaTranscriber = function DnaTranscriber() {};
 
 DnaTranscriber.prototype.convertBase = function convertBase(b) {
   switch (b) {
-  case 'G' : return 'C';
-  case 'C' : return 'G';
-  case 'T' : return 'A';
-  case 'A' : return 'U';
-  default : throw Error('Invalid input');
+    case 'G' : return 'C';
+    case 'C' : return 'G';
+    case 'T' : return 'A';
+    case 'A' : return 'U';
+    default : throw Error('Invalid input');
   }
 };
 

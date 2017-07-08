@@ -1,9 +1,10 @@
-/* eslint quotes: ["off"] */
+/* eslint quotes: "off" */
 
 const BeerSong = function BeerSong() {};
 
 /* Use pluralize library */
-let pluralize = require('pluralize');
+const pluralize = require('pluralize');
+
 pluralize.addSingularRule(/^one$/i, 'it');
 pluralize.addPluralRule(/^one$/i, 'one');
 
@@ -39,7 +40,7 @@ BeerSong.prototype.takeOrGet = function takeOrGet(n) {
 /* Get a verse of the beer song */
 BeerSong.prototype.verse = function verse(n) {
   const first = n;
-  const second = (n - 1 + 100) % 100;
+  const second = ((n - 1) + 100) % 100;
   const firstNum = this.getNumString(first);
   const secondNum = this.getNumString(second);
   const firstBottle = this.possiblyPluralize('bottle', first);
@@ -54,7 +55,7 @@ BeerSong.prototype.verse = function verse(n) {
 BeerSong.prototype.sing = function sing(a, b) {
   let aa = a;
   const bb = b || 0;
-  let verses = [];
+  const verses = [];
   /* Loop through the verses */
   while (aa >= bb) {
     verses.push(this.verse(aa));

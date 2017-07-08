@@ -5,11 +5,11 @@ const Triangle = function Triangle(a, b, c) {
       return x - y;
     }
 
-    var sides = [a, b, c];
+    const sides = [a, b, c];
     sides.sort(sortNumber);
-    let x = sides[0];
-    let y = sides[1];
-    let z = sides[2];
+    const x = sides[0];
+    const y = sides[1];
+    const z = sides[2];
 
     return function kind() {
       if (x <= 0 || x + y <= z) {
@@ -21,7 +21,7 @@ const Triangle = function Triangle(a, b, c) {
       }
       return 'scalene';
     };
-  })();
+  }());
 };
 
 module.exports = Triangle;

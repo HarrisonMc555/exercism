@@ -6,11 +6,11 @@ const Grains = function Grains() {
   };
 
   this.total = (function createTotalFunc() {
-    let totalGrains = bigInt(2).pow(64).minus(1).toString();
+    const totalGrains = bigInt(2).pow(64).minus(1).toString();
     return function total() {
       return totalGrains;
     };
-  })();
+  }());
 };
 
 module.exports = Grains;

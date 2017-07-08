@@ -1,6 +1,6 @@
 const School = function School() {
   /* Initialize empty object */
-  var students = {};
+  const students = {};
 
   /* Add a student to a particular grade */
   this.add = function add(name, gradeNum) {
