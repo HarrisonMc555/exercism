@@ -22,4 +22,4 @@ addFactors (n, fs) p
 primes :: [Integer]
 primes = filterPrimes [2..]
   where filterPrimes (p:xs) =
-          p : [x | x <- xs, x `mod` p /= 0]
+          p : filterPrimes [x | x <- xs, x `mod` p /= 0]
