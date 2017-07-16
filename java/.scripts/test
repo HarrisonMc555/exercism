@@ -1,0 +1,11 @@
+#!/bin/bash
+
+for d in /home/harrison/exercism/java/*; do
+    (
+        cd "$d"
+        echo
+        echo "---- ${d##*/} ----"
+        gradle test
+    )
+done
+         
