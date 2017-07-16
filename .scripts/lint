@@ -1,0 +1,15 @@
+#!/bin/bash
+
+file=".scripts/lint"
+for d in /home/harrison/exercism/*; do
+    (
+        cd "$d"
+        if [[ -x "${file}" ]]; then
+            echo
+            echo "==== ${d##*/} ===="
+            "${file}"
+        elif [[ -f "${file}" ]]; then
+            echo "${d}${file} exists but is not executable"
+        fi
+    )
+done

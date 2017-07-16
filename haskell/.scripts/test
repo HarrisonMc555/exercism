@@ -1,0 +1,8 @@
+#!/bin/bash
+
+for d in /home/harrison/exercism/haskell/*; do
+    (
+        cd "$d"
+        stack test --pedantic
+    )
+done

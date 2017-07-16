@@ -1,0 +1,3 @@
+#!/bin/bash
+
+hlint /home/harrison/exercism/haskell/

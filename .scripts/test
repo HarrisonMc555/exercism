@@ -1,0 +1,14 @@
+#!/bin/bash
+
+file=".scripts/test"
+for d in /home/harrison/exercism/*; do
+    (
+        cd "$d"
+        if [[ -x "${file}" ]]; then
+            echo "==== ${d##*/} ===="
+            "${file}"
+        elif [[ -f "${file}" ]]; then
+            echo "${d}${file} exists but is not executable"
+        fi
+    )
+done
