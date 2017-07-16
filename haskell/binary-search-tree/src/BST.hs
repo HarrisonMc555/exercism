@@ -30,18 +30,17 @@ empty :: BST a
 empty = Nil
 
 fromList :: Ord a => [a] -> BST a
-fromList = foldl (flip insert) Nil
+fromList = foldl (flip insert) empty
 
 insert :: Ord a => a -> BST a -> BST a
-insert x (BST left value right) =
-  if x <= value
-  then BST (insert x left) value right
-  else BST left value (insert x right)
+insert x (BST left y right)
+  | x <= y = BST (insert x left) y right
+  | otherwise  = BST left y (insert x right)
 insert x Nil = singleton x
 
 singleton :: a -> BST a
-singleton x = BST Nil x Nil
+singleton x = BST empty x empty
 
 toList :: BST a -> [a]
-toList (BST left value right) = toList left ++ [value] ++ toList right
+toList (BST left y right) = toList left ++ [y] ++ toList right
 toList Nil = []
