@@ -9,7 +9,14 @@ boardString white black = unlines [ rowString row | row <- grid ]
           | otherwise = "_"
 
 canAttack :: (Int, Int) -> (Int, Int) -> Bool
-canAttack queenA queenB = error "You need to implement this function."
+canAttack (aX, aY) (bX, bY)
+  | aX == bX = True
+  | aY == bY = True
+  | yDiff == xDiff = True
+  | yDiff == -xDiff = True
+  | otherwise = False
+  where xDiff = bX - aX
+        yDiff = bY - aY
 
 iRows :: [Int]
 iRows = [0..7]
