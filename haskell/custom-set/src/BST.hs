@@ -4,6 +4,7 @@ module BST
     , bstRight
     , bstValue
     , empty
+    , BST.null
     , fromList
     , insert
     , singleton
@@ -47,6 +48,10 @@ bstValue Nil = Nothing
 
 empty :: BST a
 empty = Nil
+
+null :: BST a -> Bool
+null BST {} = False
+null Nil = True
 
 fromList :: Ord a => [a] -> BST a
 fromList = foldl (flip insert) empty

@@ -16,7 +16,6 @@ module CustomSet
 
 import Prelude hiding (null)
 import qualified BST
-import Data.Maybe (isNothing)
 
 newtype CustomSet a = CustomSet { getBST :: BST.BST a } deriving (Show)
 
@@ -24,7 +23,7 @@ instance Eq a => Eq (CustomSet a) where
   setA == setB = getBST setA == getBST setB
 
 instance Functor CustomSet where
-  fmap f = CustomSet . fmap f . getBST
+  fmap f = fromBST . fmap f . getBST
 
 instance Foldable CustomSet where
   foldr f b = foldr f b . getBST
@@ -49,26 +48,24 @@ insert x = fromBST . BST.insert x . getBST
 
 intersection :: Ord a => CustomSet a -> CustomSet a -> CustomSet a
 intersection setA = foldr f empty
-  where f x set = if member x setA
+  where f x set = if x `member` setA
                   then insert x set
                   else set
 
-isDisjointFrom :: Eq a => CustomSet a -> CustomSet a -> Bool
-isDisjointFrom setA setB = foldr f True setA
-  where f x b = b && not (member x setB)
+isDisjointFrom :: Ord a => CustomSet a -> CustomSet a -> Bool
+isDisjointFrom setA setB = setA `intersection` setB == empty
 
-isSubsetOf :: Eq a => CustomSet a -> CustomSet a -> Bool
-isSubsetOf setA setB = foldr f True setA
-  where f x b = b && member x setB
+isSubsetOf :: Ord a => CustomSet a -> CustomSet a -> Bool
+isSubsetOf setA setB = setA `union` setB == setB
 
 member :: Eq a => a -> CustomSet a -> Bool
 member x = BST.member x . getBST
 
 null :: CustomSet a -> Bool
-null = isNothing . BST.bstValue . getBST
+null = BST.null . getBST
 
 size :: CustomSet a -> Int
-size = sum . fmap (const 1)
+size = length
 
 toList :: CustomSet a -> [a]
 toList = BST.toList . getBST
