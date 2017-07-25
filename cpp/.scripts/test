@@ -4,9 +4,10 @@ for d in /home/harrison/exercism/cpp/*; do
     (
         cd "$d"
         echo "---- ${d##*/} ----"
-        for f in *; do
+        for f in build/*; do
             if [[ -f "$f" && -x "$f" ]]; then
                 "./$f"
+                echo
             fi
         done
     )

@@ -1,0 +1,23 @@
+#!/bin/bash
+
+usage () {
+    echo "usage: $0 <filename>"
+}
+
+name="$1"
+if [[ -z "${name}" ]]; then
+    usage
+    exit 1
+fi
+
+cpp="${name}.cpp"
+h="${name}.h"
+
+if [[ -f "${cpp}." && -f "${h}" ]]; then
+    exercism submit "${cpp}" "${h}"
+elif [[ -f "../${cpp}" && -f "../${h}" ]]; then
+    exercism submit "../${cpp}" "../${h}"
+else
+    echo "Did not find ${cpp} and ${h}"
+    exit 1
+fi
