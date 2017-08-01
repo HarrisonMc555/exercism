@@ -27,7 +27,7 @@ bool anagram::anagram::is_anagram(const string input) {
 }
 
 string anagram::anagram::get_letters(const string input) {
-    string output = boost::algorithm::to_lower_copy(output);
+    string output = boost::algorithm::to_lower_copy(input);
     sort(output.begin(), output.end());
     return output;
 }
