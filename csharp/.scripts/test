@@ -1,0 +1,8 @@
+#!/bin/bash
+
+for d in /home/harrison/exercism/csharp/*; do
+    (
+        cd "$d"
+        dotnet test
+    )
+done
