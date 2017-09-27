@@ -35,7 +35,7 @@ uBoardToBoard ub = let f = uTileToTile ub
 
 stringsToUBoard :: [String] -> UBoard
 stringsToUBoard css =
-  let utss  = stringsToUTileList css
+  let utss  = stringsToUTiles css
       nrows = length utss
       ncols = if nrows == 0
               then 0
@@ -44,8 +44,8 @@ stringsToUBoard css =
      then listArray ((1, 1), (nrows, ncols)) (concat utss)
      else error "Non-rectangular board"
 
-stringsToUTileList :: [String] -> [[UTile]]
-stringsToUTileList = map (map charToUTile)
+stringsToUTiles :: [String] -> [[UTile]]
+stringsToUTiles = map (map charToUTile)
 
 uTileToTile :: UBoard -> (Int, Int) -> UTile -> Tile
 uTileToTile _ _ UMine  = Mine
@@ -53,7 +53,7 @@ uTileToTile ub i UEmpty = Empty $ numUMinesNextTo ub i
 
 numUMinesNextTo :: UBoard -> (Int, Int) -> Int
 numUMinesNextTo  = go
-  where go ub = length . filter isUMine . map (ub !) .
+  where go ub = count isUMine . map (ub !) .
                 neighboringInBoundIndices ub
 
 isUMine :: UTile -> Bool
@@ -88,3 +88,7 @@ isRectangular :: [[a]] -> Bool
 isRectangular [] = True
 isRectangular xss = let ncols = length (head xss)
                     in all ((ncols ==) . length) xss
+
+count :: (a -> Bool) -> [a] -> Int
+count = go
+  where go f = length . filter f
