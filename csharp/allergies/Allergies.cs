@@ -40,7 +40,7 @@ public class Allergies
     private static bool IsAllergicTo(string allergy, int mask)
     {
         int allergyScore = AllergyDict[allergy];
-        int scoreTest = mask / allergyScore & 1;
-        return scoreTest == 1;
+        int scoreTest = mask & allergyScore;
+        return scoreTest != 0;
     }
 }
