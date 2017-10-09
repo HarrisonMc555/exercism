@@ -1,12 +1,12 @@
 module Diamond (diamond) where
 
 diamond :: Char -> [String]
-diamond c = let cs = ['A'..c]
-                n = length cs
-                topLines = zipWith (diamondLine (n-1)) [n-1,n-2..0] cs
-                bottomLines = drop 1 $ reverse topLines
+diamond c= let cs          = ['A'..c]
+               totalSpaces = length cs - 1
+               leftSpaces  = [totalSpaces,totalSpaces-1..]
+               topLines    = zipWith (diamondLine totalSpaces) leftSpaces cs
+               bottomLines = drop 1 $ reverse topLines
             in topLines ++ bottomLines
-
 
 diamondLine :: Int -> Int -> Char -> String
 diamondLine numTotalSpaces numLeftSpaces c = left ++ right
