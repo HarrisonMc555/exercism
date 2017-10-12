@@ -3,3 +3,8 @@
 *.hi
 *.o
 dist/
+
+# For hasktags
+tags
+TAGS
+tmp
