@@ -1,11 +1,12 @@
 // https://stackoverflow.com/a/12287599/7343786
 function getPrimes(max) {
-  var sieve = [], i, j, primes = [];
-  for (i = 2; i <= max; ++i) {
+  const sieve = [];
+  const primes = [];
+  for (let i = 2; i <= max; i += 1) {
     if (!sieve[i]) {
       // i has not been marked -- it is prime
       primes.push(i);
-      for (j = i << 1; j <= max; j += i) {
+      for (let j = i * 2; j <= max; j += i) {
         sieve[j] = true;
       }
     }
@@ -14,32 +15,32 @@ function getPrimes(max) {
 }
 
 function isDivisibleBy(n, divisor) {
-  return n % divisor == 0;
+  return n % divisor === 0;
 }
 
 function getPrimeFactors(n) {
   const largestFactor = Math.floor(Math.sqrt(n));
   const primes = getPrimes(largestFactor);
-  let factors = [];
-  let i = 0;
+  const factors = [];
+  let currentNumber = n;
   for (let i = 0; i < primes.length; i += 1) {
     const prime = primes[i];
-    while (isDivisibleBy(n, prime)) {
+    while (isDivisibleBy(currentNumber, prime)) {
       factors.push(prime);
-      n /= prime;
+      currentNumber /= prime;
     }
-    if (n == 1) {
+    if (currentNumber === 1) {
       break;
     }
   }
-  if (n != 1) {
-    factors.push(n);
+  if (currentNumber !== 1) {
+    factors.push(currentNumber);
   }
   return factors;
 }
 
 const primeFactors = {
-  "for": getPrimeFactors
+  for: getPrimeFactors,
 };
 
 // For some reason this doesn't work
