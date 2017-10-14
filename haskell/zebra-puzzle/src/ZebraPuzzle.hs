@@ -1,12 +1,9 @@
-{-# LANGUAGE ExistentialQuantification, MultiParamTypeClasses #-}
 module ZebraPuzzle (Resident(..), Solution(..), solve) where
 
-import Control.Applicative ((<|>))
-import Data.Maybe (isJust)
-import qualified Data.Set as Set
 import Data.Foldable (find)
 import Data.Maybe (fromJust)
-import Data.List (intercalate)
+import Data.List (nub)
+import Control.Monad (guard)
 
 data Solution = Solution { waterDrinker :: Resident
                          , zebraOwner :: Resident
@@ -30,178 +27,98 @@ data Pet = Dog | Snails | Fox | Horse | Zebra
 data Location = First | Second | Third | Fourth | Fifth
   deriving (Eq, Enum, Bounded, Show)
 
-data Fact = Fact { resident :: Maybe Resident
-                 , color    :: Maybe Color
-                 , drink    :: Maybe Drink
-                 , smoke    :: Maybe Smoke
-                 , pet      :: Maybe Pet
-                 , location :: Maybe Location
-                 } deriving (Eq)
-instance Show Fact where
-  show (Fact r c d s p l) = "{" ++ intercalate ", " (map showMaybe xs) ++ "}"
-    where xs = [SB <$> r, SB <$> c, SB <$> d, SB <$> s, SB <$> p, SB <$> l]
-
-data ShowBox = forall s . Show s => SB s
-instance Show ShowBox where
-  show (SB s) = show s
-
-class FactItem fi where
-  singleItem :: fi -> Fact
-  
-instance FactItem Resident where
-  singleItem r = emptyFact { resident = Just r }
-instance FactItem Color where
-  singleItem c = emptyFact { color = Just c }
-instance FactItem Drink where
-  singleItem d = emptyFact { drink = Just d }
-instance FactItem Smoke where
-  singleItem s = emptyFact { smoke = Just s }
-instance FactItem Pet where
-  singleItem p = emptyFact { pet = Just p }
-instance FactItem Location where
-  singleItem l = emptyFact { location = Just l }
-
-type Rule = [Fact] -> Maybe Fact
-
-showMaybe :: Show s => Maybe s -> String
-showMaybe = maybe "?" show
+data House = House { resident :: Resident
+                 , color    :: Color
+                 , drink    :: Drink
+                 , smoke    :: Smoke
+                 , pet      :: Pet
+                 , location :: Location
+                 } deriving (Eq, Show)
 
 solve :: Solution
-solve = error "You need to implement this function."
+solve = Solution { waterDrinker = waterDrinker'
+                 , zebraOwner   = zebraOwner'
+                 }
+  where waterDrinker' = residentWith drink Water
+        zebraOwner'   = residentWith pet Zebra
+        residentWith what value = resident $ houseWith what value solution
 
-emptyFact :: Fact
-emptyFact = Fact Nothing Nothing Nothing Nothing Nothing Nothing
+solution :: [House]
+solution = head $ do
+  first <- housesAt First
+  second <- housesAt Second
+  guard $ uniqueHouses [first, second]
+  third <- housesAt Third
+  guard $ uniqueHouses [first, second, third]
+  fourth <- housesAt Fourth
+  guard $ uniqueHouses [first, second, third, fourth]
+  fifth <- housesAt Fifth
+  let fiveHouses = [first, second, third, fourth, fifth]
+  guard $ uniqueHouses fiveHouses
+  guard $ isValidLocations fiveHouses
+  return fiveHouses
+  where housesAt location' = filter ((location' ==) . location) validHouses
 
-facts :: [Fact]
-facts = [ emptyFact { resident = Just Englishman
-                    , color    = Just Red
-                    }
-        , emptyFact { resident = Just Spaniard
-                    , pet      = Just Dog
-                    }
-        , emptyFact { drink    = Just Coffee
-                    , color    = Just Green
-                    }
-        , emptyFact { resident = Just Ukrainian
-                    , drink    = Just Tea
-                    }
-        , emptyFact { smoke    = Just OldGold
-                    , pet      = Just Snails
-                    }
-        , emptyFact { smoke    = Just Kools
-                    , color    = Just Yellow
-                    }
-        , emptyFact { drink    = Just Milk
-                    , location = Just Third
-                    }
-        , emptyFact { resident = Just Norwegian
-                    , location = Just First
-                    }
-        , emptyFact { smoke    = Just LuckyStrike
-                    , drink    = Just OrangeJuice
-                    }
-        , emptyFact { resident = Just Japanese
-                    , smoke    = Just Parliaments
-                    }
-        ]
+isValidHouse :: House -> Bool
+isValidHouse (House resident' color' drink' smoke' pet' location') =
+  all (uncurry iff) [ (resident' == Englishman, color' == Red)
+                    , (resident' == Spaniard, pet' == Dog)
+                    , (drink' == Coffee, color' == Green)
+                    , (resident' == Ukrainian, drink' == Tea)
+                    , (smoke' == OldGold, pet' == Snails)
+                    , (smoke' == Kools, color' == Yellow)
+                    , (drink' == Milk, location' == Third)
+                    , (resident' == Norwegian, location' == First)
+                    , (smoke' == LuckyStrike, drink' == OrangeJuice)
+                    , (resident' == Japanese, smoke' == Parliaments)
+                    ]
 
-conflict :: (Eq a) => Maybe a -> Maybe a -> Bool
-conflict x y = (x <|> y) /= (y <|> x)
+isValidLocations :: [House] -> Bool
+isValidLocations houses =
+  and [ houseWith' color Green `toTheRightOf` houseWith' color Ivory
+      , houseWith' smoke Chesterfields `isNextTo` houseWith' pet Fox
+      , houseWith' smoke Kools `isNextTo` houseWith' pet Horse
+      , houseWith' resident Norwegian `isNextTo` houseWith' color Blue
+      ]
+  where h1 `toTheRightOf` h2 = indexOf h1 == indexOf h2 - 1
+        h1 `isNextTo` h2 = abs (indexOf h1 - indexOf h2) == 1
+        houseWith' what value = houseWith what value houses
+        indexOf h = fromEnum $ location h
 
-common :: (Eq a) => Maybe a -> Maybe a -> Bool
-common x y = x == y && isJust x
+uniqueHouses :: [House] -> Bool
+uniqueHouses houses =
+  unique' resident && unique' color && unique' drink &&
+  unique' smoke && unique' pet -- && unique' location
+  where unique' f = uniqueWith f houses
 
-compatible :: Fact -> Fact -> Bool
-compatible = go
-  where go fA fB = not $ factConflict fA fB
+validHouses :: [House]
+validHouses = filter isValidHouse allHouses
 
-factConflict :: Fact -> Fact -> Bool
-factConflict fA@(Fact rA cA dA sA pA lA) fB@(Fact rB cB dB sB pB lB)
-  = conflict rA rB ||
-    conflict cA cB ||
-    conflict dA dB ||
-    conflict sA sB ||
-    conflict pA pB ||
-    conflict lA lB
+allHouses :: [House]
+allHouses = do
+  resident' <- enumAll
+  color'    <- enumAll
+  drink'    <- enumAll
+  smoke'    <- enumAll
+  pet'      <- enumAll
+  location' <- enumAll
+  return $ House resident' color' drink' smoke' pet' location'
 
-factCompatible :: Fact -> Fact -> Bool
-factCompatible = go
-  where go f1 f2 = not $ factConflict f1 f2
+houseWith :: Eq a => (House -> a) -> a -> [House] -> House
+houseWith what value = fromJust . find ((== value) . what)
 
-factCommon :: Fact -> Fact -> Bool
-factCommon fA@(Fact rA cA dA sA pA lA) fB@(Fact rB cB dB sB pB lB)
-  = common rA rB ||
-    common cA cB ||
-    common dA dB ||
-    common sA sB ||
-    common pA pB ||
-    common lA lB
+-- Helper Functions
 
+enumAll :: (Enum a, Bounded a) => [a]
+enumAll = [minBound..maxBound]
 
-combine :: Fact -> Fact -> Either (Fact, Fact) Fact
-combine f1@(Fact r1 c1 d1 s1 p1 l1) f2@(Fact r2 c2 d2 s2 p2 l2)
-  = if factCommon f1 f2 && not (factConflict f1 f2)
-    then Right $ Fact (r1 <|> r2) (c1 <|> c2) (d1 <|> d2)
-         (s1 <|> s2) (p1 <|> p2) (l1 <|> l2)
-    else Left (f1, f2)
+iff :: Bool -> Bool -> Bool
+iff True  True  = True
+iff False False = True
+iff _     _     = False
 
--- nubOrd :: (Ord a) => [a] -> [a]
--- nubOrd xs = go Set.empty xs where
---   go s (x:xs')
---     | x `Set.member` s = go s xs'
---     | otherwise        = x : go (Set.insert x s) xs'
---   go _ _               = []
+uniqueWith :: (Eq b) => (a -> b) -> [a] -> Bool
+uniqueWith f = unique . map f
 
--- isAll :: (Enum a, Bounded a, Eq a) => [a] -> Bool
--- isAll xs = all (`elem` xs) [minBound.. maxBound]
-
--- The green house is immediately to the right of the ivory house.
-greenIvoryRule :: Foldable t => t Fact -> Maybe Fact
-greenIvoryRule fs = let f = find (\f -> color f == Just Ivory) fs
-                        l = succ . fromJust . location <$> f
-                        addLocation f' l' = f' { location = Just l' }
-                    in addLocation emptyFact { color = Just Green } <$> l
-
--- The man who smokes Chesterfields lives in the house next to the man with the
--- fox.
-chesterfieldsRule :: Foldable t => t Fact -> Maybe Fact
-chesterfieldsRule fs =
-  let f = find (\f -> pet f == Just Fox) fs
-      ll = pred . fromJust . location <$> f
-      lr = succ . fromJust . location <$> f
-      fl = case ll of
-        Just ll' -> find (\f -> location f == Just ll') fs
-        Nothing -> Nothing
-      fr = case lr of
-        Just lr' -> find (\f -> location f == Just lr') fs
-        Nothing -> Nothing
-      addLocation f' l' = f' { location = Just l' }
-  in case (fl, fr) of
-       (Nothing, Nothing) -> Nothing
-       (Just _ , Nothing) ->
-         addLocation emptyFact { smoke = Just Chesterfields } <$> lr
-       (Nothing, Just _)  ->
-         addLocation emptyFact { smoke = Just Chesterfields } <$> ll
-       (Just _ , Just _)  -> error "Rule can't be satisfied"
-
-nextToRule :: (FactItem fi1, FactItem fi2, Foldable t) =>
-  fi1 ->     -- This item is next to...
-  fi2 ->     -- ...this item
-  t Fact ->  -- List of facts so far
-  Maybe Fact -- Result (Nothing if can't determine anything)
-nextToRule i1 i2 fs = let f = findFactItem i2 fs
-                          
-  in Nothing
-
-findFactItem :: (Foldable t, FactItem fi) => fi -> t Fact -> Maybe Fact
-findFactItem fi = find (factCommon (singleItem fi))
-  
-  
-
-safeSucc, safePred :: (Enum a, Bounded a, Eq a) => a -> Maybe a
-safeSucc a
-  | a == minBound = Nothing
-  | otherwise     = Just (succ a)
-safePred a
-  | a == maxBound = Nothing
-  | otherwise     = Just (pred a)
+unique :: (Eq a) => [a] -> Bool
+unique xs = length xs == (length . nub) xs
