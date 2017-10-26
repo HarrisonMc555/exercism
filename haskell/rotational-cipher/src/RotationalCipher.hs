@@ -1,21 +1,35 @@
 module RotationalCipher (rotate) where
 
-import Data.Char (ord, chr, isLetter)
+import Data.Char (ord, chr, isUpper, isLower, isLetter)
 
 rotate :: Int -> String -> String
 rotate i = map (rotateChar i)
 
 rotateChar :: Int -> Char -> Char
 rotateChar i c
-  | not (isLetter c) = error "non-letter in rotateChar"
-  | otherwise        = i2c . (+ i) . c2i $ c
+  | isLetter c = i2c' . (+ i) . c2i' $ c
+  | otherwise  = c
+    where (i2c', c2i') = if isUpper c
+                         then (i2cUpper, c2iUpper)
+                         else (i2cLower, c2iLower)
 
-c2i :: Char -> Int
-c2i c = (ord c - aOrd) `mod` maxOrd
+c2iUpper, c2iLower :: Char -> Int
+c2iUpper = c2i aOrdUpper
+c2iLower = c2i aOrdLower
 
-i2c :: Int -> Char
-i2c i = chr ((i `mod` maxOrd) + aOrd)
+c2i :: Int -> Char -> Int
+c2i aOrd c = (ord c - aOrd) `mod` maxIndex
 
-aOrd, maxOrd :: Int
-aOrd = ord 'a'
-maxOrd = 26
+i2cUpper, i2cLower :: Int -> Char
+i2cUpper = i2c aOrdUpper
+i2cLower = i2c aOrdLower
+
+i2c :: Int -> Int -> Char
+i2c aOrd i = chr ((i `mod` maxIndex) + aOrd)
+
+aOrdUpper, aOrdLower :: Int
+aOrdLower = ord 'a'
+aOrdUpper = ord 'A'
+
+maxIndex :: Int
+maxIndex = 26
