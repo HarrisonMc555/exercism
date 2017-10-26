@@ -1,15 +1,15 @@
 module RotationalCipher (rotate) where
 
-import Data.Char (ord, chr, isUpper, isLetter)
+import Data.Char (ord, chr, isAsciiUpper, isAscii)
 
 rotate :: Int -> String -> String
 rotate i = map (rotateChar i)
 
 rotateChar :: Int -> Char -> Char
 rotateChar i c
-  | isLetter c = i2c' . (+ i) . c2i' $ c
-  | otherwise  = c
-    where (i2c', c2i') = if isUpper c
+  | isAscii c = i2c' . (+ i) . c2i' $ c
+  | otherwise = c
+    where (i2c', c2i') = if isAsciiUpper c
                          then (i2cUpper, c2iUpper)
                          else (i2cLower, c2iLower)
 
