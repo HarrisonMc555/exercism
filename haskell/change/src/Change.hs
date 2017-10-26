@@ -9,10 +9,8 @@ type Solution = Maybe [Integer]
 findFewestCoins :: Integer -> [Integer] -> Solution
 findFewestCoins target coins
   | target < 0 = Nothing
-  | otherwise  = last solutionsThroughTarget
-  where solutionsThroughTarget =
-          scanIterate nextSolution' base `genericIndex` target
-        nextSolution' = nextSolution coins
+  | otherwise  = dynamicProgram nextSolution' base target
+  where nextSolution' = nextSolution coins
         base = Just []
 
 nextSolution :: [Integer] -> [Solution] -> Solution
@@ -22,6 +20,15 @@ nextSolution coins prevSolutions =
 
 maybeIndex :: Integral i => [a] -> i -> Maybe a
 maybeIndex as i = listToMaybe $ genericDrop i as
+
+-- Implement dynamic programming
+dynamicProgram :: Integral i =>
+  ([a] -> a) -> -- A dynamic function, one that uses previous results to
+                -- construct the next result
+  a ->          -- Base case
+  i ->          -- The index of the final solution
+  a             -- The final solution
+dynamicProgram f base index = last $ scanIterate f base `genericIndex` index
 
 scanIterate :: ([a] -> a) -> a -> [[a]]
 scanIterate f base = map reverse $ iterate g [base]
