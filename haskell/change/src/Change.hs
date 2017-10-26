@@ -1,8 +1,12 @@
 module Change (findFewestCoins) where
 
-import Data.List (genericIndex, sortOn, genericIndex, genericDrop)
 import Data.Maybe (mapMaybe, listToMaybe)
 import Control.Monad (join)
+import Data.List (genericIndex, sortOn, genericIndex, genericDrop
+                 -- Only used in "cool but unused functions"
+                 , minimumBy, maximumBy)
+-- Only used in "cool but unused functions"
+import Data.Ord (comparing)
 
 type Solution = Maybe [Integer]
 
@@ -34,9 +38,12 @@ scanIterate :: ([a] -> a) -> a -> [[a]]
 scanIterate f base = map reverse $ iterate g [base]
   where g xs = f xs:xs
 
-
 ----------------------------------------
 -- Unused but cool code
+
+_minimumOn, _maximumOn :: Ord b => (a -> b) -> [a] -> a
+_minimumOn f = minimumBy (comparing f)
+_maximumOn f = maximumBy (comparing f)
 
 _dynamicFoldl :: ([b] -> a -> b) -> b -> [a] -> b
 _dynamicFoldl = go
