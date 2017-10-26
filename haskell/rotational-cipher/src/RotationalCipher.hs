@@ -1,6 +1,6 @@
 module RotationalCipher (rotate) where
 
-import Data.Char (ord, chr, isUpper, isLower, isLetter)
+import Data.Char (ord, chr, isUpper, isLetter)
 
 rotate :: Int -> String -> String
 rotate i = map (rotateChar i)
@@ -25,7 +25,7 @@ i2cUpper = i2c aOrdUpper
 i2cLower = i2c aOrdLower
 
 i2c :: Int -> Int -> Char
-i2c aOrd i = chr ((i `mod` maxIndex) + aOrd)
+i2c aOrd i = chr $ i `mod` maxIndex + aOrd
 
 aOrdUpper, aOrdLower :: Int
 aOrdLower = ord 'a'
