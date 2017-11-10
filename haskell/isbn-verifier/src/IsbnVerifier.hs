@@ -1,14 +1,17 @@
 module IsbnVerifier (isbn) where
 
+import Data.Maybe (fromMaybe)
 import Data.Char (isDigit, digitToInt, toUpper)
 
 isbn :: String -> Bool
 isbn cs =
-  let leading     = init cs
-      check       = last cs
-      leadingNums = traverse isbnLeadingCharToNum cs
-      checkNum    = isbnCheckCharToNum check
-      
+  let cs'     = filterNonNumbers cs
+      leading = init cs'
+      check   = last cs'
+      isValid = do leadingNums <- traverse isbnLeadingCharToNum leading
+                   checkNum    <- isbnCheckCharToNum check
+                   return $ isValidIsbnNums leadingNums checkNum
+  in fromMaybe False isValid
 
 isbnLeadingCharToNum :: Char -> Maybe Int
 isbnLeadingCharToNum c
@@ -27,8 +30,12 @@ isValidIsbnNums ::
   Int ->   -- Check num
   Bool
 isValidIsbnNums leading check =
-  let nums = leading ++ [check]
+  let nums     = leading ++ [check]
       products = zipWith (*) nums [10, 9..]
-      sum' = sum products
-      result = sum' `mod`11
+      sum'     = sum products
+      result   = sum' `mod` 11
   in result == 0
+
+filterNonNumbers :: String -> String
+filterNonNumbers = filter isValidIsbnDigit
+  where isValidIsbnDigit c = isDigit c || c == 'X'
