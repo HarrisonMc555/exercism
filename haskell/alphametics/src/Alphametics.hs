@@ -1,15 +1,27 @@
 module Alphametics (solve) where
 
 import qualified Calculator as Calc
-import Data.Maybe (catMaybes, fromMaybe)
-import Data.List (sort, nub)
-import Data.Map (Map)
+import qualified Data.Set as Set
+import Data.Set (Set)
 import qualified Data.Map as Map
+import Data.Map (Map)
+import Data.List (sort, nub)
+import Data.Maybe (catMaybes, fromMaybe)
+import Data.Char (isAlpha)
 
 data Associativity = LeftAssoc | NonAssoc | RightAssoc
 
 solve :: String -> Maybe [(Char, Int)]
 solve puzzle = error "You need to implement this function."
+
+allLetters :: String -> String
+allLetters = uniq . filter isAlpha
+
+-- Work here!
+-- allPossibilities :: String -> [Map Char Int]
+-- allPossibilities = let (_, _, l) = foldr f (Map.empty, Set.empty)
+--                    in l
+--   where f (m, s, l) c = 
 
 isSolution :: String -> Map Char Int -> Bool
 isSolution s m = let ws = words s
