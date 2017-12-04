@@ -8,6 +8,8 @@ library:
   exposed-modules: Alphametics
   source-dirs: src
   dependencies:
+    - containers
+    - parsec
   # - foo       # List here the packages you
   # - bar       # want to use in your solution.
 
