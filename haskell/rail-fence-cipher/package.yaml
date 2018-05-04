@@ -1,15 +1,13 @@
-name: alphametics
-version: 1.0.0.3
+name: rail-fence-cipher
+version: 1.1.0.1
 
 dependencies:
   - base
 
 library:
-  exposed-modules: Alphametics
+  exposed-modules: RailFenceCipher
   source-dirs: src
   dependencies:
-    - containers
-    - parsec
   # - foo       # List here the packages you
   # - bar       # want to use in your solution.
 
@@ -18,5 +16,5 @@ tests:
     main: Tests.hs
     source-dirs: test
     dependencies:
-      - alphametics
+      - rail-fence-cipher
       - hspec

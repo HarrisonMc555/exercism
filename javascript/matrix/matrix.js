@@ -14,7 +14,6 @@ function extractArray(str) {
 }
 
 function Matrix(str) {
-  this.str = str;
   const arr = extractArray(str);
   this.rows = extractRows(arr);
   this.columns = extractColumns(arr);
