@@ -1,20 +1,19 @@
 # Create responses from a lackadaisical teenager
 class Bob
+  YELLING_QUESTION_RESPONSE = "Calm down, I know what I'm doing!".freeze
+  YELLING_RESPONSE = 'Whoa, chill out!'.freeze
+  QUESTION_RESPONSE = 'Sure.'.freeze
+  NOTHING_RESPONSE = 'Fine. Be that way!'.freeze
+  OTHER_RESPONSE = 'Whatever.'.freeze
   def self.hey(remark)
     yelling = yelling? remark
     question = question? remark
     nothing = nothing? remark
-    if yelling and question
-      "Calm down, I know what I'm doing!"
-    elsif yelling
-      'Whoa, chill out!'
-    elsif question
-      'Sure.'
-    elsif nothing
-      'Fine. Be that way!'
-    else
-      'Whatever.'
-    end
+    return YELLING_QUESTION_RESPONSE if yelling && question
+    return YELLING_RESPONSE if yelling
+    return QUESTION_RESPONSE if question
+    return NOTHING_RESPONSE if nothing
+    OTHER_RESPONSE
   end
 
   private_class_method def self.question?(remark)
