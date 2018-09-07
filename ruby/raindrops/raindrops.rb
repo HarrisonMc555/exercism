@@ -1,3 +1,4 @@
+# Create raindrop sounds for a number based on divisors
 class Raindrops
   def self.convert(num)
     s = ''
@@ -7,7 +8,7 @@ class Raindrops
     s = num.to_s if s.empty?
     s
   end
-  
+
   def self.divisible?(num, div)
     (num % div).zero?
   end

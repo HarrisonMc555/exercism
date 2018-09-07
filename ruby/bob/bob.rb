@@ -4,17 +4,11 @@ class Bob
     yelling = yelling? remark
     question = question? remark
     nothing = nothing? remark
-    if yelling and question
-      "Calm down, I know what I'm doing!"
-    elsif yelling
-      'Whoa, chill out!'
-    elsif question
-      'Sure.'
-    elsif nothing
-      'Fine. Be that way!'
-    else
-      'Whatever.'
-    end
+    return "Calm down, I know what I'm doing!" if yelling && question
+    return 'Whoa, chill out!' if yelling
+    return 'Sure.' if question
+    return 'Fine. Be that way!' if nothing
+    'Whatever.'
   end
 
   private_class_method def self.question?(remark)
