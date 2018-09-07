@@ -3,7 +3,7 @@ use std::cmp::Ordering;
 const TARGET: u32 = 1000;
 const MAX_VALUE: u32 = TARGET;
 
-pub fn get_c_value(a: u32, b: u32) -> Option<u32> {
+fn get_c_value(a: u32, b: u32) -> Option<u32> {
     // Calculate powers
     let a_2 = a.pow(2);
     let b_2 = b.pow(2);
