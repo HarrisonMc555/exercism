@@ -25,16 +25,17 @@ fn message_type(message: &str) -> MessageType {
     // }
     match (yelling, question, nothing) {
         (true, true, _) => MessageType::YellingQuestion,
-        (true, _, _)    => MessageType::Yelling,
-        (_, true, _)    => MessageType::Question,
-        (_, _, true)    => MessageType::Nothing,
-        _               => MessageType::Other,
+        (true, _, _) => MessageType::Yelling,
+        (_, true, _) => MessageType::Question,
+        (_, _, true) => MessageType::Nothing,
+        _ => MessageType::Other,
     }
 }
 
 fn is_yelling(message: &str) -> bool {
-    message.chars().any(char::is_uppercase)
-        && !message.chars().any(char::is_lowercase)
+    let has_uppercase = message.chars().any(char::is_uppercase);
+    let has_lowercase = message.chars().any(char::is_lowercase);
+    has_uppercase && !has_lowercase
 }
 
 fn is_question(message: &str) -> bool {
