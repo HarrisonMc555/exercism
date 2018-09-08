@@ -1,21 +1,13 @@
 pub fn raindrops(n: u32) -> String {
-    let sounds = RAINDROP_FACTOR_SOUNDS
+    let sounds: Vec<&str> = RAINDROP_FACTOR_SOUNDS
         .iter()
-        .fold(Vec::new(), |mut sounds, factor_sound| {
-            add_sound(&mut sounds, n, factor_sound);
-            sounds
-        });
+        .filter(|&&(factor, _)| is_factor(n, factor))
+        .map(|&(_, sound)| sound)
+        .collect();
     if sounds.is_empty() {
         n.to_string()
     } else {
         sounds.join("")
-    }
-}
-
-fn add_sound(sounds: &mut Vec<String>, number: u32, factor_sound: &(u32, &'static str)) {
-    let (factor, sound) = factor_sound;
-    if is_factor(number, *factor) {
-        sounds.push(sound.to_string());
     }
 }
 
