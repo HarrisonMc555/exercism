@@ -1,5 +1,5 @@
 name: alphametics
-version: 1.0.0.3
+version: 1.2.0.4
 
 dependencies:
   - base
@@ -7,9 +7,7 @@ dependencies:
 library:
   exposed-modules: Alphametics
   source-dirs: src
-  dependencies:
-    - containers
-    - parsec
+  # dependencies:
   # - foo       # List here the packages you
   # - bar       # want to use in your solution.
 
