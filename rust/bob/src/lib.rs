@@ -39,7 +39,7 @@ fn is_yelling(message: &str) -> bool {
 }
 
 fn is_question(message: &str) -> bool {
-    message.trim().ends_with("?")
+    message.trim().ends_with('?')
 }
 
 fn is_nothing(message: &str) -> bool {

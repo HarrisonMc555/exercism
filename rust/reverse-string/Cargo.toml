@@ -3,7 +3,7 @@ name = "reverse_string"
 version = "1.0.0"
 
 [features]
-grapheme = ["unicode-segmentation"]
+grapheme = []
 
 [dependencies]
-unicode-segmentation = { version="*", optional = true }
+unicode-segmentation = { version="*" }

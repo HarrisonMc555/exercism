@@ -11,7 +11,7 @@ pub fn raindrops(n: u32) -> String {
     }
 }
 
-const RAINDROP_FACTOR_SOUNDS: [(u32, &'static str); 3] = [(3, "Pling"), (5, "Plang"), (7, "Plong")];
+const RAINDROP_FACTOR_SOUNDS: [(u32, &str); 3] = [(3, "Pling"), (5, "Plang"), (7, "Plong")];
 
 fn is_factor(number: u32, factor: u32) -> bool {
     number % factor == 0

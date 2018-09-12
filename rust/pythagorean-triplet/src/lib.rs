@@ -10,7 +10,7 @@ fn get_c_value(a: u32, b: u32) -> Option<u32> {
     let c_2 = a_2 + b_2;
 
     // Calculate and c value
-    let c = (c_2 as f64).sqrt() as u32;
+    let c = f64::from(c_2).sqrt() as u32;
     let c_2_check = c.pow(2);
 
     // Check if it c is the true square root of a^2 + b^2

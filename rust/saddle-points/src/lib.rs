@@ -28,8 +28,8 @@ fn greater_than_row(val: u64, row_index: usize, arr: &[Vec<u64>]) -> bool {
 }
 
 fn less_than_col(val: u64, col_index: usize, arr: &[Vec<u64>]) -> bool {
-    for row_index in 0..arr.len() {
-        let other = arr[row_index][col_index];
+    for row in arr.iter() {
+        let other = row[col_index];
         if other < val {
             return false;
         }
