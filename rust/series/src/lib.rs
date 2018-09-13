@@ -1,10 +1,10 @@
 pub fn series(digits: &str, len: usize) -> Vec<String> {
-    let char_vector = digits.chars().collect();
-    let char_windows = windows(char_vector, len);
+    let char_vector: Vec<char> = digits.chars().collect();
+    let char_windows = windows(&char_vector, len);
     char_windows.into_iter().map(|vec| join(&vec)).collect()
 }
 
-fn windows<T>(vec: Vec<T>, len: usize) -> Vec<Vec<T>>
+fn windows<T>(vec: &[T], len: usize) -> Vec<Vec<T>>
     where  T: Clone,
 {
     if len > vec.len() {
@@ -14,12 +14,12 @@ fn windows<T>(vec: Vec<T>, len: usize) -> Vec<Vec<T>>
     (0..num_windows).map(|i| get_window(&vec, len, i)).collect()
 }
 
-fn get_window<T>(vec: &Vec<T>, len: usize, index: usize) -> Vec<T>
+fn get_window<T>(vec: &[T], len: usize, index: usize) -> Vec<T>
     where T: Clone,
 {
     vec[index..index + len].to_vec()
 }
 
-fn join(vec: &Vec<char>) -> String {
+fn join(vec: &[char]) -> String {
     vec.into_iter().collect()
 }
