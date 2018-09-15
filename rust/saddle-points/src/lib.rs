@@ -14,8 +14,7 @@ pub fn find_saddle_points(input: &[Vec<u64>]) -> Vec<(usize, usize)> {
 fn is_saddle_point(indices: (usize, usize), arr: &[Vec<u64>]) -> bool {
     let (row_index, col_index) = indices;
     let val = arr[row_index][col_index];
-    greater_than_row(val, row_index, arr)
-        && less_than_col(val, col_index, arr)
+    greater_than_row(val, row_index, arr) && less_than_col(val, col_index, arr)
 }
 
 fn greater_than_row(val: u64, row_index: usize, arr: &[Vec<u64>]) -> bool {
