@@ -1,6 +1,5 @@
 pub fn find_saddle_points(input: &[Vec<u64>]) -> Vec<(usize, usize)> {
     let mut saddle_points = Vec::new();
-    // for row_index in 0..input.len() {
     for (row_index, row) in input.iter().enumerate() {
         for (col_index, _) in row.iter().enumerate() {
             let indices = (row_index, col_index);
