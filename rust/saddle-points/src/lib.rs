@@ -1,7 +1,8 @@
 pub fn find_saddle_points(input: &[Vec<u64>]) -> Vec<(usize, usize)> {
     let mut saddle_points = Vec::new();
-    for row_index in 0..input.len() {
-        for col_index in 0..input[row_index].len() {
+    // for row_index in 0..input.len() {
+    for (row_index, row) in input.iter().enumerate() {
+        for (col_index, _) in row.iter().enumerate() {
             let indices = (row_index, col_index);
             if is_saddle_point(indices, input) {
                 saddle_points.push(indices);
@@ -18,20 +19,9 @@ fn is_saddle_point(indices: (usize, usize), arr: &[Vec<u64>]) -> bool {
 }
 
 fn greater_than_row(val: u64, row_index: usize, arr: &[Vec<u64>]) -> bool {
-    for &other in arr[row_index].iter() {
-        if other > val {
-            return false;
-        }
-    }
-    true
+    arr[row_index].iter().all(|e| *e <= val)
 }
 
 fn less_than_col(val: u64, col_index: usize, arr: &[Vec<u64>]) -> bool {
-    for row in arr.iter() {
-        let other = row[col_index];
-        if other < val {
-            return false;
-        }
-    }
-    true
+    arr.iter().map(|row| row[col_index]).all(|e| e >= val)
 }
