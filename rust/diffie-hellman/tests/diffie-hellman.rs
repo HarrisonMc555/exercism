@@ -15,7 +15,6 @@ fn test_private_key_in_range_key() {
 }
 
 #[test]
-#[ignore]
 fn test_public_key_correct() {
     let p: u64 = 23;
     let g: u64 = 5;
@@ -27,7 +26,6 @@ fn test_public_key_correct() {
 }
 
 #[test]
-#[ignore]
 fn test_secret_key_correct() {
     let p: u64 = 11;
 
@@ -40,7 +38,6 @@ fn test_secret_key_correct() {
 }
 
 #[test]
-#[ignore]
 fn test_public_key_correct_big_numbers() {
     let p: u64 = 4_294_967_299;
 
@@ -54,7 +51,6 @@ fn test_public_key_correct_big_numbers() {
 }
 
 #[test]
-#[ignore]
 fn test_secret_key_correct_big_numbers() {
     let p: u64 = 4_294_967_927;
 
@@ -70,7 +66,6 @@ fn test_secret_key_correct_big_numbers() {
 }
 
 #[test]
-#[ignore]
 fn test_changed_secret_key() {
     let p: u64 = 13;
     let g: u64 = 11;
