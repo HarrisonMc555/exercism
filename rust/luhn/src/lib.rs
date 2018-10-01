@@ -2,7 +2,7 @@
 extern crate num_integer;
 
 use num_integer::Integer;
-use std::cmp::Ordering;
+// use std::cmp::Ordering;
 
 const RADIX: u32 = 10;
 const LUHN_DIVISOR: u32 = 10;
@@ -15,15 +15,18 @@ pub fn is_valid(code: &str) -> bool {
     }
     let digits = to_digits(&code);
     let second_digits_doubled = double_every_second_num_from_right(&digits);
+    // let sum: u32 = second_digits_doubled.iter().sum();
     let sum: u32 = second_digits_doubled.iter().sum();
     sum % LUHN_DIVISOR == 0
 }
 
 fn double_every_second_num_from_right(code: &[u32]) -> Vec<u32> {
+    let code_count_even = code.len().is_even();
+    let is_second_from_right = |index: usize| index.is_even() == code_count_even;
     code.iter()
         .enumerate()
         .map(|(i, d)| {
-            if index_from_end(&code, i).unwrap().is_odd() {
+            if is_second_from_right(i) {
                 luhn_double(*d)
             } else {
                 *d
@@ -40,16 +43,16 @@ fn luhn_double(num: u32) -> u32 {
     }
 }
 
-fn index_from_end<T>(arr: &[T], index: usize) -> Option<usize> {
-    let len = arr.len();
-    match index.cmp(&len) {
-        Ordering::Less => Some(len - index - 1),
-        _ => None,
-    }
-}
+// fn index_from_end<T>(arr: &[T], index: usize) -> Option<usize> {
+//     let len = arr.len();
+//     match index.cmp(&len) {
+//         Ordering::Less => Some(len - index - 1),
+//         _ => None,
+//     }
+// }
 
 fn clean(code: &str) -> String {
-    code.replace(" ", "")
+    code.chars().into_iter().filter(|c| *c != ' ').collect()
 }
 
 fn valid_format(code: &str) -> bool {
@@ -70,4 +73,20 @@ fn valid_length(code: &str) -> bool {
 
 fn to_digits(string: &str) -> Vec<u32> {
     string.chars().map(|c| c.to_digit(RADIX).unwrap()).collect()
+}
+
+fn luhn_cleaned(code: &str) -> Option<Vec<u32>> {
+    let result: Vec<u32> = code.chars().into_iter()
+        .filter(|c| *c != ' ')
+        .map(|c| match c.to_digit(RADIX) {
+            Some(n) => n,
+            // TODO: Figure out if we can bail here
+            None => 0,
+        })
+        .collect();
+    if result.len() >= LUHN_MIN_LENGTH {
+        Some(result)
+    } else {
+        None
+    }
 }
