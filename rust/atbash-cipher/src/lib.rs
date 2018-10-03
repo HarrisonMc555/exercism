@@ -21,7 +21,7 @@ fn atbash(string: &str, add_spaces: bool) -> String {
         return converted.iter().collect();
     }
     let with_spaces: Vec<char> =
-        insert_between(&converted, vec![' '], ATBASH_WORD_LENGTH)
+        insert_between(&converted, &[' '], ATBASH_WORD_LENGTH)
         .into_iter().collect();
     let without_trailing_space = &with_spaces[..with_spaces.len() - 1];
     without_trailing_space.iter().collect()
@@ -37,13 +37,13 @@ fn switch_char(c: char) -> char {
     }
 }
 
-fn insert_between<T>(arr: &[T], arr_between: Vec<T>, num_between: usize)
+fn insert_between<T>(arr: &[T], arr_between: &[T], num_between: usize)
                      -> Vec<T>
     where T: Copy
 {
     arr
         .chunks(num_between)
-        .flat_map(|chunk| {let mut v = chunk.to_vec(); v.extend(&arr_between); v})
+        .flat_map(|chunk| {let mut v = chunk.to_vec(); v.extend(arr_between); v})
         .collect()
 }
 
