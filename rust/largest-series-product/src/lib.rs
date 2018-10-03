@@ -1,11 +1,30 @@
 //! Largest product in a series
-//! 
+//!
 //! The [`lsp`] function returns the largest product in a series of base 10
 //! digits.
-//! 
+//!
 //! The [`Error`] enum is an error type returned by [`lsp`] if it is used in an
 //! invalid way.
-//! 
+//!
+//! ```
+//! use largest_series_product::lsp;
+//! # use largest_series_product::Error;
+//!
+//! let digits = "12345";
+//!
+//! println!("Result: {:?}", lsp(digits, 2));
+//! # assert_eq!(lsp(digits, 2), Ok(20));
+//! // Prints "Ok(20)" (4 * 5)
+//! println!("Result: {:?}", lsp(digits, 3));
+//! # assert_eq!(lsp(digits, 3), Ok(60));
+//! // Prints "Ok(60)" (3 * 4 * 5)
+//! println!("Result: {:?}", lsp(digits, 100));
+//! # assert_eq!(lsp(digits, 100), Err(Error::SpanTooLong));
+
+//! // Prints "Result: Err(SpanTooLong)" (there are fewer than 100 digits in
+//! // `digits`)
+//! ```
+//!
 //! [`lsp`]: fn.lsp.html
 //! [`Error`]: enum.Error.html
 
