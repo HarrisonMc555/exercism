@@ -13,16 +13,17 @@ pub fn decode(cipher: &str) -> String {
 }
 
 fn atbash(string: &str, add_spaces: bool) -> String {
-    let converted: Vec<_> = string.chars()
+    let converted: Vec<_> = string
+        .chars()
         .filter(|c| c.is_ascii_alphanumeric())
         .map(switch_char)
         .collect();
     if !add_spaces {
         return converted.iter().collect();
     }
-    let with_spaces: Vec<char> =
-        insert_between(&converted, &[' '], ATBASH_WORD_LENGTH)
-        .into_iter().collect();
+    let with_spaces: Vec<char> = insert_between(&converted, &[' '], ATBASH_WORD_LENGTH)
+        .into_iter()
+        .collect();
     let without_trailing_space = &with_spaces[..with_spaces.len() - 1];
     without_trailing_space.iter().collect()
 }
@@ -37,14 +38,16 @@ fn switch_char(c: char) -> char {
     }
 }
 
-fn insert_between<T>(arr: &[T], arr_between: &[T], num_between: usize)
-                     -> Vec<T>
-    where T: Copy
+fn insert_between<T>(arr: &[T], arr_between: &[T], num_between: usize) -> Vec<T>
+where
+    T: Copy,
 {
-    arr
-        .chunks(num_between)
-        .flat_map(|chunk| {let mut v = chunk.to_vec(); v.extend(arr_between); v})
-        .collect()
+    arr.chunks(num_between)
+        .flat_map(|chunk| {
+            let mut v = chunk.to_vec();
+            v.extend(arr_between);
+            v
+        }).collect()
 }
 
 fn to_letter_index(c: char) -> u8 {

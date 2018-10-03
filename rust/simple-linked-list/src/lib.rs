@@ -14,7 +14,7 @@ pub struct Iter<'a, T: 'a> {
     next: Option<&'a Node<T>>,
 }
 
-pub struct IterMut<'a, T: 'a>{
+pub struct IterMut<'a, T: 'a> {
     next: Option<&'a mut Node<T>>,
 }
 
@@ -64,11 +64,15 @@ impl<T> SimpleLinkedList<T> {
     }
 
     pub fn iter(&self) -> Iter<T> {
-        Iter { next: self.head.as_ref().map(|node| &**node)}
+        Iter {
+            next: self.head.as_ref().map(|node| &**node),
+        }
     }
 
     pub fn iter_mut(&mut self) -> IterMut<T> {
-        IterMut { next: self.head.as_mut().map(|node| &mut **node)}
+        IterMut {
+            next: self.head.as_mut().map(|node| &mut **node),
+        }
     }
 }
 
@@ -147,7 +151,7 @@ impl<T> IntoIterator for SimpleLinkedList<T> {
 }
 
 impl<T> std::iter::FromIterator<T> for SimpleLinkedList<T> {
-    fn from_iter<U: IntoIterator<Item=T>>(iter: U) -> Self {
+    fn from_iter<U: IntoIterator<Item = T>>(iter: U) -> Self {
         let mut list = SimpleLinkedList::new();
         for i in iter {
             list.push(i);
@@ -157,7 +161,9 @@ impl<T> std::iter::FromIterator<T> for SimpleLinkedList<T> {
 }
 
 impl<T> std::fmt::Debug for SimpleLinkedList<T>
-where T: std::fmt::Debug {
+where
+    T: std::fmt::Debug,
+{
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         let mut strings = vec![String::from("[")];
         if !self.is_empty() {

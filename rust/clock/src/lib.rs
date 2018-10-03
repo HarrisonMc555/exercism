@@ -15,10 +15,7 @@ impl Clock {
         let total_minutes = hours * MINUTES_PER_HOUR + minutes;
         let hours = total_minutes / MINUTES_PER_HOUR % HOURS_PER_DAY;
         let minutes = total_minutes % MINUTES_PER_HOUR;
-        Clock {
-            hours,
-            minutes
-        }
+        Clock { hours, minutes }
     }
 
     pub fn add_minutes(self, minutes: i32) -> Self {
