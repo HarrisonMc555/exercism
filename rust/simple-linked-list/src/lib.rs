@@ -1,3 +1,4 @@
+#[derive(Default)]
 pub struct SimpleLinkedList<T> {
     head: Option<Box<Node<T>>>,
     length: usize,
@@ -59,9 +60,9 @@ impl<T> SimpleLinkedList<T> {
         self.head.as_ref().map(|node| &node.data)
     }
 
-    pub fn into_iter(self) -> IntoIter<T> {
-        IntoIter(self)
-    }
+    // pub fn into_iter(self) -> IntoIter<T> {
+    //     IntoIter(self)
+    // }
 
     pub fn iter(&self) -> Iter<T> {
         Iter {

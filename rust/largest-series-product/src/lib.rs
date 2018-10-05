@@ -89,7 +89,7 @@ fn to_digits(string_digits: &str, radix: u32) -> Result<Vec<u64>, Error> {
     string_digits.chars()
         .map(|c| c
              .to_digit(radix)
-             .ok_or(Error::InvalidDigit(c))
-             .map(|d| u64::from(d)))
+             .ok_or_else(|| Error::InvalidDigit(c))
+             .map(u64::from))
         .collect()
 }
