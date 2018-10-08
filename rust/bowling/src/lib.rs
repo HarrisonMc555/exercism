@@ -15,6 +15,7 @@ enum Frame {
     Open(u16, u16),
     Spare(u16),
     Strike,
+    FinalFrame(u16, u16, Option<u16>),
 }
 
 #[derive(Debug, PartialEq)]
@@ -63,9 +64,6 @@ impl BowlingGame {
     }
 
     fn score_so_far(&self) -> u16 {
-        self.frames()
-            .windows(3)
-            .
         self.frames
             .iter()
             .map(|op_frame| op_frame.map_or(0, |f| f.score().unwrap_or(0)))
@@ -87,7 +85,7 @@ impl Frame {
             match first_roll.cmp(&NUM_PINS) {
                 Ordering::Greater => Err(Error::NotEnoughPinsLeft),
                 Ordering::Equal => Ok(Frame::Strike),
-                Ordering::Less => Ok(Frame::Unfinished(first_roll))
+                Ordering::Less => Ok(Frame::Unfinished(first_roll)),
             }
         }
     }
@@ -106,6 +104,7 @@ impl Frame {
             Frame::Spare(_) => Some(NUM_PINS),
             Frame::Strike => Some(NUM_PINS),
             Frame::Unfinished(_) => None,
+            Frame::FinalFrame(first, second, third) => Some(first + second + third.unwrap_or(0)),
         }
     }
 
@@ -122,6 +121,7 @@ impl Frame {
             Frame::Spare(first) => Some((first, NUM_PINS - first)),
             Frame::Strike => next_frame.map(|f| (NUM_PINS, f.one_roll())),
             Frame::Unfinished(_) => None,
+            Frame::FinalFrame(first, second, _) => Some((first, second)),
         }
     }
 
@@ -131,6 +131,7 @@ impl Frame {
             Frame::Spare(first) => first,
             Frame::Strike => NUM_PINS,
             Frame::Unfinished(first) => first,
+            Frame::FinalFrame(first, _, _) => first,
         }
     }
 }
