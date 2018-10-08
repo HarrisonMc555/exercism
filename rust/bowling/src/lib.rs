@@ -63,6 +63,9 @@ impl BowlingGame {
     }
 
     fn score_so_far(&self) -> u16 {
+        self.frames()
+            .windows(3)
+            .
         self.frames
             .iter()
             .map(|op_frame| op_frame.map_or(0, |f| f.score().unwrap_or(0)))
@@ -98,8 +101,8 @@ impl Frame {
     }
 
     fn score(&self, next_rolls: (u16, u16)) -> Option<u16> {
-        match self {
-            Frame::Open(first, second) => Some(*first + *second),
+        match *self {
+            Frame::Open(first, second) => Some(first + second),
             Frame::Spare(_) => Some(NUM_PINS),
             Frame::Strike => Some(NUM_PINS),
             Frame::Unfinished(_) => None,
@@ -110,6 +113,24 @@ impl Frame {
         match self {
             Frame::Unfinished(_) => true,
             _ => false,
+        }
+    }
+
+    fn two_rolls(&self, next_frame: Option<Frame>) -> Option<(u16, u16)> {
+        match *self {
+            Frame::Open(first, second) => Some((first, second)),
+            Frame::Spare(first) => Some((first, NUM_PINS - first)),
+            Frame::Strike => next_frame.map(|f| (NUM_PINS, f.one_roll())),
+            Frame::Unfinished(_) => None,
+        }
+    }
+
+    fn one_roll(&self) -> u16 {
+        match *self {
+            Frame::Open(first, _) => first,
+            Frame::Spare(first) => first,
+            Frame::Strike => NUM_PINS,
+            Frame::Unfinished(first) => first,
         }
     }
 }
