@@ -10,12 +10,9 @@ pub enum Error {
 }
 
 #[derive(Debug, PartialEq, Clone, Copy)]
-enum Frame {
-    Unfinished(u16),
-    Open(u16, u16),
-    Spare(u16),
-    Strike,
-    FinalFrame(u16, u16, Option<u16>),
+struct Frame {
+    first_roll: u16,
+    second_roll: Option<u16>,
 }
 
 #[derive(Debug, PartialEq)]
@@ -38,11 +35,11 @@ impl BowlingGame {
         }
         let cur_frame = self.frames[self.index];
         if let Some(cur_frame) = cur_frame {
-            let new_frame = cur_frame.add_roll(pins).unwrap();
+            let new_frame = cur_frame.add_roll(pins)?;
             self.frames[self.index] = Some(new_frame);
             self.index += 1;
         } else {
-            let new_frame = Frame::new(pins, None)?;
+            let new_frame = Frame::new(pins)?;
             self.frames[self.index] = Some(new_frame);
             if !new_frame.is_unfinished() {
                 self.index += 1;
@@ -72,66 +69,54 @@ impl BowlingGame {
 }
 
 impl Frame {
-    fn new(first_roll: u16, second_roll: Option<u16>) -> Result<Self, Error> {
-        if let Some(second_roll) = second_roll {
-            let total = first_roll + second_roll;
-            assert!(total <= NUM_PINS);
-            if total == NUM_PINS {
-                Ok(Frame::Spare(first_roll))
-            } else {
-                Ok(Frame::Open(first_roll, second_roll))
-            }
+    fn new(first_roll: u16) -> Result<Self, Error> {
+        if first_roll > NUM_PINS {
+            Err(Error::NotEnoughPinsLeft)
         } else {
-            match first_roll.cmp(&NUM_PINS) {
-                Ordering::Greater => Err(Error::NotEnoughPinsLeft),
-                Ordering::Equal => Ok(Frame::Strike),
-                Ordering::Less => Ok(Frame::Unfinished(first_roll)),
-            }
+            Ok(Frame { first_roll: first_roll,
+                       second_roll: None})
         }
     }
 
     fn add_roll(&self, new_roll: u16) -> Result<Self, Error> {
-        if let Frame::Unfinished(first_roll) = self {
-            Self::new(*first_roll, Some(new_roll))
-        } else {
-            Err(Error::NotEnoughPinsLeft)
+        match self.second_roll {
+            Some(_) => Err(Error::NotEnoughPinsLeft),
+            None => Ok(Self { second_roll: Some(new_roll), ..*self })
         }
     }
 
-    fn score(&self, next_rolls: (u16, u16)) -> Option<u16> {
-        match *self {
-            Frame::Open(first, second) => Some(first + second),
-            Frame::Spare(_) => Some(NUM_PINS),
-            Frame::Strike => Some(NUM_PINS),
-            Frame::Unfinished(_) => None,
-            Frame::FinalFrame(first, second, third) => Some(first + second + third.unwrap_or(0)),
+    fn score(&self, next_rolls: (u16, u16)) -> u16 {
+        let (first_roll, second_roll) = next_rolls;
+        if self.is_strike() {
+            NUM_PINS + first_roll + second_roll
+        } else if self.is_spare() {
+            NUM_PINS + first_roll
+        } else {
+            self.first_roll + self.second_roll.unwrap_or(0)
         }
+    }
+
+    fn is_strike(&self) -> bool {
+        self.first_roll == NUM_PINS
+    }
+
+    fn is_spare(&self) -> bool {
+        self.first_roll + self.second_roll.unwrap_or(0) == NUM_PINS
+    }
+
+    fn is_finished(&self) -> bool {
+        self.first_roll == NUM_PINS || !self.second_roll.is_none()
     }
 
     fn is_unfinished(&self) -> bool {
-        match self {
-            Frame::Unfinished(_) => true,
-            _ => false,
-        }
+        !self.is_finished()
     }
 
-    fn two_rolls(&self, next_frame: Option<Frame>) -> Option<(u16, u16)> {
-        match *self {
-            Frame::Open(first, second) => Some((first, second)),
-            Frame::Spare(first) => Some((first, NUM_PINS - first)),
-            Frame::Strike => next_frame.map(|f| (NUM_PINS, f.one_roll())),
-            Frame::Unfinished(_) => None,
-            Frame::FinalFrame(first, second, _) => Some((first, second)),
-        }
-    }
-
-    fn one_roll(&self) -> u16 {
-        match *self {
-            Frame::Open(first, _) => first,
-            Frame::Spare(first) => first,
-            Frame::Strike => NUM_PINS,
-            Frame::Unfinished(first) => first,
-            Frame::FinalFrame(first, _, _) => first,
-        }
+    fn two_rolls(&self, next_frame: Frame) -> (u16, u16) {
+        let second_roll = match self.second_roll {
+            Some(second_roll) => second_roll,
+            None => next_frame.first_roll
+        };
+        (self.first_roll, second_roll)
     }
 }
