@@ -3,7 +3,3 @@ name = "diffie-hellman"
 version = "0.1.0"
 
 [dependencies]
-primes = {version = "*"}
-rand = {version = "*"}
-num-bigint = {version = "*"}
-num-traits = {version = "*"}
