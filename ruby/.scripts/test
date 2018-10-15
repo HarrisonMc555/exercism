@@ -1,0 +1,10 @@
+#!/bin/sh
+
+for d in ${HOME}/exercism/ruby/*; do
+    (
+        cd "$d"
+        echo "==== ${d##*/} ===="
+        ruby *_test.rb
+        echo
+    )
+done

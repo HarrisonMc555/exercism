@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 for d in /home/harrison/exercism/csharp/*; do
     (

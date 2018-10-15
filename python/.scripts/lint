@@ -1,11 +1,10 @@
-#!/bin/bash
+#!/bin/sh
 
 echo
 echo "---- pycodestyle ----"
-pycodestyle /home/harrison/exercism/python/ --filename=*.py --exclude=*_test.py
+pycodestyle ${HOME}/exercism/python/ --filename=*.py --exclude=*_test.py
 
 echo
 echo "---- pylint ----"
-pylint /home/harrison/exercism/python/ -r n \
-       $(find /home/harrison/exercism/python/ -name '*.py' \
-              -not -name '*_test.py')
+pylint -r n $(find ${HOME}/exercism/python/ -name '*.py' \
+                   -not -name '*_test.py')

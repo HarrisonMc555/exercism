@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 file=".scripts/lint"
 for d in /home/harrison/exercism/*; do
