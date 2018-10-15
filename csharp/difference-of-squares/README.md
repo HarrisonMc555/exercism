@@ -17,11 +17,7 @@ This exercise requires you to process a collection of data. You can simplify you
 For more information, see [this page]
 (https://docs.microsoft.com/en-us/dotnet/articles/standard/using-linq).
 
-### Submitting Exercises
 
-Note that, when trying to submit an exercise, make sure the exercise file that you're submitting is in the `exercism/csharp/<exerciseName>` directory.
-
-For example, if you're submitting `bob.cs` for the Bob exercise, the submit command would be something like `exercism submit <path_to_exercism_dir>/csharp/bob/bob.cs`.
 ## Source
 
 Problem 6 at Project Euler [http://projecteuler.net/problem=6](http://projecteuler.net/problem=6)

@@ -1,4 +1,4 @@
-// This file was auto-generated based on version 1.0.1 of the canonical data.
+// This file was auto-generated based on version 2.2.1 of the canonical data.
 
 using Xunit;
 
@@ -197,56 +197,56 @@ public class ClockTest
     public void Subtract_minutes()
     {
         var sut = new Clock(10, 3);
-        Assert.Equal("10:00", sut.Add(-3).ToString());
+        Assert.Equal("10:00", sut.Subtract(3).ToString());
     }
 
     [Fact]
     public void Subtract_to_previous_hour()
     {
         var sut = new Clock(10, 3);
-        Assert.Equal("09:33", sut.Add(-30).ToString());
+        Assert.Equal("09:33", sut.Subtract(30).ToString());
     }
 
     [Fact]
     public void Subtract_more_than_an_hour()
     {
         var sut = new Clock(10, 3);
-        Assert.Equal("08:53", sut.Add(-70).ToString());
+        Assert.Equal("08:53", sut.Subtract(70).ToString());
     }
 
     [Fact]
     public void Subtract_across_midnight()
     {
         var sut = new Clock(0, 3);
-        Assert.Equal("23:59", sut.Add(-4).ToString());
+        Assert.Equal("23:59", sut.Subtract(4).ToString());
     }
 
     [Fact]
     public void Subtract_more_than_two_hours()
     {
         var sut = new Clock(0, 0);
-        Assert.Equal("21:20", sut.Add(-160).ToString());
+        Assert.Equal("21:20", sut.Subtract(160).ToString());
     }
 
     [Fact]
     public void Subtract_more_than_two_hours_with_borrow()
     {
         var sut = new Clock(6, 15);
-        Assert.Equal("03:35", sut.Add(-160).ToString());
+        Assert.Equal("03:35", sut.Subtract(160).ToString());
     }
 
     [Fact]
     public void Subtract_more_than_one_day_1500_min_25_hrs_()
     {
         var sut = new Clock(5, 32);
-        Assert.Equal("04:32", sut.Add(-1500).ToString());
+        Assert.Equal("04:32", sut.Subtract(1500).ToString());
     }
 
     [Fact]
     public void Subtract_more_than_two_days()
     {
         var sut = new Clock(2, 20);
-        Assert.Equal("00:20", sut.Add(-3000).ToString());
+        Assert.Equal("00:20", sut.Subtract(3000).ToString());
     }
 
     [Fact]
@@ -259,98 +259,98 @@ public class ClockTest
     [Fact]
     public void Clocks_a_minute_apart()
     {
-        var sut = new Clock(15, 36);
-        Assert.NotEqual(new Clock(15, 37), sut);
+        var sut = new Clock(15, 37);
+        Assert.NotEqual(new Clock(15, 36), sut);
     }
 
     [Fact]
     public void Clocks_an_hour_apart()
     {
-        var sut = new Clock(14, 37);
-        Assert.NotEqual(new Clock(15, 37), sut);
+        var sut = new Clock(15, 37);
+        Assert.NotEqual(new Clock(14, 37), sut);
     }
 
     [Fact]
     public void Clocks_with_hour_overflow()
     {
-        var sut = new Clock(10, 37);
-        Assert.Equal(new Clock(34, 37), sut); 
+        var sut = new Clock(34, 37);
+        Assert.Equal(new Clock(10, 37), sut); 
     }
 
     [Fact]
     public void Clocks_with_hour_overflow_by_several_days()
     {
-        var sut = new Clock(3, 11);
-        Assert.Equal(new Clock(99, 11), sut); 
+        var sut = new Clock(99, 11);
+        Assert.Equal(new Clock(3, 11), sut); 
     }
 
     [Fact]
     public void Clocks_with_negative_hour()
     {
-        var sut = new Clock(22, 40);
-        Assert.Equal(new Clock(-2, 40), sut); 
+        var sut = new Clock(-2, 40);
+        Assert.Equal(new Clock(22, 40), sut); 
     }
 
     [Fact]
     public void Clocks_with_negative_hour_that_wraps()
     {
-        var sut = new Clock(17, 3);
-        Assert.Equal(new Clock(-31, 3), sut); 
+        var sut = new Clock(-31, 3);
+        Assert.Equal(new Clock(17, 3), sut); 
     }
 
     [Fact]
     public void Clocks_with_negative_hour_that_wraps_multiple_times()
     {
-        var sut = new Clock(13, 49);
-        Assert.Equal(new Clock(-83, 49), sut); 
+        var sut = new Clock(-83, 49);
+        Assert.Equal(new Clock(13, 49), sut); 
     }
 
     [Fact]
     public void Clocks_with_minute_overflow()
     {
-        var sut = new Clock(0, 1);
-        Assert.Equal(new Clock(0, 1441), sut); 
+        var sut = new Clock(0, 1441);
+        Assert.Equal(new Clock(0, 1), sut); 
     }
 
     [Fact]
     public void Clocks_with_minute_overflow_by_several_days()
     {
-        var sut = new Clock(2, 2);
-        Assert.Equal(new Clock(2, 4322), sut); 
+        var sut = new Clock(2, 4322);
+        Assert.Equal(new Clock(2, 2), sut); 
     }
 
     [Fact]
     public void Clocks_with_negative_minute()
     {
-        var sut = new Clock(2, 40);
-        Assert.Equal(new Clock(3, -20), sut); 
+        var sut = new Clock(3, -20);
+        Assert.Equal(new Clock(2, 40), sut); 
     }
 
     [Fact]
     public void Clocks_with_negative_minute_that_wraps()
     {
-        var sut = new Clock(4, 10);
-        Assert.Equal(new Clock(5, -1490), sut); 
+        var sut = new Clock(5, -1490);
+        Assert.Equal(new Clock(4, 10), sut); 
     }
 
     [Fact]
     public void Clocks_with_negative_minute_that_wraps_multiple_times()
     {
-        var sut = new Clock(6, 15);
-        Assert.Equal(new Clock(6, -4305), sut); 
+        var sut = new Clock(6, -4305);
+        Assert.Equal(new Clock(6, 15), sut); 
     }
 
     [Fact]
     public void Clocks_with_negative_hours_and_minutes()
     {
-        var sut = new Clock(7, 32);
-        Assert.Equal(new Clock(-12, -268), sut); 
+        var sut = new Clock(-12, -268);
+        Assert.Equal(new Clock(7, 32), sut); 
     }
 
     [Fact]
     public void Clocks_with_negative_hours_and_minutes_that_wrap()
     {
-        var sut = new Clock(18, 7);
-        Assert.Equal(new Clock(-54, -11513), sut); 
+        var sut = new Clock(-54, -11513);
+        Assert.Equal(new Clock(18, 7), sut); 
     }
 }
