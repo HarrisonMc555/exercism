@@ -1,8 +1,8 @@
 package raindrops
 
-// Source: exercism/x-common
-// Commit: 9db5371 raindrops: Fix canonical-data.json formatting
-// x-common version: 1.0.0
+// Source: exercism/problem-specifications
+// Commit: 99de15d raindrops: apply "input" policy
+// Problem Specifications Version: 1.1.0
 
 var tests = []struct {
 	input    int

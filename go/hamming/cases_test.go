@@ -1,14 +1,19 @@
 package hamming
 
-// Source: exercism/x-common
-// Commit: bb56dc7 Fix canonical-data.json formatting
-// x-common version: 1.0.0
+// Source: exercism/problem-specifications
+// Commit: b5d154b hamming: move inputs (strand1, strand2) to input object
+// Problem Specifications Version: 2.1.0
 
 var testCases = []struct {
 	s1   string
 	s2   string
 	want int
 }{
+	{ // empty strands
+		"",
+		"",
+		0,
+	},
 	{ // identical strands
 		"A",
 		"A",
@@ -45,13 +50,13 @@ var testCases = []struct {
 		2,
 	},
 	{ // non-unique character in first strand
-		"AGA",
-		"AGG",
+		"AAG",
+		"AAA",
 		1,
 	},
 	{ // non-unique character in second strand
-		"AGG",
-		"AGA",
+		"AAA",
+		"AAG",
 		1,
 	},
 	{ // same nucleotides in different positions
@@ -68,11 +73,6 @@ var testCases = []struct {
 		"GGACGGATTCTG",
 		"AGGACGGATTCT",
 		9,
-	},
-	{ // empty strands
-		"",
-		"",
-		0,
 	},
 	{ // disallow first strand longer
 		"AATG",

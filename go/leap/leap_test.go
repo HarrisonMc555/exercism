@@ -2,17 +2,6 @@ package leap
 
 import "testing"
 
-// Define a function with the following signature:
-// IsLeapYear(int) bool
-
-const targetTestVersion = 3
-
-func TestTestVersion(t *testing.T) {
-	if testVersion != targetTestVersion {
-		t.Fatalf("Found testVersion = %v, want %v", testVersion, targetTestVersion)
-	}
-}
-
 func TestLeapYears(t *testing.T) {
 	for _, test := range testCases {
 		observed := IsLeapYear(test.year)
