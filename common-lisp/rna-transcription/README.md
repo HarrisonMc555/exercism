@@ -1,4 +1,4 @@
-# Rna Transcription
+# RNA Transcription
 
 Given a DNA strand, return its RNA complement (per RNA transcription).
 
@@ -20,7 +20,7 @@ each nucleotide with its complement:
 
 ## Setup
 
-Check out [Exercism Help](http://exercism.io/languages/lisp) for instructions to
+Check out [Exercism Help](http://exercism.io/tracks/common-lisp) for instructions to
 get started writing Common Lisp. That page will explain how to install and setup
 a Lisp implementation and how to run the tests.
 
@@ -66,8 +66,7 @@ with the REPL; making iterative coding and testing very easy.
 
 ## Source
 
-Rosalind [http://rosalind.info/problems/rna](http://rosalind.info/problems/rna)
+Hyperphysics [http://hyperphysics.phy-astr.gsu.edu/hbase/Organic/transcription.html](http://hyperphysics.phy-astr.gsu.edu/hbase/Organic/transcription.html)
 
-## Submitting Incomplete Problems
+## Submitting Incomplete Solutions
 It's possible to submit an incomplete solution so you can see how others have completed the exercise.
-

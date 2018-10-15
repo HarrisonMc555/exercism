@@ -37,7 +37,7 @@ of equal length differently.
 
 ## Setup
 
-Check out [Exercism Help](http://exercism.io/languages/lisp) for instructions to
+Check out [Exercism Help](http://exercism.io/tracks/common-lisp) for instructions to
 get started writing Common Lisp. That page will explain how to install and setup
 a Lisp implementation and how to run the tests.
 
@@ -85,6 +85,5 @@ with the REPL; making iterative coding and testing very easy.
 
 The Calculating Point Mutations problem at Rosalind [http://rosalind.info/problems/hamm/](http://rosalind.info/problems/hamm/)
 
-## Submitting Incomplete Problems
+## Submitting Incomplete Solutions
 It's possible to submit an incomplete solution so you can see how others have completed the exercise.
-

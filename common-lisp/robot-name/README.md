@@ -12,13 +12,12 @@ which means that their name gets wiped. The next time you ask, it will
 respond with a new random name.
 
 The names must be random: they should not follow a predictable sequence.
-Random names means a risk of collisions. Your solution should not allow
-the use of the same name twice when avoidable. In some exercism language
-tracks there are tests to ensure that the same name is never used twice.
+Random names means a risk of collisions. Your solution must ensure that
+every existing robot has a unique name.
 
 ## Setup
 
-Check out [Exercism Help](http://exercism.io/languages/lisp) for instructions to
+Check out [Exercism Help](http://exercism.io/tracks/common-lisp) for instructions to
 get started writing Common Lisp. That page will explain how to install and setup
 a Lisp implementation and how to run the tests.
 
@@ -66,6 +65,5 @@ with the REPL; making iterative coding and testing very easy.
 
 A debugging session with Paul Blackwell at gSchool. [http://gschool.it](http://gschool.it)
 
-## Submitting Incomplete Problems
+## Submitting Incomplete Solutions
 It's possible to submit an incomplete solution so you can see how others have completed the exercise.
-

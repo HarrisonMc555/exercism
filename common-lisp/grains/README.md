@@ -1,6 +1,7 @@
 # Grains
 
-Calculate the number of grains of wheat on a chessboard given that the number on each square doubles.
+Calculate the number of grains of wheat on a chessboard given that the number
+on each square doubles.
 
 There once was a wise servant who saved the life of a prince. The king
 promised to pay whatever the servant could dream up. Knowing that the
@@ -13,7 +14,6 @@ There are 64 squares on a chessboard.
 Write code that shows:
 - how many grains were on each square, and
 - the total number of grains
-
 
 ## For bonus points
 
@@ -28,7 +28,7 @@ experiment make the code better? Worse? Did you learn anything from it?
 
 ## Setup
 
-Check out [Exercism Help](http://exercism.io/languages/lisp) for instructions to
+Check out [Exercism Help](http://exercism.io/tracks/common-lisp) for instructions to
 get started writing Common Lisp. That page will explain how to install and setup
 a Lisp implementation and how to run the tests.
 
@@ -76,6 +76,5 @@ with the REPL; making iterative coding and testing very easy.
 
 JavaRanch Cattle Drive, exercise 6 [http://www.javaranch.com/grains.jsp](http://www.javaranch.com/grains.jsp)
 
-## Submitting Incomplete Problems
+## Submitting Incomplete Solutions
 It's possible to submit an incomplete solution so you can see how others have completed the exercise.
-
