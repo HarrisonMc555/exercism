@@ -1,11 +1,12 @@
+# Determine if all brackets are matched
 class Brackets
-  def self.paired?(s)
+  def self.paired?(str)
     stack = []
-    for c in s.chars
-      if BRACKET_MAP.has_key?(c)
+    str.chars.each do |c|
+      if BRACKET_MAP.key?(c)
         stack.push(c)
-      elsif BRACKET_MAP.has_value?(c)
-        return false if !paired_brackets?(stack.pop, c)
+      elsif BRACKET_MAP.value?(c)
+        return false unless paired_brackets?(stack.pop, c)
       end
     end
     # If there is anything left over, brackets weren't matched
@@ -20,6 +21,6 @@ class Brackets
   BRACKET_MAP = {
     '[' => ']',
     '{' => '}',
-    '(' => ')',
+    '(' => ')'
   }.freeze
 end
