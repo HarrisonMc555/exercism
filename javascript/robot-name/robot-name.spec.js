@@ -1,32 +1,32 @@
 var Robot = require('./robot-name');
 
-describe('Robot', function() {
+describe('Robot', function () {
   // NOTE: The 'beforeEach()' and 'afterEach()' act as setup/teardown for this
   // test suite. See more: http://jasmine.github.io/2.0/introduction.html
   var robot;
 
-  beforeEach(function() {
+  beforeEach(function () {
     robot = new Robot();
   });
 
-  afterEach(function() {
+  afterEach(function () {
     robot = null;
   });
 
-  it('has a name', function() {
+  it('has a name', function () {
     expect(robot.name).toMatch(/^[A-Z]{2}\d{3}$/);
   });
 
-  it('name is the same each time', function() {
+  it('name is the same each time', function () {
     expect(robot.name).toEqual(robot.name);
   });
 
-  it('different robots have different names', function() {
+  it('different robots have different names', function () {
     var differentRobot = new Robot();
     expect(differentRobot.name).not.toEqual(robot.name);
   });
 
-  it('is able to reset the name', function() {
+  it('is able to reset the name', function () {
     var originalName = robot.name;
     robot.reset();
     var newName = robot.name;
@@ -34,10 +34,10 @@ describe('Robot', function() {
     expect(originalName).not.toEqual(newName);
   });
 
-  it('should set a unique name after reset', function() {
-    var i,
-        numResets = 10000,
-        usedNames = {};
+  it('should set a unique name after reset', function () {
+    var i;
+    var numResets = 10000;
+    var usedNames = {};
 
     usedNames[robot.name] = true;
 
@@ -48,12 +48,12 @@ describe('Robot', function() {
 
     expect(Object.keys(usedNames).length).toEqual(numResets + 1);
   });
-  
-  //This test is optional. 
-  it('there can be lots of robots with different names each', function() {
-    var i,
-        numRobots = 10000,
-        usedNames = {};
+
+  // This test is optional.
+  it('there can be lots of robots with different names each', function () {
+    var i;
+    var numRobots = 10000;
+    var usedNames = {};
 
     for (i = 0; i < numRobots; i++) {
       var newRobot = new Robot();

@@ -1,6 +1,6 @@
 # Food Chain
 
-Generate the lyrics of the song 'I Know an Old Lady Who Swallowed a Fly'
+Generate the lyrics of the song 'I Know an Old Lady Who Swallowed a Fly'.
 
 While you could copy/paste the lyrics,
 or read them from a file, this problem is much more
@@ -10,7 +10,7 @@ This is a [cumulative song](http://en.wikipedia.org/wiki/Cumulative_song) of unk
 
 This is one of many common variants.
 
-```plain
+```text
 I know an old lady who swallowed a fly.
 I don't know why she swallowed the fly. Perhaps she'll die.
 
@@ -65,26 +65,33 @@ She's dead, of course!
 
 ## Setup
 
-Go through the setup instructions for JavaScript to
-install the necessary dependencies:
+Go through the setup instructions for JavaScript to install the
+ necessary dependencies:
 
-http://exercism.io/languages/javascript
+http://exercism.io/languages/javascript/installation
 
-## Making the Test Suite Pass
+## Running the test suite
 
-Execute the tests with:
+The provided test suite uses [Jasmine](https://jasmine.github.io/).
+You can install it by opening a terminal window and running the
+following command:
 
-    jasmine .
+```sh
+npm install -g jasmine
+```
 
-In many test suites all but the first test have been skipped.
+Run the test suite from the exercise directory with:
 
-Once you get a test passing, you can unskip the next one by
-changing `xit` to `it`.
+```sh
+jasmine food-chain.spec.js
+```
+
+In many test suites all but the first test have been marked "pending".
+Once you get a test passing, activate the next one by changing `xit` to `it`.
 
 ## Source
 
 Wikipedia [http://en.wikipedia.org/wiki/There_Was_an_Old_Lady_Who_Swallowed_a_Fly](http://en.wikipedia.org/wiki/There_Was_an_Old_Lady_Who_Swallowed_a_Fly)
 
-## Submitting Incomplete Problems
+## Submitting Incomplete Solutions
 It's possible to submit an incomplete solution so you can see how others have completed the exercise.
-

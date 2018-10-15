@@ -1,6 +1,6 @@
 # Hello World
 
-The classical introductory exercise. Just say "Hello, World!"
+The classical introductory exercise. Just say "Hello, World!".
 
 ["Hello, World!"](http://en.wikipedia.org/wiki/%22Hello,_world!%22_program) is
 the traditional first program for beginning programming in a new language
@@ -13,25 +13,6 @@ The objectives are simple:
 - Submit your solution and check it at the website.
 
 If everything goes well, you will be ready to fetch your first real exercise.
-
-## Setup
-
-Go through the setup instructions for JavaScript to
-install the necessary dependencies:
-
-http://exercism.io/languages/javascript
-
-## Making the Test Suite Pass
-
-Execute the tests with:
-
-    jasmine-node .
-
-In many test suites all but the first test have been skipped.
-
-Once you get a test passing, you can unskip the next one by
-changing `xit` to `it`.
-
 
 ## Tutorial
 
@@ -49,23 +30,21 @@ but it helps to understand what a test looks like, and what
 it is doing.
 
 Open up the test file, hello-world.spec.js.
-It has three tests defined in it.
+There is one test inside:
 
-This is the first test:
-
-    it('says hello world with no name', function() {
-      expect(helloWorld.hello('')).toEqual('Hello, World!');
+    it('says hello world', function() {
+      expect(helloWorld.hello()).toEqual('Hello, World!');
     });
 
 Run the test now, with the following command on the command-line:
 
-    jasmine-node .
+    jasmine hello-world.spec.js
 
 The test fails, which makes sense since you've not written any code yet.
 
 The failure looks like this:
 
-    1) Hello World says hello world with no name
+    1) Hello World says hello world 
        Message:
           Expected undefined to equal 'Hello, World!'.
 
@@ -73,16 +52,16 @@ There's more, but this is the most important part.
 
 Take a look at that first line:
 
-    1) Hello World says hello world with no name
+    1) Hello World says hello world 
 
 Now look at the test definition again:
 
-    it('says hello world with no name', function() {
+    it('says hello world', function() {
       // ... more code here ...
     });
 
-The text 'says hello world with no name' is repeated.
-This is how you know which test failed.
+The text 'says hello world' is repeated.
+This is how you know the test failed.
 
 The failure message explains what is wrong:
 
@@ -90,11 +69,11 @@ The failure message explains what is wrong:
 
 This comes from the part of the test definition that says "expect":
 
-    expect(helloWorld.hello('')).toEqual('Hello, World!');
+    expect(helloWorld.hello()).toEqual('Hello, World!');
 
 It's comparing two values. It is calling
 
-    helloWorld.hello('')
+    helloWorld.hello()
 
 and comparing the result to a hard-coded string.
 
@@ -111,35 +90,46 @@ Try changing the function in hello-world.js so that it says
 
 Then run the tests again from the command-line:
 
-    jasmine-node .
+    jasmine hello-world.spec.js
 
 Notice how it changes the failure message.
 
 Then change the implementation in hello-world.js again, this time to make the test pass.
 
-Once the test is passing, look at the second test in hello-world.spec.js. It looks like this:
-
-    xit('says hello to bob', function() {
-      expect(helloWorld.hello('Bob')).toEqual('Hello, Bob!');
-    });
-
-This test starts with `xit` instead of `it`.
-That means that when jasmine-node runs the tests,
-the test will be skipped.
-
-Change the test so that it starts with `it`,
-and run the tests again.
-
-Make the test pass, and then do the same with the third test.
-
 When you are done, submit your solution to exercism:
 
     exercism submit hello-world.js
+
+
+## Setup
+
+Go through the setup instructions for JavaScript to install the
+ necessary dependencies:
+
+http://exercism.io/languages/javascript/installation
+
+## Running the test suite
+
+The provided test suite uses [Jasmine](https://jasmine.github.io/).
+You can install it by opening a terminal window and running the
+following command:
+
+```sh
+npm install -g jasmine
+```
+
+Run the test suite from the exercise directory with:
+
+```sh
+jasmine hello-world.spec.js
+```
+
+In many test suites all but the first test have been marked "pending".
+Once you get a test passing, activate the next one by changing `xit` to `it`.
 
 ## Source
 
 This is an exercise to introduce users to using Exercism [http://en.wikipedia.org/wiki/%22Hello,_world!%22_program](http://en.wikipedia.org/wiki/%22Hello,_world!%22_program)
 
-## Submitting Incomplete Problems
+## Submitting Incomplete Solutions
 It's possible to submit an incomplete solution so you can see how others have completed the exercise.
-
