@@ -3,9 +3,9 @@ import unittest
 from tournament import tally
 
 
-# test cases adapted from `x-common//canonical-data.json` @ version: 1.3.0
+# Tests adapted from `problem-specifications//canonical-data.json` @ v1.4.0
 
-class TestTournament(unittest.TestCase):
+class TournamentTest(unittest.TestCase):
     def test_just_the_header_if_no_input(self):
         self.assertEqual(
             tally(''),
@@ -17,8 +17,6 @@ class TestTournament(unittest.TestCase):
         table = ('Team                           | MP |  W |  D |  L |  P\n'
                  'Allegoric Alaskans             |  1 |  1 |  0 |  0 |  3\n'
                  'Blithering Badgers             |  1 |  0 |  0 |  1 |  0')
-        # print(repr(table))
-        # print(table)
         self.assertEqual(tally(results), table)
 
     def test_a_win_can_also_be_expressed_as_a_loss(self):
