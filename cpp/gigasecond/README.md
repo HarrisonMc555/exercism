@@ -6,8 +6,9 @@ A gigasecond is 10^9 (1,000,000,000) seconds.
 
 ## Getting Started
 
-Make sure you have read [the C++ page](http://exercism.io/languages/cpp) on
-exercism.io.  This covers the basic information on setting up the development
+Make sure you have read the [Installing](https://exercism.io/tracks/cpp/installing) and 
+[Running the Tests](https://exercism.io/tracks/cpp/tests) pages for C++ on exercism.io. 
+This covers the basic information on setting up the development
 environment expected by the exercises.
 
 ## Passing the Tests
@@ -41,4 +42,3 @@ Chapter 9 in Chris Pine's online Learn to Program tutorial. [http://pine.fm/Lear
 
 ## Submitting Incomplete Solutions
 It's possible to submit an incomplete solution so you can see how others have completed the exercise.
-
