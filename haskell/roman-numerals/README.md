@@ -14,7 +14,7 @@ The Romans wrote numbers using letters - I, V, X, L, C, D, M. (notice
 these letters have lots of straight lines and are hence easy to hack
 into stone tablets).
 
-```
+```text
  1  => I
 10  => X
  7  => VII
@@ -49,6 +49,7 @@ that *maybe* converts a number to a *string* representing a roman numeral.
 
 Your function is expected to, at least, convert numbers up to 3000,
 but is up to you to decide how far you want to go.
+
 
 
 ## Getting Started
@@ -97,7 +98,7 @@ stack ghci
 
 ## Feedback, Issues, Pull Requests
 
-The [exercism/xhaskell](https://github.com/exercism/xhaskell) repository on
+The [exercism/haskell](https://github.com/exercism/haskell) repository on
 GitHub is the home for all of the Haskell exercises.
 
 If you have feedback about an exercise, or want to help implementing a new
@@ -109,4 +110,3 @@ The Roman Numeral Kata [http://codingdojo.org/cgi-bin/index.pl?KataRomanNumerals
 
 ## Submitting Incomplete Solutions
 It's possible to submit an incomplete solution so you can see how others have completed the exercise.
-

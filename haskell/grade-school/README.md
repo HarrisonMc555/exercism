@@ -1,6 +1,7 @@
 # Grade School
 
-Given students' names along with the grade that they are in, create a roster for the school.
+Given students' names along with the grade that they are in, create a roster
+for the school.
 
 In the end, you should be able to:
 
@@ -19,7 +20,6 @@ In the end, you should be able to:
 
 Note that all our students only have one name.  (It's a small town, what
 do you want?)
-
 
 ## For bonus points
 
@@ -47,6 +47,7 @@ and implement the following functions:
 You will find a dummy data declaration and type signatures already in
 place, but it is up to you to define the functions and create a meaningful
 data type, newtype or type synonym.
+
 
 
 ## Getting Started
@@ -95,7 +96,7 @@ stack ghci
 
 ## Feedback, Issues, Pull Requests
 
-The [exercism/xhaskell](https://github.com/exercism/xhaskell) repository on
+The [exercism/haskell](https://github.com/exercism/haskell) repository on
 GitHub is the home for all of the Haskell exercises.
 
 If you have feedback about an exercise, or want to help implementing a new
@@ -105,6 +106,5 @@ one, head over there and create an issue.  We'll do our best to help you!
 
 A pairing session with Phil Battos at gSchool [http://gschool.it](http://gschool.it)
 
-## Submitting Incomplete Problems
+## Submitting Incomplete Solutions
 It's possible to submit an incomplete solution so you can see how others have completed the exercise.
-

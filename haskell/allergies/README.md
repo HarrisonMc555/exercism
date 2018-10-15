@@ -29,7 +29,6 @@ allergens that score 256, 512, 1024, etc.).  Your program should
 ignore those components of the score.  For example, if the allergy
 score is 257, your program should only report the eggs (1) allergy.
 
-
 ## Hints
 
 To complete this exercise you need to to create the data type `Allergen`,
@@ -41,6 +40,7 @@ with `Eq` and `Show` instances, and implement the following functions:
 You will find a dummy data declaration and type signatures already in place,
 but it is up to you to define the functions and create a meaningful data type,
 newtype or type synonym.
+
 
 
 ## Getting Started
@@ -89,7 +89,7 @@ stack ghci
 
 ## Feedback, Issues, Pull Requests
 
-The [exercism/xhaskell](https://github.com/exercism/xhaskell) repository on
+The [exercism/haskell](https://github.com/exercism/haskell) repository on
 GitHub is the home for all of the Haskell exercises.
 
 If you have feedback about an exercise, or want to help implementing a new
@@ -101,4 +101,3 @@ Jumpstart Lab Warm-up [http://jumpstartlab.com](http://jumpstartlab.com)
 
 ## Submitting Incomplete Solutions
 It's possible to submit an incomplete solution so you can see how others have completed the exercise.
-

@@ -64,7 +64,7 @@ stack ghci
 
 ## Feedback, Issues, Pull Requests
 
-The [exercism/xhaskell](https://github.com/exercism/xhaskell) repository on
+The [exercism/haskell](https://github.com/exercism/haskell) repository on
 GitHub is the home for all of the Haskell exercises.
 
 If you have feedback about an exercise, or want to help implementing a new
@@ -74,6 +74,5 @@ one, head over there and create an issue.  We'll do our best to help you!
 
 A variation on a famous interview question intended to weed out potential candidates. [http://jumpstartlab.com](http://jumpstartlab.com)
 
-## Submitting Incomplete Problems
+## Submitting Incomplete Solutions
 It's possible to submit an incomplete solution so you can see how others have completed the exercise.
-

@@ -1,8 +1,9 @@
-# Etl
+# ETL
 
 We are going to do the `Transform` step of an Extract-Transform-Load.
 
 ### ETL
+
 Extract-Transform-Load (ETL) is a fancy way of saying, "We have some crufty, legacy data over in this system, and now we need it in this shiny new system over here, so
 we're going to migrate this."
 
@@ -11,6 +12,7 @@ once." That's then typically followed by much forehead slapping and
 moaning about how stupid we could possibly be.)
 
 ### The goal
+
 We're going to extract some scrabble scores from a legacy system.
 
 The old system stored a list of letters per score:
@@ -91,7 +93,7 @@ stack ghci
 
 ## Feedback, Issues, Pull Requests
 
-The [exercism/xhaskell](https://github.com/exercism/xhaskell) repository on
+The [exercism/haskell](https://github.com/exercism/haskell) repository on
 GitHub is the home for all of the Haskell exercises.
 
 If you have feedback about an exercise, or want to help implementing a new
@@ -101,6 +103,5 @@ one, head over there and create an issue.  We'll do our best to help you!
 
 The Jumpstart Lab team [http://jumpstartlab.com](http://jumpstartlab.com)
 
-## Submitting Incomplete Problems
+## Submitting Incomplete Solutions
 It's possible to submit an incomplete solution so you can see how others have completed the exercise.
-

@@ -4,7 +4,7 @@ Detect saddle points in a matrix.
 
 So say you have a matrix like so:
 
-```plain
+```text
     0  1  2
   |---------
 0 | 9  8  7
@@ -15,7 +15,7 @@ So say you have a matrix like so:
 It has a saddle point at (1, 0).
 
 It's called a "saddle point" because it is greater than or equal to
-every element in its row and the less than or equal to every element in
+every element in its row and less than or equal to every element in
 its column.
 
 A matrix may have zero or more saddle points.
@@ -85,4 +85,3 @@ J Dalbey's Programming Practice problems [http://users.csc.calpoly.edu/~jdalbey/
 
 ## Submitting Incomplete Solutions
 It's possible to submit an incomplete solution so you can see how others have completed the exercise.
-

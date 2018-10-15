@@ -1,6 +1,9 @@
 # Accumulate
 
-Implement the `accumulate` operation, which, given a collection and an operation to perform on each element of the collection, returns a new collection containing the result of applying that operation to each element of the input collection.
+Implement the `accumulate` operation, which, given a collection and an
+operation to perform on each element of the collection, returns a new
+collection containing the result of applying that operation to each element of
+the input collection.
 
 Given the collection of numbers:
 
@@ -21,9 +24,6 @@ Check out the test suite to see the expected function signature.
 Keep your hands off that collect/map/fmap/whatchamacallit functionality
 provided by your standard library!
 Solve this one yourself using other basic tools instead.
-
-Lisp specific: it's perfectly fine to use `MAPCAR` or the equivalent,
-as this is idiomatic Lisp, not a library function.
 
 
 ## Getting Started
@@ -72,7 +72,7 @@ stack ghci
 
 ## Feedback, Issues, Pull Requests
 
-The [exercism/xhaskell](https://github.com/exercism/xhaskell) repository on
+The [exercism/haskell](https://github.com/exercism/haskell) repository on
 GitHub is the home for all of the Haskell exercises.
 
 If you have feedback about an exercise, or want to help implementing a new
@@ -82,6 +82,5 @@ one, head over there and create an issue.  We'll do our best to help you!
 
 Conversation with James Edward Gray II [https://twitter.com/jeg2](https://twitter.com/jeg2)
 
-## Submitting Incomplete Problems
+## Submitting Incomplete Solutions
 It's possible to submit an incomplete solution so you can see how others have completed the exercise.
-

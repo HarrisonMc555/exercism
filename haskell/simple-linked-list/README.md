@@ -40,6 +40,7 @@ but it is up to you to define the functions and create a meaningful data type,
 newtype or type synonym.
 
 
+
 ## Getting Started
 
 For installation and learning resources, refer to the
@@ -86,7 +87,7 @@ stack ghci
 
 ## Feedback, Issues, Pull Requests
 
-The [exercism/xhaskell](https://github.com/exercism/xhaskell) repository on
+The [exercism/haskell](https://github.com/exercism/haskell) repository on
 GitHub is the home for all of the Haskell exercises.
 
 If you have feedback about an exercise, or want to help implementing a new
@@ -98,4 +99,3 @@ Inspired by 'Data Structures and Algorithms with Object-Oriented Design Patterns
 
 ## Submitting Incomplete Solutions
 It's possible to submit an incomplete solution so you can see how others have completed the exercise.
-

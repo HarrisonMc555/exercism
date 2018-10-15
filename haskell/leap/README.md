@@ -4,7 +4,7 @@ Given a year, report if it is a leap year.
 
 The tricky thing here is that a leap year in the Gregorian calendar occurs:
 
-```plain
+```text
 on every year that is evenly divisible by 4
   except every year that is evenly divisible by 100
     unless the year is also evenly divisible by 400
@@ -37,6 +37,7 @@ don't let it restrict your creativity:
 ```haskell
 isLeapYear :: Integer -> Bool
 ```
+
 
 
 ## Getting Started
@@ -85,7 +86,7 @@ stack ghci
 
 ## Feedback, Issues, Pull Requests
 
-The [exercism/xhaskell](https://github.com/exercism/xhaskell) repository on
+The [exercism/haskell](https://github.com/exercism/haskell) repository on
 GitHub is the home for all of the Haskell exercises.
 
 If you have feedback about an exercise, or want to help implementing a new
@@ -95,6 +96,5 @@ one, head over there and create an issue.  We'll do our best to help you!
 
 JavaRanch Cattle Drive, exercise 3 [http://www.javaranch.com/leap.jsp](http://www.javaranch.com/leap.jsp)
 
-## Submitting Incomplete Problems
+## Submitting Incomplete Solutions
 It's possible to submit an incomplete solution so you can see how others have completed the exercise.
-

@@ -28,6 +28,9 @@ cases = [ Case { description = "basic"
                , input       = "Ruby on Rails"
                , expected    = "ROR"
                }
+        -- Although this case was removed in specification 1.1.0,
+        -- the Haskell track has chosen to keep it,
+        -- since it makes the problem more interesting.
         , Case { description = "camelcase"
                , input       = "HyperText Markup Language"
                , expected    = "HTML"
@@ -36,16 +39,16 @@ cases = [ Case { description = "basic"
                , input       = "First In, First Out"
                , expected    = "FIFO"
                }
-        , Case { description = "all caps words"
-               , input       = "PHP: Hypertext Preprocessor"
-               , expected    = "PHP"
-               }
-        , Case { description = "non-acronym all caps word"
+        , Case { description = "all caps word"
                , input       = "GNU Image Manipulation Program"
                , expected    = "GIMP"
                }
-        , Case { description = "hyphenated"
+        , Case { description = "punctuation without whitespace"
                , input       = "Complementary metal-oxide semiconductor"
                , expected    = "CMOS"
+               }
+        , Case { description = "very long abbreviation"
+               , input       = "Rolling On The Floor Laughing So Hard That My Dogs Came Over And Licked Me"
+               , expected    = "ROTFLSHTMDCOALM"
                }
         ]

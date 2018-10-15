@@ -36,6 +36,10 @@ cases = [ Case { description = "empty string"
                , input       = "eleven"
                , expected    = False
                }
+        , Case { description = "word with one duplicated character from the end of the alphabet"
+               , input       = "zzyzx"
+               , expected    = False
+               }
         , Case { description = "longest reported english isogram"
                , input       = "subdermatoglyphic"
                , expected    = True
@@ -48,8 +52,8 @@ cases = [ Case { description = "empty string"
                , input       = "thumbscrew-japingly"
                , expected    = True
                }
-        , Case { description = "isogram with duplicated non letter character"
-               , input       = "Hjelmqvist-Gryb-Zock-Pfund-Wax"
+        , Case { description = "isogram with duplicated hyphen"
+               , input       = "six-year-old"
                , expected    = True
                }
         , Case { description = "made-up name that is an isogram"

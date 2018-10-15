@@ -1,7 +1,5 @@
 # Space Age
 
-Given an age in seconds, calculate how old someone is in terms of a given planet's solar years.
-
 Given an age in seconds, calculate how old someone would be on:
 
    - Earth: orbital period 365.25 Earth days, or 31557600 seconds
@@ -14,7 +12,7 @@ Given an age in seconds, calculate how old someone would be on:
    - Neptune: orbital period 164.79132 Earth years
 
 So if you were told someone were 1,000,000,000 seconds old, you should
-be able to say that they're 31 Earth-years old.
+be able to say that they're 31.69 Earth-years old.
 
 If you're wondering why Pluto didn't make the cut, go watch [this
 youtube video](http://www.youtube.com/watch?v=Z_2gbGXzFbs).
@@ -33,6 +31,7 @@ don't let it restrict your creativity:
 ```haskell
 ageOn :: Planet -> Float -> Float
 ```
+
 
 
 ## Getting Started
@@ -81,7 +80,7 @@ stack ghci
 
 ## Feedback, Issues, Pull Requests
 
-The [exercism/xhaskell](https://github.com/exercism/xhaskell) repository on
+The [exercism/haskell](https://github.com/exercism/haskell) repository on
 GitHub is the home for all of the Haskell exercises.
 
 If you have feedback about an exercise, or want to help implementing a new
@@ -91,6 +90,5 @@ one, head over there and create an issue.  We'll do our best to help you!
 
 Partially inspired by Chapter 1 in Chris Pine's online Learn to Program tutorial. [http://pine.fm/LearnToProgram/?Chapter=01](http://pine.fm/LearnToProgram/?Chapter=01)
 
-## Submitting Incomplete Problems
+## Submitting Incomplete Solutions
 It's possible to submit an incomplete solution so you can see how others have completed the exercise.
-

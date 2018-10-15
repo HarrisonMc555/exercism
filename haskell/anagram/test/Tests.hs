@@ -35,16 +35,6 @@ cases = [ Case { description = "no matches"
                , candidates  = [ "hello", "world", "zombies", "pants"]
                , expected    = []
                }
-        , Case { description = "detects simple anagram"
-               , subject     = "ant"
-               , candidates  = ["tan", "stand", "at"]
-               , expected    = ["tan"]
-               }
-        , Case { description = "does not detect false positives"
-               , subject     = "galea"
-               , candidates  = ["eagle"]
-               , expected    = []
-               }
         , Case { description = "detects two anagrams"
                , subject     = "master"
                , candidates  = ["stream", "pigeon", "maters"]
@@ -64,11 +54,6 @@ cases = [ Case { description = "no matches"
                , subject     = "allergy"
                , candidates  = ["gallery", "ballerina", "regally", "clergy", "largely", "leading"]
                , expected    = ["gallery", "regally", "largely"]
-               }
-        , Case { description = "does not detect identical words"
-               , subject     = "corn"
-               , candidates  = ["corn", "dark", "Corn", "rank", "CORN", "cron", "park"]
-               , expected    = ["cron"]
                }
         , Case { description = "does not detect non-anagrams with identical checksum"
                , subject     = "mass"
@@ -90,11 +75,6 @@ cases = [ Case { description = "no matches"
                , candidates  = ["cashregister", "Carthorse", "radishes"]
                , expected    = ["Carthorse"]
                }
-        , Case { description = "does not detect a word as its own anagram"
-               , subject     = "banana"
-               , candidates  = ["Banana"]
-               , expected    = []
-               }
         , Case { description = "does not detect a anagram if the original word is repeated"
                , subject     = "go"
                , candidates  = ["go Go GO"]
@@ -105,9 +85,9 @@ cases = [ Case { description = "no matches"
                , candidates  = ["patter"]
                , expected    = []
                }
-        , Case { description = "capital word is not own anagram"
+        , Case { description = "words are not anagrams of themselves (case-insensitive)"
                , subject     = "BANANA"
-               , candidates  = ["Banana"]
+               , candidates  = ["BANANA", "Banana", "banana"]
                , expected    = []
                }
         ]

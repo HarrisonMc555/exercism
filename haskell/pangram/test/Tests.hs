@@ -10,8 +10,7 @@ main :: IO ()
 main = hspecWith defaultConfig {configFastFail = True} specs
 
 specs :: Spec
-specs = describe "pangram" $
-          describe "isPangram" $ for_ cases test
+specs = describe "isPangram" $ for_ cases test
   where
     test Case{..} = it description $ isPangram input `shouldBe` expected
 
@@ -25,6 +24,10 @@ cases = [ Case { description = "sentence empty"
                , input       = ""
                , expected    = False
                }
+        , Case { description = "recognizes a perfect lower case pangram"
+               , input       = "abcdefghijklmnopqrstuvwxyz"
+               , expected    = True
+               }
         , Case { description = "pangram with only lower case"
                , input       = "the quick brown fox jumps over the lazy dog"
                , expected    = True
@@ -33,8 +36,8 @@ cases = [ Case { description = "sentence empty"
                , input       = "a quick movement of the enemy will jeopardize five gunboats"
                , expected    = False
                }
-        , Case { description = "another missing character 'x'"
-               , input       = "the quick brown fish jumps over the lazy dog"
+        , Case { description = "another missing character, e.g. 'h'"
+               , input       = "five boxing wizards jump quickly at it"
                , expected    = False
                }
         , Case { description = "pangram with underscores"
@@ -54,7 +57,7 @@ cases = [ Case { description = "sentence empty"
                , expected    = True
                }
         , Case { description = "upper and lower case versions of the same character should not be counted separately"
-               , input       = "the quick brown fox jumped over the lazy FOX"
+               , input       = "the quick brown fox jumps over with lazy FX"
                , expected    = False
                }
         ]

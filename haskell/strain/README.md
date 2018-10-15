@@ -1,10 +1,9 @@
 # Strain
 
-Implement the `keep` and `discard` operation on collections. Given a collection and a predicate on the collection's elements, `keep` returns a new collection containing those elements where the predicate is true, while `discard` returns a new collection containing those elements where the predicate is false.
-
-Write two functions that each take a function and a list.  One of them will
-return the list of items for which the passed in function is true, and the
-other will return the items for which it is false.
+Implement the `keep` and `discard` operation on collections. Given a collection
+and a predicate on the collection's elements, `keep` returns a new collection
+containing those elements where the predicate is true, while `discard` returns
+a new collection containing those elements where the predicate is false.
 
 For example, given the collection of numbers:
 
@@ -81,7 +80,7 @@ stack ghci
 
 ## Feedback, Issues, Pull Requests
 
-The [exercism/xhaskell](https://github.com/exercism/xhaskell) repository on
+The [exercism/haskell](https://github.com/exercism/haskell) repository on
 GitHub is the home for all of the Haskell exercises.
 
 If you have feedback about an exercise, or want to help implementing a new
@@ -91,6 +90,5 @@ one, head over there and create an issue.  We'll do our best to help you!
 
 Conversation with James Edward Gray II [https://twitter.com/jeg2](https://twitter.com/jeg2)
 
-## Submitting Incomplete Problems
+## Submitting Incomplete Solutions
 It's possible to submit an incomplete solution so you can see how others have completed the exercise.
-

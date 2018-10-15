@@ -1,18 +1,18 @@
 # Series
 
 Given a string of digits, output all the contiguous substrings of length `n` in
-that string.
+that string in the order that they appear.
 
 For example, the string "49142" has the following 3-digit series:
 
-- 491
-- 914
-- 142
+- "491"
+- "914"
+- "142"
 
 And the following 4-digit series:
 
-- 4914
-- 9142
+- "4914"
+- "9142"
 
 And if you ask for a 6-digit series from a 5-digit string, you deserve
 whatever you get.
@@ -43,6 +43,7 @@ types and libraries:
 
 The test suite was intentionally designed to accept almost any type signature
 that makes sense, so you are encouraged to find the one you think is the best.
+
 
 
 ## Getting Started
@@ -103,4 +104,3 @@ A subset of the Problem 8 at Project Euler [http://projecteuler.net/problem=8](h
 
 ## Submitting Incomplete Solutions
 It's possible to submit an incomplete solution so you can see how others have completed the exercise.
-

@@ -5,13 +5,15 @@ that matrix.
 
 So given a string with embedded newlines like:
 
-> 9 8 7  
-> 5 3 2  
-> 6 6 7  
+```text
+9 8 7
+5 3 2
+6 6 7
+```
 
 representing this matrix:
 
-```plain
+```text
     0  1  2
   |---------
 0 | 9  8  7
@@ -64,6 +66,7 @@ rectangular, invalid chars are encountered, etc.
 shape is (rows, cols)
 
 
+
 ## Getting Started
 
 For installation and learning resources, refer to the
@@ -110,7 +113,7 @@ stack ghci
 
 ## Feedback, Issues, Pull Requests
 
-The [exercism/xhaskell](https://github.com/exercism/xhaskell) repository on
+The [exercism/haskell](https://github.com/exercism/haskell) repository on
 GitHub is the home for all of the Haskell exercises.
 
 If you have feedback about an exercise, or want to help implementing a new
@@ -122,4 +125,3 @@ Warmup to the `saddle-points` warmup. [http://jumpstartlab.com](http://jumpstart
 
 ## Submitting Incomplete Solutions
 It's possible to submit an incomplete solution so you can see how others have completed the exercise.
-

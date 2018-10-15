@@ -1,10 +1,10 @@
 # Beer Song
 
-Produce the lyrics to that beloved classic, that field-trip favorite: 99 Bottles of Beer on the Wall.
+Recite the lyrics to that beloved classic, that field-trip favorite: 99 Bottles of Beer on the Wall.
 
 Note that not all verses are identical.
 
-```plain
+```text
 99 bottles of beer on the wall, 99 bottles of beer.
 Take one down and pass it around, 98 bottles of beer on the wall.
 
@@ -340,6 +340,7 @@ Change one thing at a time and check if your solution still passes the tests.
 Have fun!
 
 
+
 ## Getting Started
 
 For installation and learning resources, refer to the
@@ -386,7 +387,7 @@ stack ghci
 
 ## Feedback, Issues, Pull Requests
 
-The [exercism/xhaskell](https://github.com/exercism/xhaskell) repository on
+The [exercism/haskell](https://github.com/exercism/haskell) repository on
 GitHub is the home for all of the Haskell exercises.
 
 If you have feedback about an exercise, or want to help implementing a new
@@ -396,6 +397,5 @@ one, head over there and create an issue.  We'll do our best to help you!
 
 Learn to Program by Chris Pine [http://pine.fm/LearnToProgram/?Chapter=06](http://pine.fm/LearnToProgram/?Chapter=06)
 
-## Submitting Incomplete Problems
+## Submitting Incomplete Solutions
 It's possible to submit an incomplete solution so you can see how others have completed the exercise.
-

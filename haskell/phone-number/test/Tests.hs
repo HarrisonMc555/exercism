@@ -53,6 +53,22 @@ cases =
            , input       = "321234567890"
            , expected    = Nothing
            }
+    , Case { description = "invalid if area code starts with 0 on valid 11-digit number"
+           , input       = "1 (023) 456-7890"
+           , expected    = Nothing
+           }
+    , Case { description = "invalid if area code starts with 1 on valid 11-digit number"
+           , input       = "1 (123) 456-7890"
+           , expected    = Nothing
+           }
+    , Case { description = "invalid if exchange code starts with 0 on valid 11-digit number"
+           , input       = "1 (223) 056-7890"
+           , expected    = Nothing
+           }
+    , Case { description = "invalid if exchange code starts with 1 on valid 11-digit number"
+           , input       = "1 (223) 156-7890"
+           , expected    = Nothing
+           }
     , Case { description = "invalid with letters"
            , input       = "123-abc-7890"
            , expected    = Nothing
@@ -61,12 +77,20 @@ cases =
            , input       = "123-@:!-7890"
            , expected    = Nothing
            }
-    , Case { description = "invalid if area code does not start with 2-9"
+    , Case { description = "invalid if area code starts with 0"
+           , input       = "(023) 456-7890"
+           , expected    = Nothing
+           }
+    , Case { description = "invalid if area code starts with 1"
            , input       = "(123) 456-7890"
            , expected    = Nothing
            }
-    , Case { description = "invalid if exchange code does not start with 2-9"
+    , Case { description = "invalid if exchange code starts with 0"
            , input       = "(223) 056-7890"
+           , expected    = Nothing
+           }
+    , Case { description = "invalid if exchange code starts with 1"
+           , input       = "(223) 156-7890"
            , expected    = Nothing
            }
     ]

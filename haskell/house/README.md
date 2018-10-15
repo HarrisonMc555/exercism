@@ -1,6 +1,6 @@
 # House
 
-Output the nursery rhyme 'This is the House that Jack Built'.
+Recite the nursery rhyme 'This is the House that Jack Built'.
 
 > [The] process of placing a phrase of clause within another phrase of
 > clause is called embedding. It is through the processes of recursion
@@ -11,10 +11,9 @@ Output the nursery rhyme 'This is the House that Jack Built'.
 
 - [papyr.com](http://papyr.com/hypertextbooks/grammar/ph_noun.htm)
 
-
 The nursery rhyme reads as follows:
 
-```plain
+```text
 This is the house that Jack built.
 
 This is the malt
@@ -126,6 +125,7 @@ Change one thing at a time and check if your solution still passes the tests.
 Have fun!
 
 
+
 ## Getting Started
 
 For installation and learning resources, refer to the
@@ -172,7 +172,7 @@ stack ghci
 
 ## Feedback, Issues, Pull Requests
 
-The [exercism/xhaskell](https://github.com/exercism/xhaskell) repository on
+The [exercism/haskell](https://github.com/exercism/haskell) repository on
 GitHub is the home for all of the Haskell exercises.
 
 If you have feedback about an exercise, or want to help implementing a new
@@ -184,4 +184,3 @@ British nursery rhyme [http://en.wikipedia.org/wiki/This_Is_The_House_That_Jack_
 
 ## Submitting Incomplete Solutions
 It's possible to submit an incomplete solution so you can see how others have completed the exercise.
-

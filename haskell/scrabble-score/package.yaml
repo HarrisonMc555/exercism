@@ -1,14 +1,13 @@
 name: scrabble-score
-version: 1.0.0.3
+version: 1.1.0.4
 
 dependencies:
   - base
-  - containers
 
 library:
   exposed-modules: Scrabble
   source-dirs: src
-  dependencies:
+  # dependencies:
   # - foo       # List here the packages you
   # - bar       # want to use in your solution.
 

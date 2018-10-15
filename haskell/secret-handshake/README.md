@@ -6,7 +6,7 @@
 You and your fellow cohort of those in the "know" when it comes to
 binary decide to come up with a secret "handshake".
 
-```
+```text
 1 = wink
 10 = double blink
 100 = close your eyes
@@ -75,7 +75,7 @@ stack ghci
 
 ## Feedback, Issues, Pull Requests
 
-The [exercism/xhaskell](https://github.com/exercism/xhaskell) repository on
+The [exercism/haskell](https://github.com/exercism/haskell) repository on
 GitHub is the home for all of the Haskell exercises.
 
 If you have feedback about an exercise, or want to help implementing a new
@@ -83,8 +83,7 @@ one, head over there and create an issue.  We'll do our best to help you!
 
 ## Source
 
-Bert, in Mary Poppins [http://www.imdb.com/character/ch0011238/quotes](http://www.imdb.com/character/ch0011238/quotes)
+Bert, in Mary Poppins [http://www.imdb.com/title/tt0058331/quotes/qt0437047](http://www.imdb.com/title/tt0058331/quotes/qt0437047)
 
 ## Submitting Incomplete Solutions
 It's possible to submit an incomplete solution so you can see how others have completed the exercise.
-
