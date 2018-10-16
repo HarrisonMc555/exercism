@@ -8,8 +8,8 @@ class Raindrops
 
   def self.convert(num)
     sounds = NUM_SOUND_PAIRS
-             .select { |x, _| divisible?(num, x) }
-             .map { |_, sound| sound }
+             .select { |key| divisible?(num, key) }
+             .values
              .join
     sounds.empty? ? num.to_s : sounds
   end
