@@ -1,9 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 
 file=".scripts/lint"
 for d in /home/harrison/exercism/*; do
     (
-        cd "$d"
+        cd "$d" || exit 1
         if [[ -x "${file}" ]]; then
             echo
             echo "==== ${d##*/} ===="
