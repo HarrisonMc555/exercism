@@ -1,6 +1,6 @@
 use std::io::{Read, Result, Write};
 
-pub struct ReadStats<R>{
+pub struct ReadStats<R> {
     reader: R,
     num_bytes: usize,
     num_reads: usize,
@@ -41,7 +41,7 @@ impl<R: Read> Read for ReadStats<R> {
     }
 }
 
-pub struct WriteStats<W>{
+pub struct WriteStats<W> {
     writer: W,
     num_bytes: usize,
     num_writes: usize,
