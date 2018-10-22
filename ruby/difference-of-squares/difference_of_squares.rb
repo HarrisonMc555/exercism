@@ -1,16 +1,40 @@
 # Calculate square of sum and sum of squares
 class Squares
   def initialize(num)
-    nums = (1..num)
-    @square_of_sum = (sum nums)**2
-    @sum_of_squares = sum(nums.map { |x| x**2 })
-    @difference = @square_of_sum - @sum_of_squares
+    @nums = (1..num)
   end
-  attr_reader :square_of_sum
-  attr_reader :sum_of_squares
-  attr_reader :difference
+
+  def square_of_sum
+    @_square_of_sum ||= calc_square_of_sum
+    @_square_of_sum
+  end
+
+  def sum_of_squares
+    @_sum_of_squares ||= calc_sum_of_squares
+    @_sum_of_squares
+  end
+
+  def difference
+    @_difference ||= calc_difference
+    @_difference
+  end
+
+  private
+  def calc_square_of_sum
+    (Helper.sum @nums)**2
+  end
+
+  def calc_sum_of_squares
+    Helper.sum(@nums.map { |x| x**2 })
+  end
+
+  def calc_difference
+    square_of_sum - sum_of_squares
+  end
 end
 
-def sum(enumerable)
-  enumerable.reduce(0, :+)
+class Helper
+  def self.sum(enumerable)
+    enumerable.reduce(0, :+)
+  end
 end
