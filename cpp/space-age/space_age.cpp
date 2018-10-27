@@ -6,7 +6,7 @@ namespace {
     const int HOURS_PER_DAY = 24;
     const double DAYS_PER_YEAR = 365.25;
     const double SECONDS_PER_EARTH_YEAR = SECONDS_PER_MINUTE * MINUTES_PER_HOUR
-        * HOURS_PER_DAY * DAYS_PER_YEAR;
+                                          * HOURS_PER_DAY * DAYS_PER_YEAR;
 
     const double MERCURY_YEARS_PER_EARTH_YEAR = 0.2408467;
     const double VENUS_YEARS_PER_EARTH_YEAR = 0.61519726;
