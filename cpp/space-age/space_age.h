@@ -5,7 +5,7 @@ namespace space_age {
 
     class space_age {
     private:
-        long age_in_seconds;
+        const long age_in_seconds;
 
     public:
         explicit space_age(long age_in_seconds);
