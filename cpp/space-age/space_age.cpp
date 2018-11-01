@@ -19,9 +19,8 @@ namespace {
 
 namespace space_age {
 
-    space_age::space_age(long age_in_seconds) {
-        this->age_in_seconds = age_in_seconds;
-    }
+    space_age::space_age(long age_in_seconds) :
+        age_in_seconds(age_in_seconds) {}
 
     long space_age::seconds() const {
         return this->age_in_seconds;

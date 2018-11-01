@@ -8,7 +8,7 @@ namespace space_age {
         long age_in_seconds;
 
     public:
-        space_age(long age_in_seconds);
+        explicit space_age(long age_in_seconds);
         long seconds() const;
         double on_earth() const;
         double on_mercury() const;
