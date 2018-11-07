@@ -3,7 +3,7 @@
 file=".scripts/test"
 for d in /home/harrison/exercism/*; do
     (
-        cd "$d"
+        cd "$d" || exit 1
         if [[ -x "${file}" ]]; then
             echo "==== ${d##*/} ===="
             "${file}"
