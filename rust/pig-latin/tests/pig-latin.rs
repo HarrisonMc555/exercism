@@ -61,13 +61,11 @@ fn test_word_beginning_with_ch() {
 }
 
 #[test]
-#[ignore]
 fn test_word_beginning_with_qu() {
     assert_eq!(pl::translate("queen"), "eenquay");
 }
 
 #[test]
-#[ignore]
 fn test_word_beginning_with_qu_and_a_preceding_consonant() {
     assert_eq!(pl::translate("square"), "aresquay");
 }
