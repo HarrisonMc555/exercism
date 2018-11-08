@@ -5,8 +5,7 @@ pub fn translate(input: &str) -> String {
     if input.is_empty() {
         return String::from(input);
     }
-    let first_letter = input.chars().next().unwrap();
-    if is_vowel(first_letter) {
+    if starts_with_vowel(input) {
         translate_word_starting_with_vowel(input)
     } else {
         translate_word_starting_with_consonant(input)
@@ -30,18 +29,6 @@ fn get_first(word: &str) -> String {
         .unwrap_or(String::from(word))
 }
 
-fn is_vowel(letter: char) -> bool {
-    let letter = letter.to_ascii_lowercase();
-    match letter {
-        'a' => true,
-        'e' => true,
-        'i' => true,
-        'o' => true,
-        'u' => true,
-        _ => false,
-    }
-}
-
 fn get_diagraph(word: &str) -> Option<String> {
     DIAGRAPH_PATTERNS
         .iter()
@@ -59,4 +46,41 @@ fn get_diagraph_after_vowel(word: &str) -> Option<String> {
     diagraph.map(|&diagraph| {
         word.chars().take(diagraph.chars().count() + 1).collect()
     })
+}
+
+fn starts_with_vowel(word: &str) -> bool {
+    if word.is_empty() {
+        return false;
+    }
+    let first_letter = word.chars().next().unwrap();
+    // Regular vowels are vowels
+    if is_vowel(first_letter) {
+        return true;
+    }
+    // Regular consonants are NOT vowels
+    if first_letter != 'y' {
+        return false;
+    }
+    // 'y' is only a vowel if followed by a consonant
+    let second_letter = word.chars().skip(1).next();
+    match second_letter {
+        Some(c) => is_consonant(c),
+        None => true,
+    }
+}
+
+fn is_vowel(letter: char) -> bool {
+    let letter = letter.to_ascii_lowercase();
+    match letter {
+        'a' => true,
+        'e' => true,
+        'i' => true,
+        'o' => true,
+        'u' => true,
+        _ => false,
+    }
+}
+
+fn is_consonant(letter: char) -> bool {
+    !is_vowel(letter)
 }

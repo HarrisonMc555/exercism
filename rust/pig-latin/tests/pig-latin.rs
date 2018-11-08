@@ -86,7 +86,6 @@ fn test_word_beginning_with_sch() {
 }
 
 #[test]
-#[ignore]
 fn test_word_beginning_with_yt() {
     assert_eq!(pl::translate("yttria"), "yttriaay");
 }
