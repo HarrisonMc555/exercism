@@ -1,4 +1,4 @@
-const DIAGRAPH_PATTERNS: [&'static str; 5] = ["ch", "qu", "thr", "th", "sch"];
+const DIAGRAPH_PATTERNS: [&'static str; 6] = ["ch", "qu", "thr", "th", "sch", "rh"];
 const DIAGRAPH_AFTER_VOWEL_PATTERNS: [&'static str; 1] = ["qu"];
 const VOWEL_DIAGRAPHS: [&'static str; 1] = ["xr"];
 
