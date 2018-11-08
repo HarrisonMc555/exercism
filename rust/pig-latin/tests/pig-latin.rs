@@ -81,7 +81,6 @@ fn test_word_beginning_with_thr() {
 }
 
 #[test]
-#[ignore]
 fn test_word_beginning_with_sch() {
     assert_eq!(pl::translate("school"), "oolschay");
 }
