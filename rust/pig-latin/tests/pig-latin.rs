@@ -101,7 +101,6 @@ fn test_y_is_treated_like_a_vowel_at_the_end_of_a_consonant_cluster() {
 }
 
 #[test]
-#[ignore]
 fn test_a_whole_phrase() {
     assert_eq!(pl::translate("quick fast run"), "ickquay astfay unray");
 }
