@@ -1,5 +1,6 @@
 const DIAGRAPH_PATTERNS: [&'static str; 5] = ["ch", "qu", "thr", "th", "sch"];
 const DIAGRAPH_AFTER_VOWEL_PATTERNS: [&'static str; 1] = ["qu"];
+const VOWEL_DIAGRAPHS: [&'static str; 1] = ["xr"];
 
 pub fn translate(input: &str) -> String {
     if input.is_empty() {
@@ -55,6 +56,13 @@ fn starts_with_vowel(word: &str) -> bool {
     let first_letter = word.chars().next().unwrap();
     // Regular vowels are vowels
     if is_vowel(first_letter) {
+        return true;
+    }
+    // Vowel diagraphs count as vowels
+    if VOWEL_DIAGRAPHS
+        .iter()
+        .any(|&diagraph| word.starts_with(diagraph))
+    {
         return true;
     }
     // Regular consonants are NOT vowels

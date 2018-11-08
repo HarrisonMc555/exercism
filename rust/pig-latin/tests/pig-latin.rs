@@ -91,7 +91,6 @@ fn test_word_beginning_with_yt() {
 }
 
 #[test]
-#[ignore]
 fn test_word_beginning_with_xr() {
     assert_eq!(pl::translate("xray"), "xrayay");
 }
