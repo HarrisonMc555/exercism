@@ -16,19 +16,16 @@ fn test_word_beginning_with_i() {
 }
 
 #[test]
-#[ignore]
 fn test_word_beginning_with_o() {
     assert_eq!(pl::translate("object"), "objectay");
 }
 
 #[test]
-#[ignore]
 fn test_word_beginning_with_u() {
     assert_eq!(pl::translate("under"), "underay");
 }
 
 #[test]
-#[ignore]
 fn test_word_beginning_with_a_vowel_and_followed_by_a_qu() {
     assert_eq!(pl::translate("equal"), "equalay");
 }
