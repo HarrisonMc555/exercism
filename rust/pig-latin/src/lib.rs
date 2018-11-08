@@ -1,4 +1,4 @@
-const DIAGRAPH_PATTERNS: [&'static str; 4] = ["ch", "qu", "th", "thr"];
+const DIAGRAPH_PATTERNS: [&'static str; 4] = ["ch", "qu", "thr", "th"];
 const DIAGRAPH_AFTER_VOWEL_PATTERNS: [&'static str; 1] = ["qu"];
 
 pub fn translate(input: &str) -> String {

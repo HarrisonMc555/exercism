@@ -71,13 +71,11 @@ fn test_word_beginning_with_qu_and_a_preceding_consonant() {
 }
 
 #[test]
-#[ignore]
 fn test_word_beginning_with_th() {
     assert_eq!(pl::translate("therapy"), "erapythay");
 }
 
 #[test]
-#[ignore]
 fn test_word_beginning_with_thr() {
     assert_eq!(pl::translate("thrush"), "ushthray");
 }
