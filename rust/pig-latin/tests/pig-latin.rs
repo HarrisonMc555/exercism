@@ -1,18 +1,16 @@
 extern crate pig_latin as pl;
 
 #[test]
-fn test_word_beginning_with_a() {
+fn test_word_beginning_with_ax() {
     assert_eq!(pl::translate("apple"), "appleay");
 }
 
 #[test]
-#[ignore]
 fn test_word_beginning_with_e() {
     assert_eq!(pl::translate("ear"), "earay");
 }
 
 #[test]
-#[ignore]
 fn test_word_beginning_with_i() {
     assert_eq!(pl::translate("igloo"), "iglooay");
 }
