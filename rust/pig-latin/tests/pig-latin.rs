@@ -56,7 +56,6 @@ fn test_word_beginning_with_q_without_a_following_u() {
 }
 
 #[test]
-#[ignore]
 fn test_word_beginning_with_ch() {
     assert_eq!(pl::translate("chair"), "airchay");
 }
