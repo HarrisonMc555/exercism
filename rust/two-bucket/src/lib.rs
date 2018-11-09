@@ -119,7 +119,16 @@ fn emptying_moves(state: State, _limit: &Limit) -> Vec<State> {
 }
 
 fn filling_moves(state: State, limit: &Limit) -> Vec<State> {
-    unimplemented!("filling_moves not yet implemented");
+    let (a, b) = state;
+    let &(a_max, b_max) = limit;
+    let mut moves = Vec::new();
+    if a < a_max {
+        moves.push((a_max, b));
+    }
+    if b < b_max {
+        moves.push((a, b_max));
+    }
+    moves
 }
 
 fn goal_bucket(states: &Vec<State>, goal: Capacity) -> Option<State> {
