@@ -106,8 +106,16 @@ fn pouring_moves(state: State, limit: &Limit) -> Vec<State> {
     moves
 }
 
-fn emptying_moves(state: State, limit: &Limit) -> Vec<State> {
-    unimplemented!("emptying_moves not yet implemented");
+fn emptying_moves(state: State, _limit: &Limit) -> Vec<State> {
+    let (a, b) = state;
+    let mut moves = Vec::new();
+    if a > 0 {
+        moves.push((0, b));
+    }
+    if b > 0 {
+        moves.push((a, 0));
+    }
+    moves
 }
 
 fn filling_moves(state: State, limit: &Limit) -> Vec<State> {
