@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::cmp;
 
 #[derive(PartialEq, Eq, Debug)]
 pub enum Bucket {
@@ -89,7 +90,20 @@ fn possible_moves(state: State, limit: &Limit) -> Vec<State> {
 }
 
 fn pouring_moves(state: State, limit: &Limit) -> Vec<State> {
-    unimplemented!("pouring_moves not yet implemented");
+    let (a, b) = state;
+    let &(a_max, b_max) = limit;
+    let mut moves = Vec::new();
+    if a < a_max {
+        let a_new = cmp::min(a_max, a + b);
+        let b_new = b - a_new;
+        moves.push((a_new, b_new));
+    }
+    if b < b_max {
+        let b_new = cmp::min(b_max, b + a);
+        let a_new = a - b_new;
+        moves.push((a_new, b_new));
+    }
+    moves
 }
 
 fn emptying_moves(state: State, limit: &Limit) -> Vec<State> {
