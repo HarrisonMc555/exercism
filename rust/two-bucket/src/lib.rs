@@ -8,6 +8,7 @@ pub enum Bucket {
 
 type Capacity = u8;
 type State = (Capacity, Capacity);
+type Limit = (Capacity, Capacity);
 type Moves = u8;
 
 /// A struct to hold your results in.
@@ -39,6 +40,7 @@ pub fn solve(
     states.insert(first_state, 1);
     let mut moves = vec![first_state];
     let mut num_moves = 1;
+    let limit = (capacity_1, capacity_2);
     loop {
         if let Some(state) = goal_bucket(&moves, goal) {
             return BucketStats {
@@ -47,22 +49,30 @@ pub fn solve(
                 other_bucket: get_other_capacity(state, goal),
             };
         }
-        moves = all_next_moves(&moves, &states);
+        moves = all_next_moves(&moves, &limit, &states);
         num_moves += 1;
     }
 }
 
-fn all_next_moves(states: &Vec<State>, prev_states: &HashMap<State, Moves>) -> Vec<State> {
+fn all_next_moves(
+    states: &Vec<State>,
+    limit: &Limit,
+    prev_states: &HashMap<State, Moves>,
+) -> Vec<State> {
     let mut all_moves = Vec::new();
     for state in states.iter().cloned() {
-        all_moves.extend(next_moves(state, prev_states));
+        all_moves.extend(next_moves(state, limit, prev_states));
     }
     dedupify(&mut all_moves);
     all_moves
 }
 
-fn next_moves(state: State, prev_states: &HashMap<State, Moves>) -> Vec<State> {
-    let mut moves = possible_moves(state);
+fn next_moves(
+    state: State,
+    limit: &Limit,
+    prev_states: &HashMap<State, Moves>,
+) -> Vec<State> {
+    let mut moves = possible_moves(state, limit);
     moves.sort_unstable();
     moves.dedup();
     moves
@@ -71,27 +81,30 @@ fn next_moves(state: State, prev_states: &HashMap<State, Moves>) -> Vec<State> {
         .collect()
 }
 
-fn possible_moves(state: State) -> Vec<State> {
-    let mut moves = pouring_moves(state);
-    moves.extend(emptying_moves(state));
-    moves.extend(filling_moves(state));
+fn possible_moves(state: State, limit: &Limit) -> Vec<State> {
+    let mut moves = pouring_moves(state, limit);
+    moves.extend(emptying_moves(state, limit));
+    moves.extend(filling_moves(state, limit));
     moves
 }
 
-fn pouring_moves(_state: State) -> Vec<State> {
+fn pouring_moves(state: State, limit: &Limit) -> Vec<State> {
     unimplemented!("pouring_moves not yet implemented");
 }
 
-fn emptying_moves(_state: State) -> Vec<State> {
+fn emptying_moves(state: State, limit: &Limit) -> Vec<State> {
     unimplemented!("emptying_moves not yet implemented");
 }
 
-fn filling_moves(_state: State) -> Vec<State> {
+fn filling_moves(state: State, limit: &Limit) -> Vec<State> {
     unimplemented!("filling_moves not yet implemented");
 }
 
 fn goal_bucket(states: &Vec<State>, goal: Capacity) -> Option<State> {
-    states.iter().find(|&&st| has_goal_bucket(st, goal)).map(|&st| st)
+    states
+        .iter()
+        .find(|&&st| has_goal_bucket(st, goal))
+        .map(|&st| st)
 }
 
 fn has_goal_bucket(state: State, goal: Capacity) -> bool {
