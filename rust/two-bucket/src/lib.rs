@@ -45,11 +45,6 @@ pub fn solve(
     let mut num_moves = 1;
     let limit = (capacity_1, capacity_2);
     loop {
-        println!("Move {}:", num_moves);
-        for state in &cur_states {
-            let (a, b) = state;
-            println!("\t({}/{}, {}/{})", a, capacity_1, b, capacity_2);
-        }
         if let Some(state) = goal_bucket(&cur_states, goal) {
             return BucketStats {
                 moves: num_moves,
@@ -69,11 +64,7 @@ fn all_next_moves(
     limit: &Limit,
     prev_states: &HashSet<State>,
 ) -> HashSet<State> {
-    let mut all_moves = HashSet::new();
-    for state in states.iter().cloned() {
-        all_moves.extend(next_moves(&state, limit, prev_states));
-    }
-    all_moves
+    states.iter().cloned().flat_map(|st| next_moves(&st, limit, prev_states)).collect()
 }
 
 fn next_moves(
