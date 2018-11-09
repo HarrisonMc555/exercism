@@ -31,7 +31,8 @@ fn u32_to_bytes(value: &u32) -> Vec<u8> {
         bytes.push(byte);
         rest = next_rest;
     }
-    bytes.iter().rev().cloned().collect()
+    bytes.reverse();
+    bytes
 }
 
 fn first_byte(value: &u32) -> (u8, u32) {
