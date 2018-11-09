@@ -52,8 +52,8 @@ pub fn solve(
         if let Some(state) = goal_bucket(&cur_states, goal) {
             return BucketStats {
                 moves: num_moves,
-                goal_bucket: get_goal_bucket(state, goal),
-                other_bucket: get_other_capacity(state, goal),
+                goal_bucket: get_goal_bucket(&state, goal),
+                other_bucket: get_other_capacity(&state, goal),
             };
         }
         prev_states.extend(&cur_states);
@@ -70,14 +70,14 @@ fn all_next_moves(
 ) -> Vec<State> {
     let mut all_moves = Vec::new();
     for state in states.iter().cloned() {
-        all_moves.extend(next_moves(state, limit, prev_states));
+        all_moves.extend(next_moves(&state, limit, prev_states));
     }
     dedupify(&mut all_moves);
     all_moves
 }
 
 fn next_moves(
-    state: State,
+    state: &State,
     limit: &Limit,
     prev_states: &HashSet<State>,
 ) -> Vec<State> {
@@ -90,15 +90,15 @@ fn next_moves(
         .collect()
 }
 
-fn possible_moves(state: State, limit: &Limit) -> Vec<State> {
+fn possible_moves(state: &State, limit: &Limit) -> Vec<State> {
     let mut moves = pouring_moves(state, limit);
     moves.extend(emptying_moves(state, limit));
     moves.extend(filling_moves(state, limit));
     moves
 }
 
-fn pouring_moves(state: State, limit: &Limit) -> Vec<State> {
-    let (a, b) = state;
+fn pouring_moves(state: &State, limit: &Limit) -> Vec<State> {
+    let &(a, b) = state;
     let &(a_max, b_max) = limit;
     let mut moves = Vec::new();
     if a < a_max {
@@ -116,8 +116,8 @@ fn pouring_moves(state: State, limit: &Limit) -> Vec<State> {
     moves
 }
 
-fn emptying_moves(state: State, _limit: &Limit) -> Vec<State> {
-    let (a, b) = state;
+fn emptying_moves(state: &State, _limit: &Limit) -> Vec<State> {
+    let &(a, b) = state;
     let mut moves = Vec::new();
     if a > 0 {
         moves.push((0, b));
@@ -128,8 +128,8 @@ fn emptying_moves(state: State, _limit: &Limit) -> Vec<State> {
     moves
 }
 
-fn filling_moves(state: State, limit: &Limit) -> Vec<State> {
-    let (a, b) = state;
+fn filling_moves(state: &State, limit: &Limit) -> Vec<State> {
+    let &(a, b) = state;
     let &(a_max, b_max) = limit;
     let mut moves = Vec::new();
     if a < a_max {
@@ -144,17 +144,17 @@ fn filling_moves(state: State, limit: &Limit) -> Vec<State> {
 fn goal_bucket(states: &Vec<State>, goal: Capacity) -> Option<State> {
     states
         .iter()
-        .find(|&&st| has_goal_bucket(st, goal))
+        .find(|&st| has_goal_bucket(st, goal))
         .map(|&st| st)
 }
 
-fn has_goal_bucket(state: State, goal: Capacity) -> bool {
-    let (a, b) = state;
+fn has_goal_bucket(state: &State, goal: Capacity) -> bool {
+    let &(a, b) = state;
     a == goal || b == goal
 }
 
-fn get_goal_bucket(state: State, goal: Capacity) -> Bucket {
-    let (a, b) = state;
+fn get_goal_bucket(state: &State, goal: Capacity) -> Bucket {
+    let &(a, b) = state;
     if a == goal {
         Bucket::One
     } else if b == goal {
@@ -164,8 +164,8 @@ fn get_goal_bucket(state: State, goal: Capacity) -> Bucket {
     }
 }
 
-fn get_other_capacity(state: State, goal: Capacity) -> Capacity {
-    let (a, b) = state;
+fn get_other_capacity(state: &State, goal: Capacity) -> Capacity {
+    let &(a, b) = state;
     if a == goal {
         b
     } else if b == goal {
@@ -190,17 +190,17 @@ fn remove_opposite_start(
 ) -> Vec<State> {
     states
         .iter()
-        .filter(|&&st| !is_opposite_start(st, &limit, &start_bucket))
+        .filter(|&st| !is_opposite_start(st, &limit, &start_bucket))
         .map(|&st| st)
         .collect()
 }
 
 fn is_opposite_start(
-    state: State,
+    state: &State,
     limit: &Limit,
     start_bucket: &Bucket,
 ) -> bool {
-    let (a, b) = state;
+    let &(a, b) = state;
     let &(a_max, b_max) = limit;
     match start_bucket {
         Bucket::One => a == 0 && b == b_max,
