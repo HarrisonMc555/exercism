@@ -95,12 +95,14 @@ fn pouring_moves(state: State, limit: &Limit) -> Vec<State> {
     let mut moves = Vec::new();
     if a < a_max {
         let a_new = cmp::min(a_max, a + b);
-        let b_new = b - a_new;
+        let a_diff = a_new - a;
+        let b_new = b - a_diff;
         moves.push((a_new, b_new));
     }
     if b < b_max {
         let b_new = cmp::min(b_max, b + a);
-        let a_new = a - b_new;
+        let b_diff = b_new - b;
+        let a_new = a - b_diff;
         moves.push((a_new, b_new));
     }
     moves
