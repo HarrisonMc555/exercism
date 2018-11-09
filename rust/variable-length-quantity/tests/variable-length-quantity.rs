@@ -107,7 +107,6 @@ fn zero_incomplete_byte_sequence() {
 }
 
 #[test]
-#[ignore]
 fn overflow_u32() {
     assert_eq!(
         Err(vlq::Error::Overflow),

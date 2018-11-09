@@ -2,6 +2,7 @@ const MASK_LENGTH: usize = 7;
 const MASK: u32 = (1 << MASK_LENGTH) - 1;
 const CONTINUE_BIT: u8 = 1 << MASK_LENGTH;
 const MAX_BYTES: usize = 5;
+const HIGHEST_BYTE_MAX_VALUE: u8 = 0x0f;
 
 #[derive(Debug, PartialEq)]
 pub enum Error {
@@ -70,7 +71,6 @@ fn decode_value(bytes: &[u8]) -> Result<u32, Error> {
 }
 
 fn get_value_bytes(bytes: &[u8]) -> Result<&[u8], Error> {
-    println!("get_value_bytes({:?})", bytes);
     if bytes.is_empty() {
         return Ok(&[]);
     }
@@ -79,10 +79,14 @@ fn get_value_bytes(bytes: &[u8]) -> Result<&[u8], Error> {
         .take(MAX_BYTES)
         .position(|byte| is_last_byte(byte))
     {
-        println!("\tIndex of last byte is {}", index);
-        Ok(&bytes[..index + 1])
+        if index + 1 == MAX_BYTES
+            && decode_other_byte(&bytes[0]) > HIGHEST_BYTE_MAX_VALUE as u32
+        {
+            Err(Error::Overflow)
+        } else {
+            Ok(&bytes[..index + 1])
+        }
     } else {
-        println!("\tNo last byte found");
         Err(Error::IncompleteNumber)
     }
 }
