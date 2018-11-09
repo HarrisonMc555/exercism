@@ -40,7 +40,8 @@ pub fn solve(
     let mut prev_states = HashSet::new();
     prev_states.insert(zero_state);
     prev_states.insert(first_state);
-    let mut cur_states = vec![first_state];
+    let mut cur_states = HashSet::new();
+    cur_states.insert(first_state);
     let mut num_moves = 1;
     let limit = (capacity_1, capacity_2);
     loop {
@@ -64,15 +65,14 @@ pub fn solve(
 }
 
 fn all_next_moves(
-    states: &Vec<State>,
+    states: &HashSet<State>,
     limit: &Limit,
     prev_states: &HashSet<State>,
-) -> Vec<State> {
-    let mut all_moves = Vec::new();
+) -> HashSet<State> {
+    let mut all_moves = HashSet::new();
     for state in states.iter().cloned() {
         all_moves.extend(next_moves(&state, limit, prev_states));
     }
-    dedupify(&mut all_moves);
     all_moves
 }
 
@@ -80,72 +80,69 @@ fn next_moves(
     state: &State,
     limit: &Limit,
     prev_states: &HashSet<State>,
-) -> Vec<State> {
-    let mut moves = possible_moves(state, limit);
-    moves.sort_unstable();
-    moves.dedup();
-    moves
-        .into_iter()
-        .filter(|st| !prev_states.contains(st))
+) -> HashSet<State> {
+    possible_moves(state, limit)
+        .difference(prev_states)
+        .cloned()
         .collect()
 }
 
-fn possible_moves(state: &State, limit: &Limit) -> Vec<State> {
+fn possible_moves(state: &State, limit: &Limit) -> HashSet<State> {
     let mut moves = pouring_moves(state, limit);
     moves.extend(emptying_moves(state, limit));
     moves.extend(filling_moves(state, limit));
     moves
 }
 
-fn pouring_moves(state: &State, limit: &Limit) -> Vec<State> {
+fn pouring_moves(state: &State, limit: &Limit) -> HashSet<State> {
     let &(a, b) = state;
     let &(a_max, b_max) = limit;
-    let mut moves = Vec::new();
+    let mut moves = HashSet::new();
     if a < a_max {
         let a_new = cmp::min(a_max, a + b);
         let a_diff = a_new - a;
         let b_new = b - a_diff;
-        moves.push((a_new, b_new));
+        moves.insert((a_new, b_new));
     }
     if b < b_max {
         let b_new = cmp::min(b_max, b + a);
         let b_diff = b_new - b;
         let a_new = a - b_diff;
-        moves.push((a_new, b_new));
+        moves.insert((a_new, b_new));
     }
     moves
 }
 
-fn emptying_moves(state: &State, _limit: &Limit) -> Vec<State> {
+fn emptying_moves(state: &State, _limit: &Limit) -> HashSet<State> {
     let &(a, b) = state;
-    let mut moves = Vec::new();
+    let mut moves = HashSet::new();
     if a > 0 {
-        moves.push((0, b));
+        moves.insert((0, b));
     }
     if b > 0 {
-        moves.push((a, 0));
+        moves.insert((a, 0));
     }
     moves
 }
 
-fn filling_moves(state: &State, limit: &Limit) -> Vec<State> {
+fn filling_moves(state: &State, limit: &Limit) -> HashSet<State> {
     let &(a, b) = state;
     let &(a_max, b_max) = limit;
-    let mut moves = Vec::new();
+    let mut moves = HashSet::new();
     if a < a_max {
-        moves.push((a_max, b));
+        moves.insert((a_max, b));
     }
     if b < b_max {
-        moves.push((a, b_max));
+        moves.insert((a, b_max));
     }
     moves
 }
 
-fn goal_bucket(states: &Vec<State>, goal: Capacity) -> Option<State> {
+fn goal_bucket(states: &HashSet<State>, goal: Capacity) -> Option<State> {
     states
         .iter()
         .find(|&st| has_goal_bucket(st, goal))
-        .map(|&st| st)
+        .cloned()
 }
 
 fn has_goal_bucket(state: &State, goal: Capacity) -> bool {
@@ -175,23 +172,15 @@ fn get_other_capacity(state: &State, goal: Capacity) -> Capacity {
     }
 }
 
-fn dedupify<T>(vec: &mut Vec<T>)
-where
-    T: Ord,
-{
-    vec.sort_unstable();
-    vec.dedup()
-}
-
 fn remove_opposite_start(
-    states: Vec<State>,
+    states: HashSet<State>,
     limit: &Limit,
     start_bucket: &Bucket,
-) -> Vec<State> {
+) -> HashSet<State> {
     states
         .iter()
         .filter(|&st| !is_opposite_start(st, &limit, &start_bucket))
-        .map(|&st| st)
+        .cloned()
         .collect()
 }
 
