@@ -8,7 +8,6 @@ fn to_single_byte() {
 }
 
 #[test]
-#[ignore]
 fn to_double_byte() {
     assert_eq!(&[0x81, 0x00], vlq::to_bytes(&[0x80]).as_slice());
     assert_eq!(&[0xc0, 0x00], vlq::to_bytes(&[0x2000]).as_slice());
