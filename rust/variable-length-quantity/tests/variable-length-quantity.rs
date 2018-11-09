@@ -15,7 +15,6 @@ fn to_double_byte() {
 }
 
 #[test]
-#[ignore]
 fn to_triple_byte() {
     assert_eq!(&[0x81, 0x80, 0x00], vlq::to_bytes(&[0x4000]).as_slice());
     assert_eq!(&[0xc0, 0x80, 0x00], vlq::to_bytes(&[0x10_0000]).as_slice());
@@ -23,7 +22,6 @@ fn to_triple_byte() {
 }
 
 #[test]
-#[ignore]
 fn to_quadruple_byte() {
     assert_eq!(
         &[0x81, 0x80, 0x80, 0x00],
@@ -40,7 +38,6 @@ fn to_quadruple_byte() {
 }
 
 #[test]
-#[ignore]
 fn to_quintuple_byte() {
     assert_eq!(
         &[0x81, 0x80, 0x80, 0x80, 0x00],
