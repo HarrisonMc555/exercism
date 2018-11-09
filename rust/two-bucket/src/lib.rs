@@ -1,5 +1,5 @@
-use std::collections::HashMap;
 use std::cmp;
+use std::collections::HashSet;
 
 #[derive(PartialEq, Eq, Debug)]
 pub enum Bucket {
@@ -15,10 +15,11 @@ type Moves = u8;
 /// A struct to hold your results in.
 #[derive(PartialEq, Eq, Debug)]
 pub struct BucketStats {
-    /// The total number of "moves" it should take to reach the desired number of liters, including
-    /// the first fill.
+    /// The total number of "moves" it should take to reach the desired number
+    /// of liters, including the first fill.
     pub moves: Moves,
-    /// Which bucket should end up with the desired number of liters? (Either "one" or "two")
+    /// Which bucket should end up with the desired number of liters? (Either
+    /// "one" or "two")
     pub goal_bucket: Bucket,
     /// How many liters are left in the other bucket?
     pub other_bucket: Capacity,
@@ -31,26 +32,33 @@ pub fn solve(
     goal: u8,
     start_bucket: &Bucket,
 ) -> BucketStats {
-    let mut states = HashMap::new();
     let zero_state = (0, 0);
     let first_state = match &start_bucket {
         Bucket::One => (capacity_1, 0),
         Bucket::Two => (0, capacity_2),
     };
-    states.insert(zero_state, 0);
-    states.insert(first_state, 1);
-    let mut moves = vec![first_state];
+    let mut prev_states = HashSet::new();
+    prev_states.insert(zero_state);
+    prev_states.insert(first_state);
+    let mut cur_states = vec![first_state];
     let mut num_moves = 1;
     let limit = (capacity_1, capacity_2);
     loop {
-        if let Some(state) = goal_bucket(&moves, goal) {
+        println!("Move {}:", num_moves);
+        for state in &cur_states {
+            let (a, b) = state;
+            println!("\t({}/{}, {}/{})", a, capacity_1, b, capacity_2);
+        }
+        if let Some(state) = goal_bucket(&cur_states, goal) {
             return BucketStats {
                 moves: num_moves,
                 goal_bucket: get_goal_bucket(state, goal),
                 other_bucket: get_other_capacity(state, goal),
             };
         }
-        moves = all_next_moves(&moves, &limit, &states);
+        prev_states.extend(&cur_states);
+        cur_states = all_next_moves(&cur_states, &limit, &prev_states);
+        cur_states = remove_opposite_start(cur_states, &limit, &start_bucket);
         num_moves += 1;
     }
 }
@@ -58,7 +66,7 @@ pub fn solve(
 fn all_next_moves(
     states: &Vec<State>,
     limit: &Limit,
-    prev_states: &HashMap<State, Moves>,
+    prev_states: &HashSet<State>,
 ) -> Vec<State> {
     let mut all_moves = Vec::new();
     for state in states.iter().cloned() {
@@ -71,14 +79,14 @@ fn all_next_moves(
 fn next_moves(
     state: State,
     limit: &Limit,
-    prev_states: &HashMap<State, Moves>,
+    prev_states: &HashSet<State>,
 ) -> Vec<State> {
     let mut moves = possible_moves(state, limit);
     moves.sort_unstable();
     moves.dedup();
     moves
         .into_iter()
-        .filter(|st| !prev_states.contains_key(st))
+        .filter(|st| !prev_states.contains(st))
         .collect()
 }
 
@@ -173,4 +181,29 @@ where
 {
     vec.sort_unstable();
     vec.dedup()
+}
+
+fn remove_opposite_start(
+    states: Vec<State>,
+    limit: &Limit,
+    start_bucket: &Bucket,
+) -> Vec<State> {
+    states
+        .iter()
+        .filter(|&&st| !is_opposite_start(st, &limit, &start_bucket))
+        .map(|&st| st)
+        .collect()
+}
+
+fn is_opposite_start(
+    state: State,
+    limit: &Limit,
+    start_bucket: &Bucket,
+) -> bool {
+    let (a, b) = state;
+    let &(a_max, b_max) = limit;
+    match start_bucket {
+        Bucket::One => a == 0 && b == b_max,
+        Bucket::Two => a == a_max && b == 0,
+    }
 }
