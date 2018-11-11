@@ -2,6 +2,7 @@
 extern crate lazy_static;
 
 use std::collections::HashMap;
+use std::collections::HashSet;
 
 lazy_static! {
     static ref BRACKET_HASH: HashMap<char, char> = {
@@ -11,8 +12,30 @@ lazy_static! {
         bracket_hash.insert('{', '}');
         bracket_hash
     };
+
+    static ref CLOSE_BRACKETS: HashSet<char> = {
+        let mut close_brackets = HashSet::new();
+        close_brackets.insert(')');
+        close_brackets.insert(']');
+        close_brackets.insert('}');
+        close_brackets
+    };
 }
 
 pub fn brackets_are_balanced(string: &str) -> bool {
-    unimplemented!("Check if the string \"{}\" contains balanced brackets", string);
+    let mut stack = Vec::new();
+    for c in string.chars() {
+        if BRACKET_HASH.contains_key(&c) {
+            stack.push(c);
+        } else if CLOSE_BRACKETS.contains(&c) {
+            if let Some(open) = stack.pop() {
+                if BRACKET_HASH[&open] != c {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+    }
+    stack.is_empty()
 }
