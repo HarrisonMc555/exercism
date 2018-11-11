@@ -28,11 +28,8 @@ pub fn brackets_are_balanced(string: &str) -> bool {
         if BRACKET_HASH.contains_key(&c) {
             stack.push(c);
         } else if CLOSE_BRACKETS.contains(&c) {
-            if let Some(open) = stack.pop() {
-                if BRACKET_HASH[&open] != c {
-                    return false;
-                }
-            } else {
+            let open = stack.pop();
+            if open.is_none() || BRACKET_HASH[&open.unwrap()] != c {
                 return false;
             }
         }
