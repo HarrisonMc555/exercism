@@ -23,7 +23,6 @@ fn test_encrypt_also_decrypts_square() {
 }
 
 #[test]
-#[ignore]
 fn test_example() {
     test(
         "If man was meant to stay on the ground, god would have given us roots.",
