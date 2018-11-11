@@ -1,3 +1,6 @@
 [package]
 name = "bracket-push"
 version = "1.2.0"
+
+[dependencies]
+lazy_static = "1.2.*"
