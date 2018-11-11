@@ -14,11 +14,7 @@ lazy_static! {
     };
 
     static ref CLOSE_BRACKETS: HashSet<char> = {
-        let mut close_brackets = HashSet::new();
-        close_brackets.insert(')');
-        close_brackets.insert(']');
-        close_brackets.insert('}');
-        close_brackets
+        BRACKET_HASH.values().cloned().collect()
     };
 }
 
