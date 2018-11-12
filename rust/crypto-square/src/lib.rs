@@ -1,52 +1,49 @@
 pub fn encrypt(input: &str) -> String {
+    if input.is_empty() {
+        return String::new();
+    }
     println!("input: \"{}\"", input);
     let normalized = normalize(input);
     println!("normalized: \"{}\"", normalized);
     let normalized_vec: Vec<_> = normalized.chars().collect();
-    let rectangle = to_rectangle(&normalized_vec);
+    let (r, c) = calculate_dimensions(normalized_vec.len());
+    println!("r, c = {}, {}", r, c);
+    let rectangle = to_rectangle(&normalized_vec, c);
     println!("rectangle:");
     for row in &rectangle {
         println!("\t{}", row.iter().cloned().collect::<String>());
     }
     let transposed = transpose_rectangle(&rectangle);
     println!("transposed:");
-    for row in transposed {
-        println!("\t{}", row.iter().cloned().collect::<String>());
+    for row in &transposed {
+        println!("\t\"{: <1$}\"", row.iter().cloned().collect::<String>(), r);
     }
-    normalized
+    
+    let flattened: String = transposed
+        .iter()
+        .map(|row| format!("{: <1$}", row.iter().cloned().collect::<String>(), r))
+        .collect::<Vec<String>>()
+        .join(" ");
+        // flatten_rectangle(&transposed).iter().cloned().collect();
+    println!("flattened: \"{}\"", flattened);
+    flattened
 }
 
 fn normalize(input: &str) -> String {
     input
         .chars()
-        .filter(|c| c.is_ascii_alphabetic())
+        .filter(|c| c.is_ascii_alphanumeric())
         .map(|c| c.to_ascii_lowercase())
         .collect()
 }
 
-fn to_rectangle<T>(vec: &[T]) -> Vec<Vec<T>>
-    where T: Clone,
+fn to_rectangle<T>(vec: &[T], num_cols: usize) -> Vec<Vec<T>>
+where
+    T: Clone,
 {
-    let (r, c) = calculate_dimensions(vec.len());
-    // let letters: Vec<_> = input.chars().collect();
-    // let num_leftover = r * c - letters.len();
-    let num_leftover = r * c - vec.len();
-    // let extra_spaces = (0..num_leftover).map(|_| ' ');
-    // let mut rectangle: Vec<Vec<char>> = letters
-    //     .chunks(c)
-    //     .map(|row| row.iter().cloned().collect())
-    //     .collect();
-    // rectangle.last_mut().map(|v| v.extend(extra_spaces));
-    // rectangle
-    vec
-        .chunks(c)
+    vec.chunks(num_cols)
         .map(|row| row.iter().cloned().collect())
         .collect()
-    // (0..r)
-    //     .map(|i| (0..c)
-    //          .map(|j| at_or(&letters, i + r*j, &' '))
-    //          .collect())
-    //     .collect()
 }
 
 fn transpose_rectangle<T>(rectangle: &[Vec<T>]) -> Vec<Vec<T>>
@@ -58,15 +55,28 @@ where
     }
     let new_r = rectangle.iter().map(|row| row.len()).max().unwrap();
     (0..new_r)
-        .map(|i| rectangle.iter().filter_map(|row| at(row, i).map(|t| t.clone())).collect())
-        .collect()
+        .map(|i| {
+            rectangle
+                .iter()
+                .filter_map(|row| at(row, i).map(|t| t.clone()))
+                .collect()
+        }).collect()
 }
 
-fn flatten_rectangle<T>(rectangle: &[Vec<T>]) -> Vec<T>
-    where T: Clone,
-{
-    rectangle.iter().flat_map(|row| row).cloned().collect()
-}
+// fn flatten_rectangle<T>(rectangle: &[Vec<T>], join: T) -> Vec<T>
+// where
+//     T: Clone,
+// {
+//     if rectangle.is_empty() {
+//         Vec::new();
+//     }
+//     let len = rectangle[0].len();
+//     rectangle
+//         .iter()
+//         .map(|row| format!("{: >1$}", len, row.iter().cloned().collect()))
+//         .collect()
+//         .join(join)
+// }
 
 fn calculate_dimensions(size: usize) -> (usize, usize) {
     let dim = (size as f64).sqrt() as usize;
@@ -78,14 +88,6 @@ fn calculate_dimensions(size: usize) -> (usize, usize) {
         (dim + 1, dim + 1)
     }
 }
-
-// fn at_or<'a, T>(slice: &'a [T], index: usize, default: &'a T) -> &'a T {
-//     if index >= slice.len() {
-//         default
-//     } else {
-//         &slice[index]
-//     }
-// }
 
 fn at<'a, T>(slice: &'a [T], index: usize) -> Option<&'a T> {
     if index >= slice.len() {
