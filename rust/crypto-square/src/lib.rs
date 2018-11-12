@@ -2,31 +2,16 @@ pub fn encrypt(input: &str) -> String {
     if input.is_empty() {
         return String::new();
     }
-    println!("input: \"{}\"", input);
     let normalized = normalize(input);
-    println!("normalized: \"{}\"", normalized);
     let normalized_vec: Vec<_> = normalized.chars().collect();
     let (r, c) = calculate_dimensions(normalized_vec.len());
-    println!("r, c = {}, {}", r, c);
     let rectangle = to_rectangle(&normalized_vec, c);
-    println!("rectangle:");
-    for row in &rectangle {
-        println!("\t{}", row.iter().cloned().collect::<String>());
-    }
     let transposed = transpose_rectangle(&rectangle);
-    println!("transposed:");
-    for row in &transposed {
-        println!("\t\"{: <1$}\"", row.iter().cloned().collect::<String>(), r);
-    }
-    
-    let flattened: String = transposed
+    transposed
         .iter()
-        .map(|row| format!("{: <1$}", row.iter().cloned().collect::<String>(), r))
+        .map(|row| format_row(row, r))
         .collect::<Vec<String>>()
-        .join(" ");
-        // flatten_rectangle(&transposed).iter().cloned().collect();
-    println!("flattened: \"{}\"", flattened);
-    flattened
+        .join(" ")
 }
 
 fn normalize(input: &str) -> String {
@@ -63,21 +48,6 @@ where
         }).collect()
 }
 
-// fn flatten_rectangle<T>(rectangle: &[Vec<T>], join: T) -> Vec<T>
-// where
-//     T: Clone,
-// {
-//     if rectangle.is_empty() {
-//         Vec::new();
-//     }
-//     let len = rectangle[0].len();
-//     rectangle
-//         .iter()
-//         .map(|row| format!("{: >1$}", len, row.iter().cloned().collect()))
-//         .collect()
-//         .join(join)
-// }
-
 fn calculate_dimensions(size: usize) -> (usize, usize) {
     let dim = (size as f64).sqrt() as usize;
     if dim * dim >= size {
@@ -95,4 +65,8 @@ fn at<'a, T>(slice: &'a [T], index: usize) -> Option<&'a T> {
     } else {
         Some(&slice[index])
     }
+}
+
+fn format_row(chars: &[char], width: usize) -> String {
+    format!("{: <1$}", chars.iter().cloned().collect::<String>(), width)
 }
