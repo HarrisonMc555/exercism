@@ -64,7 +64,11 @@ fn all_next_moves(
     limit: &Limit,
     prev_states: &HashSet<State>,
 ) -> HashSet<State> {
-    states.iter().cloned().flat_map(|st| next_moves(&st, limit, prev_states)).collect()
+    states
+        .iter()
+        .cloned()
+        .flat_map(|st| next_moves(&st, limit, prev_states))
+        .collect()
 }
 
 fn next_moves(
@@ -130,10 +134,7 @@ fn filling_moves(state: &State, limit: &Limit) -> HashSet<State> {
 }
 
 fn goal_bucket(states: &HashSet<State>, goal: Capacity) -> Option<State> {
-    states
-        .iter()
-        .find(|&st| has_goal_bucket(st, goal))
-        .cloned()
+    states.iter().find(|&st| has_goal_bucket(st, goal)).cloned()
 }
 
 fn has_goal_bucket(state: &State, goal: Capacity) -> bool {

@@ -92,7 +92,8 @@ fn say_digit(n: u64) -> Option<String> {
 }
 
 fn either_or_combine<T, F>(a: Option<T>, b: Option<T>, f: F) -> Option<T>
-    where F: FnOnce(T, T) -> T
+where
+    F: FnOnce(T, T) -> T,
 {
     match (a, b) {
         (Some(a), Some(b)) => Some(f(a, b)),
