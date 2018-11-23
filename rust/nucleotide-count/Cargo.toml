@@ -1,0 +1,6 @@
+[package]
+name = "nucleotide-count"
+version = "0.0.0"
+
+[dependencies]
+lazy_static = "1.2.*"
