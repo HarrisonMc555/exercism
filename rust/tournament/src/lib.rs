@@ -78,11 +78,3 @@ fn update_history(history: &mut History, result: MatchResult) {
         MatchResult::Draw => history.2 += 1,
     }
 }
-
-#[allow(dead_code)]
-fn count_matching<T, F>(values: &[T], f: F) -> usize
-where
-    for<'r> F: Fn(&'r &T) -> bool,
-{
-    values.iter().filter(f).count()
-}
