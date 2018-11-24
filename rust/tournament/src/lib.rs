@@ -19,7 +19,7 @@ pub fn tally(match_results: &str) -> String {
         add_result(&mut results, result);
     }
     let mut results: Vec<_> = results.iter().collect();
-    results.sort_unstable_by_key(|(_, (w, l, d))| w + l + d);
+    results.sort_unstable_by_key(|(_, history)| num_points(history));
     results.reverse();
     let mut lines = vec![String::from(HEADER)];
     for (name, &history) in results.iter() {
@@ -63,8 +63,8 @@ fn other_team_result(result: &MatchResult) -> MatchResult {
 
 fn create_line(team_name: &str, history: History) -> String {
     let (wins, losses, draws) = history;
-    let points = wins * 3 + draws;
-    let matches = wins + losses + draws;
+    let points = num_points(&history);
+    let matches = num_matches(&history);
     format!(
         "{:30} | {:2} | {:2} | {:2} | {:2} | {:2}",
         team_name, matches, wins, draws, losses, points
@@ -77,4 +77,12 @@ fn update_history(history: &mut History, result: MatchResult) {
         MatchResult::Loss => history.1 += 1,
         MatchResult::Draw => history.2 += 1,
     }
+}
+
+fn num_points((wins, _, draws): &History) -> u64 {
+    wins * 3 + draws
+}
+
+fn num_matches((wins, losses, draws): &History) -> u64 {
+    wins + losses + draws
 }
