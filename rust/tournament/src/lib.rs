@@ -19,7 +19,9 @@ pub fn tally(match_results: &str) -> String {
         add_result(&mut results, result);
     }
     let mut results: Vec<_> = results.iter().collect();
-    results.sort_unstable_by_key(|(_, history)| num_points(history));
+    results.sort_unstable_by_key(|(name, _)| name.to_owned());
+    results.reverse();
+    results.sort_by_key(|(_, history)| num_points(history));
     results.reverse();
     let mut lines = vec![String::from(HEADER)];
     for (name, &history) in results.iter() {
