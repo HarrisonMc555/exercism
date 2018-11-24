@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 
-const HEADER: &'static str = "Team                           | MP |  W |  D |  L |  P";
+const HEADER: &'static str =
+    "Team                           | MP |  W |  D |  L |  P";
 
 type Match = (String, String, MatchResult);
 type History = (u64, u64, u64);
