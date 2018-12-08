@@ -37,10 +37,27 @@ pub enum Error {
 ///     process input with leading 0 digits.
 ///
 pub fn convert(number: &[u32], from_base: u32, to_base: u32) -> Result<Vec<u32>, Error> {
+    println!("{:?}", from_digits(number, from_base));
     unimplemented!(
         "Convert {:?} from base {} to base {}",
         number,
         from_base,
         to_base
     )
+}
+
+fn from_digits(digits: &[u32], base: u32) -> Result<u32, Error> {
+    if base < 1 {
+        return Err(Error::InvalidInputBase);
+    }
+    let mut result = 0;
+    let mut power = 1;
+    for (index, &digit) in digits.into_iter().enumerate() {
+        if digit >= base {
+            return Err(Error::InvalidDigit(index as u32));
+        }
+        result += digit * power;
+        power *= base;
+    }
+    Ok(result)
 }
