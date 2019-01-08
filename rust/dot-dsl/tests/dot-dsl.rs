@@ -14,7 +14,7 @@ fn test_empty_graph() {
 
     assert!(graph.edges.is_empty());
 
-    // assert!(graph.attrs.is_empty());
+    assert!(graph.attrs.is_empty());
 }
 
 // #[test]
