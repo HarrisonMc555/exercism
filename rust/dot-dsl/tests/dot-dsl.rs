@@ -52,11 +52,11 @@ fn test_graph_with_one_edge() {
 
     let graph = Graph::new().with_edges(&edges);
 
-    // assert!(graph.nodes.is_empty());
+    assert!(graph.nodes.is_empty());
 
-    // assert!(graph.attrs.is_empty());
+    assert!(graph.attrs.is_empty());
 
-    // assert_eq!(graph.edges, vec![Edge::new("a", "b")]);
+    assert_eq!(graph.edges, vec![Edge::new("a", "b")]);
 }
 
 // #[test]

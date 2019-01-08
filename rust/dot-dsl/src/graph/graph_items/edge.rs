@@ -1,4 +1,4 @@
-#[derive(Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Edge;
 
 impl Edge {
