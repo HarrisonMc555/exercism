@@ -50,7 +50,7 @@ fn test_graph_with_one_node_with_keywords() {
 fn test_graph_with_one_edge() {
     let edges = vec![Edge::new("a", "b")];
 
-    // let graph = Graph::new().with_edges(&edges);
+    let graph = Graph::new().with_edges(&edges);
 
     // assert!(graph.nodes.is_empty());
 

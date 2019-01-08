@@ -1,9 +1,11 @@
 pub mod graph_items;
+
 use crate::graph::graph_items::node::Node;
+use crate::graph::graph_items::edge::Edge;
 
 pub struct Graph {
     pub nodes : Vec<Node>,
-    pub edges : Vec<u32>,
+    pub edges : Vec<Edge>,
     pub attrs : Vec<u32>,
 }
 
@@ -18,11 +20,11 @@ impl Graph {
 
     pub fn with_nodes(mut self, nodes: &[Node]) -> Self {
         self.nodes = nodes.to_vec();
-        // self.nodes = Vec::new();
-        // for &node in nodes {
-        //     self.nodes.push(node);
-        // }
+        self
+    }
+
+    pub fn with_edges(mut self, edges: &[Edge]) -> Self {
+        self.edges = edges.to_vec();
         self
     }
 }
-
