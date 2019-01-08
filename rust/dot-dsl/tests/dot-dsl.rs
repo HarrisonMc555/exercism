@@ -12,7 +12,7 @@ fn test_empty_graph() {
 
     assert!(graph.nodes.is_empty());
 
-    // assert!(graph.edges.is_empty());
+    assert!(graph.edges.is_empty());
 
     // assert!(graph.attrs.is_empty());
 }
