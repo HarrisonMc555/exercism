@@ -31,20 +31,19 @@ fn test_graph_with_one_node() {
 }
 
 #[test]
-#[ignore]
 fn test_graph_with_one_node_with_keywords() {
     let nodes = vec![Node::new("a").with_attrs(&[("color", "green")])];
 
-    // let graph = Graph::new().with_nodes(&nodes);
+    let graph = Graph::new().with_nodes(&nodes);
 
-    // assert!(graph.edges.is_empty());
+    assert!(graph.edges.is_empty());
 
-    // assert!(graph.attrs.is_empty());
+    assert!(graph.attrs.is_empty());
 
-    // assert_eq!(
-    //     graph.nodes,
-    //     vec![Node::new("a").with_attrs(&[("color", "green")])]
-    // );
+    assert_eq!(
+        graph.nodes,
+        vec![Node::new("a").with_attrs(&[("color", "green")])]
+    );
 }
 
 // #[test]
