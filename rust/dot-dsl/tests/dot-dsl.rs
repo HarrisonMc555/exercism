@@ -24,9 +24,9 @@ fn test_graph_with_one_node() {
 
     let graph = Graph::new().with_nodes(&nodes);
 
-    // assert!(graph.edges.is_empty());
+    assert!(graph.edges.is_empty());
 
-    // assert!(graph.attrs.is_empty());
+    assert!(graph.attrs.is_empty());
 
     // assert_eq!(graph.nodes, vec![Node::new("a")]);
 }

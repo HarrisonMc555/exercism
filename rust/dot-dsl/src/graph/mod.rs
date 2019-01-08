@@ -16,8 +16,12 @@ impl Graph {
         }
     }
 
-    pub fn with_nodes(& mut self, nodes: &[Node]) -> & mut Self {
-        self.nodes = nodes.to_vec();
+    pub fn with_nodes(mut self, nodes: &[Node]) -> Self {
+        // self.nodes = nodes.to_vec();
+        self.nodes = Vec::new();
+        for &node in nodes {
+            self.nodes.push(node);
+        }
         self
     }
 }
