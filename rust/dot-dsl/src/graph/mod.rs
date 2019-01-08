@@ -34,4 +34,27 @@ impl Graph {
             |&(s1, s2)| (s1.to_owned(), s2.to_owned())).collect();
         self
     }
+
+    pub fn get_node(&self, node_name: &str) -> Option<&Node> {
+        for node in self.nodes.iter() {
+            if node.get_name() == node_name {
+                return Some(&node);
+            }
+        }
+        None
+    }
+
+    pub fn get_edge(&self, source_name: &str, dest_name: &str) -> Option<&Edge> {
+        for edge in self.edges.iter() {
+            if edge.get_source_name() == source_name &&
+                edge.get_dest_name() == dest_name {
+                return Some(&edge);
+            }
+        }
+        None
+    }
+
+    pub fn get_attr(&self, attr_name: &str) -> Option<&str> {
+        self.attrs.get(attr_name).map(|r| r.as_str())
+    }
 }

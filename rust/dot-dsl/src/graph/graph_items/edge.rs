@@ -29,4 +29,8 @@ impl Edge {
     pub fn get_dest_name(&self) -> &str {
         &self.dest_name
     }
+
+    pub fn get_attr(&self, attr_name: &str) -> Option<&str> {
+        self.attrs.get(attr_name).map(|r| r.as_str())
+    }
 }

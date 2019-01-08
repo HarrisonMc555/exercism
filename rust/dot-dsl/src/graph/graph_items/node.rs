@@ -1,14 +1,16 @@
+use std::collections::HashMap;
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct Node {
     name: String,
-    attrs: Vec<(String, String)>,
+    attrs: HashMap<String, String>,
 }
 
 impl Node {
     pub fn new(name: &str) -> Self {
         Node {
             name: name.to_owned(),
-            attrs: Vec::new(),
+            attrs: HashMap::new(),
         }
     }
 
@@ -20,5 +22,9 @@ impl Node {
 
     pub fn get_name(&self) -> &str {
         &self.name
+    }
+
+    pub fn get_attr(&self, attr_name: &str) -> Option<&str> {
+        self.attrs.get(attr_name).map(|r| r.as_str())
     }
 }
