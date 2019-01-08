@@ -63,15 +63,15 @@ fn test_graph_with_one_edge() {
 fn test_graph_with_one_attribute() {
     let graph = Graph::new().with_attrs(&[("foo", "1")]);
 
-    // let expected_attrs = hashmap! {
-    //     "foo".to_string() => "1".to_string(),
-    // };
+    let expected_attrs = hashmap! {
+        "foo".to_string() => "1".to_string(),
+    };
 
-    // assert!(graph.nodes.is_empty());
+    assert!(graph.nodes.is_empty());
 
-    // assert!(graph.edges.is_empty());
+    assert!(graph.edges.is_empty());
 
-    // assert_eq!(graph.attrs, expected_attrs);
+    assert_eq!(graph.attrs, expected_attrs);
 }
 
 // #[test]

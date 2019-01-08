@@ -1,12 +1,13 @@
 pub mod graph_items;
 
+use std::collections::HashMap;
 use crate::graph::graph_items::node::Node;
 use crate::graph::graph_items::edge::Edge;
 
 pub struct Graph {
     pub nodes : Vec<Node>,
     pub edges : Vec<Edge>,
-    pub attrs : Vec<(String, String)>,
+    pub attrs : HashMap<String, String>,
 }
 
 impl Graph {
@@ -14,7 +15,7 @@ impl Graph {
         Graph {
             nodes: Vec::new(),
             edges: Vec::new(),
-            attrs: Vec::new(),
+            attrs: HashMap::new(),
         }
     }
 
