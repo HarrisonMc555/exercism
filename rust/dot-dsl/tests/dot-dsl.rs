@@ -10,7 +10,7 @@ use dot_dsl::graph::Graph;
 fn test_empty_graph() {
     let graph = Graph::new();
 
-    // assert!(graph.nodes.is_empty());
+    assert!(graph.nodes.is_empty());
 
     // assert!(graph.edges.is_empty());
 
