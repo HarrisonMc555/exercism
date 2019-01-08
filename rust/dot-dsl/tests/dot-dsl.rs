@@ -22,7 +22,7 @@ fn test_empty_graph() {
 fn test_graph_with_one_node() {
     let nodes = vec![Node::new("a")];
 
-    // let graph = Graph::new().with_nodes(&nodes);
+    let graph = Graph::new().with_nodes(&nodes);
 
     // assert!(graph.edges.is_empty());
 
