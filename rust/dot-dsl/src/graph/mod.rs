@@ -6,7 +6,7 @@ use crate::graph::graph_items::edge::Edge;
 pub struct Graph {
     pub nodes : Vec<Node>,
     pub edges : Vec<Edge>,
-    pub attrs : Vec<u32>,
+    pub attrs : Vec<(String, String)>,
 }
 
 impl Graph {
@@ -25,6 +25,12 @@ impl Graph {
 
     pub fn with_edges(mut self, edges: &[Edge]) -> Self {
         self.edges = edges.to_vec();
+        self
+    }
+
+    pub fn with_attrs(mut self, attrs: &[(&str, &str)]) -> Self {
+        self.attrs = attrs.iter().map(
+            |&(s1, s2)| (String::from(s1), String::from(s2))).collect();
         self
     }
 }
