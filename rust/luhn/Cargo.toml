@@ -1,3 +1,6 @@
 [package]
 name = "luhn"
 version = "0.0.0"
+
+[dependencies]
+num-integer = "0.1.*"

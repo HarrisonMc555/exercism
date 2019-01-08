@@ -6,3 +6,4 @@ version = "1.0.0"
 grapheme = []
 
 [dependencies]
+unicode-segmentation = "1.2.*"

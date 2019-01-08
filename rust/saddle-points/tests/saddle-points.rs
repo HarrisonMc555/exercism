@@ -20,7 +20,6 @@ fn identify_single_saddle_point() {
 }
 
 #[test]
-#[ignore]
 fn identify_empty_matrix() {
     let input = vec![vec![], vec![], vec![]];
     let expected: Vec<(usize, usize)> = Vec::new();
@@ -28,7 +27,6 @@ fn identify_empty_matrix() {
 }
 
 #[test]
-#[ignore]
 fn identify_lack_of_saddle_point() {
     let input = vec![
         vec![1, 2, 3],
@@ -40,7 +38,6 @@ fn identify_lack_of_saddle_point() {
 }
 
 #[test]
-#[ignore]
 fn multiple_saddle_points_in_col() {
     let input = vec![
         vec![4, 5, 4],
@@ -54,7 +51,6 @@ fn multiple_saddle_points_in_col() {
 }
 
 #[test]
-#[ignore]
 fn multiple_saddle_points_in_row() {
     let input = vec![
         vec![6, 7, 8],
@@ -68,7 +64,6 @@ fn multiple_saddle_points_in_row() {
 }
 
 #[test]
-#[ignore]
 fn identify_bottom_right_saddle_point() {
     let input = vec![
         vec![8, 7, 9],
@@ -80,7 +75,6 @@ fn identify_bottom_right_saddle_point() {
 
 // track specific as of v1.3
 #[test]
-#[ignore]
 fn non_square_matrix_high() {
     let input = vec![
         vec![1, 5],
@@ -92,7 +86,6 @@ fn non_square_matrix_high() {
 }
 
 #[test]
-#[ignore]
 fn non_square_matrix_wide() {
     let input = vec![
         vec![3, 1, 3],
@@ -102,7 +95,6 @@ fn non_square_matrix_wide() {
 }
 
 #[test]
-#[ignore]
 fn single_column_matrix() {
     let input = vec![
         vec![2],
@@ -114,7 +106,6 @@ fn single_column_matrix() {
 }
 
 #[test]
-#[ignore]
 fn single_row_matrix() {
     let input = vec![
         vec![2, 5, 3, 5],
