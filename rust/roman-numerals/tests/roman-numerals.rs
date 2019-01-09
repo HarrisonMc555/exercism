@@ -51,7 +51,6 @@ fn test_fifty_nine() {
 }
 
 #[test]
-#[ignore]
 fn test_ninety_three() {
     assert_eq!("XCIII", Roman::from(93).to_string());
 }
