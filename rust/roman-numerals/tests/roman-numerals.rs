@@ -6,13 +6,11 @@ fn test_one() {
 }
 
 #[test]
-#[ignore]
 fn test_two() {
     assert_eq!("II", Roman::from(2).to_string());
 }
 
 #[test]
-#[ignore]
 fn test_three() {
     assert_eq!("III", Roman::from(3).to_string());
 }
