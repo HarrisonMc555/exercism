@@ -56,43 +56,36 @@ fn test_ninety_three() {
 }
 
 #[test]
-#[ignore]
 fn test_141() {
     assert_eq!("CXLI", Roman::from(141).to_string());
 }
 
 #[test]
-#[ignore]
 fn test_163() {
     assert_eq!("CLXIII", Roman::from(163).to_string());
 }
 
 #[test]
-#[ignore]
 fn test_402() {
     assert_eq!("CDII", Roman::from(402).to_string());
 }
 
 #[test]
-#[ignore]
 fn test_575() {
     assert_eq!("DLXXV", Roman::from(575).to_string());
 }
 
 #[test]
-#[ignore]
 fn test_911() {
     assert_eq!("CMXI", Roman::from(911).to_string());
 }
 
 #[test]
-#[ignore]
 fn test_1024() {
     assert_eq!("MXXIV", Roman::from(1024).to_string());
 }
 
 #[test]
-#[ignore]
 fn test_3000() {
     assert_eq!("MMM", Roman::from(3000).to_string());
 }

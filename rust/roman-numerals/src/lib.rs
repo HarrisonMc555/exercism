@@ -1,17 +1,21 @@
 use std::fmt::{Display, Formatter, Result};
 
-const NUM_ROMAN_SYMBOLS: usize = 9;
+const NUM_ROMAN_SYMBOLS: usize = 13;
 
 const ROMAN_VALUE_SYMBOL_PAIRS: [(u32, &str); NUM_ROMAN_SYMBOLS] = [
-    (100, "C"),
-    (90,  "XC"),
-    (50,  "L"),
-    (40,  "XL"),
-    (10,  "X"),
-    (9,   "IX"),
-    (5,   "V"),
-    (4,   "IV"),
-    (1,   "I"),
+    (1000, "M"),
+    (900,  "CM"),
+    (500,  "D"),
+    (400,  "CD"),
+    (100,  "C"),
+    (90,   "XC"),
+    (50,   "L"),
+    (40,   "XL"),
+    (10,   "X"),
+    (9,    "IX"),
+    (5,    "V"),
+    (4,    "IV"),
+    (1,    "I"),
 ];
 
 pub struct Roman {
