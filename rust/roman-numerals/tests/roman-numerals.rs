@@ -16,7 +16,6 @@ fn test_three() {
 }
 
 #[test]
-#[ignore]
 fn test_four() {
     assert_eq!("IV", Roman::from(4).to_string());
 }

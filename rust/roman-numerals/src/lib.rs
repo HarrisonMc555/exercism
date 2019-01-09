@@ -1,9 +1,10 @@
 use std::fmt::{Display, Formatter, Result};
 
-const NUM_ROMAN_SYMBOLS: usize = 1;
+const NUM_ROMAN_SYMBOLS: usize = 2;
 
-const ROMAN_VALUE_SYMBOL_PAIRS: [(u32, char); NUM_ROMAN_SYMBOLS] = [
-    (1, 'I'),
+const ROMAN_VALUE_SYMBOL_PAIRS: [(u32, &str); NUM_ROMAN_SYMBOLS] = [
+    (4, "IV"),
+    (1, "I"),
 ];
 
 pub struct Roman {
@@ -16,7 +17,7 @@ impl Display for Roman {
         let symbols = ROMAN_VALUE_SYMBOL_PAIRS.iter()
             .map(|&(_, symbol)| symbol);
         for (symbol, &count) in symbols.zip(self.symbol_counts.iter()) {
-            result.push(multiply_char(symbol, count));
+            result.push(multiply_string(symbol, count));
         }
         result.reverse();
         let string = result.join("");
@@ -48,6 +49,6 @@ fn get_count(num: &mut u32, multiple: u32) -> usize {
     count
 }
 
-fn multiply_char(c: char, num: usize) -> String {
-    (0..num).map(|_| c).collect()
+fn multiply_string(s: &str, num: usize) -> String {
+    (0..num).map(|_| s).collect::<Vec<_>>().join("")
 }
