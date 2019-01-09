@@ -21,13 +21,11 @@ fn test_four() {
 }
 
 #[test]
-#[ignore]
 fn test_five() {
     assert_eq!("V", Roman::from(5).to_string());
 }
 
 #[test]
-#[ignore]
 fn test_six() {
     assert_eq!("VI", Roman::from(6).to_string());
 }
