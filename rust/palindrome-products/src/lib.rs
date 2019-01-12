@@ -4,22 +4,34 @@ pub fn get_palindrome_products(min: u64, max: u64) -> (u64, u64) {
 
 pub fn min(palindromes: &(u64, u64)) -> Option<u64> {
     let &(min, max) = palindromes;
-    (min..=max)
-        .enumerate()
-        .flat_map(|(i, x)| (min + i as u64..=max).map(move |y| (x, y)))
-        .map(|(x, y)| x * y)
-        .filter(|product| is_palindrome(product))
-        .min()
+    for end in min..=max {
+        let xs = min..=end;
+        let ys = (min..=end).rev();
+        let pairs = xs.zip(ys).take_while(|(x, y)| x <= y);
+        let products = pairs.map(|(x, y)| x * y);
+        let palindromes = products.filter(|product| is_palindrome(product));
+        match palindromes.min() {
+            Some(product) => return Some(product),
+            None => (),
+        }
+    }
+    None
 }
 
 pub fn max(palindromes: &(u64, u64)) -> Option<u64> {
     let &(min, max) = palindromes;
-    (min..=max)
-        .enumerate()
-        .flat_map(|(i, x)| (min + i as u64..=max).map(move |y| (x, y)))
-        .map(|(x, y)| x * y)
-        .filter(|product| is_palindrome(product))
-        .max()
+    for start in (min..=max).rev() {
+        let xs = start..=max;
+        let ys = (min..=max).rev();
+        let pairs = xs.zip(ys).take_while(|(x, y)| x <= y);
+        let products = pairs.map(|(x, y)| x * y);
+        let palindromes = products.filter(|product| is_palindrome(product));
+        match palindromes.max() {
+            Some(product) => return Some(product),
+            None => (),
+        }
+    }
+    None
 }
 
 fn is_palindrome<T: std::fmt::Display>(value: T) -> bool {
