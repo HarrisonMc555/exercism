@@ -2,7 +2,6 @@
 extern crate num_integer;
 
 use num_integer::Integer;
-// use std::cmp::Ordering;
 
 const RADIX: u32 = 10;
 const LUHN_DIVISOR: u32 = 10;
