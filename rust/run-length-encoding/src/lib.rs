@@ -10,7 +10,14 @@ pub fn encode(source: &str) -> String {
 }
 
 pub fn decode(source: &str) -> String {
-    unimplemented!("Return the run-length decoding of {}.", source);
+    let mut decoded_portions = Vec::new();
+    let source: Vec<_> = source.chars().collect();
+    let mut slice = source.as_slice();
+    while let Some((decoded, rest)) = decode_portion(slice) {
+        decoded_portions.push(decoded);
+        slice = rest;
+    }
+    decoded_portions.join("")
 }
 
 fn encode_portion(source: &[char]) -> Option<(String, &[char])> {
@@ -27,4 +34,25 @@ fn encode_portion(source: &[char]) -> Option<(String, &[char])> {
         format!("{}{}", num_matching_chars, first_char)
     };
     Some((encoded, rest))
+}
+
+fn decode_portion(source: &[char]) -> Option<(String, &[char])> {
+    if source.is_empty() {
+        return None;
+    }
+    let digit_chars: String = source
+        .iter()
+        .take_while(|&&c| c.is_ascii_digit())
+        .collect();
+    if digit_chars.is_empty() {
+        let decoded = source[0].to_string();
+        let rest = &source[1..];
+        return Some((decoded, rest));
+    }
+    let num_digits = digit_chars.len();
+    let letter = source[num_digits];
+    let rest = &source[num_digits + 1..];
+    let num_letters: usize = digit_chars.parse().unwrap();
+    let decoded = std::iter::repeat(letter).take(num_letters as usize).collect();
+    Some((decoded, rest))
 }
