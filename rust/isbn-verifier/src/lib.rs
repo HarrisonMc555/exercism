@@ -8,10 +8,6 @@ pub fn is_valid_isbn(isbn: &str) -> bool {
         Some(digits) => digits,
         None => return false,
     };
-    println!("digits:     {}", vec_to_string(&digits, 3, ", "));
-    let multiplied = multiply_digits(&digits);
-    println!("multiplied: {}", vec_to_string(&multiplied, 3, ", "));
-    let sum: u32 = multiplied.iter().sum();
     let sum: u32 = multiply_digits(&digits).iter().sum();
     println!("sum: {}", sum);
     sum % 11 == 0
@@ -67,14 +63,4 @@ where
         (Some(a), Some(b)) => Some(combine(a, b)),
         _ => None,
     }
-}
-
-fn vec_to_string<T>(vec: &Vec<T>, min_width: usize, joiner: &str) -> String
-where
-    T: std::fmt::Display,
-{
-    vec.iter()
-        .map(|val| format!("{:>width$}", val.to_string(), width = min_width))
-        .collect::<Vec<_>>()
-        .join(joiner)
 }
