@@ -1,5 +1,5 @@
-use std::collections::BTreeSet;
 use std::collections::BTreeMap;
+use std::collections::BTreeSet;
 
 pub struct School {
     roster: BTreeMap<u32, BTreeSet<String>>,
@@ -23,11 +23,9 @@ impl School {
         self.roster.keys().cloned().collect()
     }
 
-    // If grade returned an `Option<&Vec<String>>`,
-    // the internal implementation would be forced to keep a `Vec<String>` to lend out.
-    // By returning an owned vector instead,
-    // the internal implementation is free to use whatever it chooses.
     pub fn grade(&self, grade: u32) -> Option<Vec<String>> {
-        unimplemented!("Return the list of students in {}", grade)
+        self.roster
+            .get(&grade)
+            .map(|students| students.iter().cloned().collect())
     }
 }
