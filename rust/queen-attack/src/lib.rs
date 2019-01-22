@@ -8,6 +8,7 @@ pub struct ChessPosition {
 pub struct Queen(ChessPosition);
 
 impl ChessPosition {
+    #![allow(clippy::new_ret_no_self)]    
     pub fn new(rank: i32, file: i32) -> Option<Self> {
         if ChessPosition::rank_in_range(rank)
             && ChessPosition::file_in_range(file)
@@ -42,14 +43,14 @@ impl ChessPosition {
     const MAX_RANK: i32 = 7;
 
     fn rank_in_range(rank: i32) -> bool {
-        in_range(rank, ChessPosition::MIN_RANK, ChessPosition::MAX_RANK)
+        in_range(&rank, &ChessPosition::MIN_RANK, &ChessPosition::MAX_RANK)
     }
 
     const MIN_FILE: i32 = 0;
     const MAX_FILE: i32 = 7;
 
     fn file_in_range(file: i32) -> bool {
-        in_range(file, ChessPosition::MIN_FILE, ChessPosition::MAX_FILE)
+        in_range(&file, &ChessPosition::MIN_FILE, &ChessPosition::MAX_FILE)
     }
 }
 
@@ -68,6 +69,6 @@ impl Queen {
     }
 }
 
-fn in_range<T: PartialOrd>(value: T, min: T, max: T) -> bool {
+fn in_range<T: PartialOrd>(value: &T, min: &T, max: &T) -> bool {
     min <= value && value <= max
 }
