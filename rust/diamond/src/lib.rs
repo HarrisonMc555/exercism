@@ -1,5 +1,6 @@
 const ALPHABET_INITIAL_CHAR_UPPERCASE: char = 'A';
-const ALPHABET_INITIAL_CHAR_UPPERCASE_INDEX: usize = ALPHABET_INITIAL_CHAR_UPPERCASE as usize;
+const ALPHABET_INITIAL_CHAR_UPPERCASE_INDEX: usize =
+    ALPHABET_INITIAL_CHAR_UPPERCASE as usize;
 const MAX_ALPHABET_INDEX: usize = 26;
 
 pub fn get_diamond(c: char) -> Vec<String> {
@@ -19,7 +20,8 @@ fn create_line(c: char, index: usize, num_chars: usize) -> String {
         leading = " ".repeat(num_leading_spaces),
         c = c
     );
-    let backward_string: String = forward_string.chars().rev().skip(1).collect();
+    let backward_string: String =
+        forward_string.chars().rev().skip(1).collect();
     forward_string + &backward_string
 }
 
