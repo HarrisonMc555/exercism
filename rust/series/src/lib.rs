@@ -5,8 +5,7 @@ pub fn series(digits: &str, len: usize) -> Vec<String> {
 }
 
 fn windows<T>(vec: &[T], len: usize) -> Vec<Vec<T>>
-where
-    T: Clone,
+    where  T: Clone,
 {
     if len > vec.len() {
         return Vec::new();
@@ -16,8 +15,7 @@ where
 }
 
 fn get_window<T>(vec: &[T], len: usize, index: usize) -> Vec<T>
-where
-    T: Clone,
+    where T: Clone,
 {
     vec[index..index + len].to_vec()
 }
