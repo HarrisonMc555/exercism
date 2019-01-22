@@ -1,25 +1,20 @@
-extern crate num_bigint;
-extern crate num_traits;
-extern crate primes;
-extern crate rand;
-
 use num_bigint::ToBigUint;
 use num_traits::cast::ToPrimitive;
 use primes::PrimeSet;
-use rand::Rng;
-use std::u64;
+use rand::seq::SliceRandom;
 
 const NUM_PRIME_CHOICES: usize = 100;
 
 pub fn private_key(p: u64) -> u64 {
-    let valid_primes: Vec<_> = PrimeSet::new().iter().take_while(|x| *x < p).collect();
+    let valid_primes: Vec<_> =
+        PrimeSet::new().iter().take_while(|x| *x < p).collect();
     let close_primes: Vec<_> = valid_primes
         .into_iter()
         .rev()
         .take(NUM_PRIME_CHOICES)
         .collect();
-    let choice_ref = rand::thread_rng()
-        .choose(&close_primes)
+    let choice_ref = close_primes
+        .choose(&mut rand::thread_rng())
         .expect("Maximum range for private_key too small");
     *choice_ref
 }
