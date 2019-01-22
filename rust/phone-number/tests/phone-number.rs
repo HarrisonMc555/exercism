@@ -10,19 +10,16 @@ fn test_cleans_the_number() {
 }
 
 #[test]
-#[ignore]
 fn test_cleans_numbers_with_dots() {
     process_clean_case("223.456.7890", Some("2234567890"));
 }
 
 #[test]
-#[ignore]
 fn test_cleans_numbers_with_multiple_spaces() {
     process_clean_case("223 456   7890   ", Some("2234567890"));
 }
 
 #[test]
-#[ignore]
 fn test_invalid_when_9_digits() {
     process_clean_case("123456789", None);
 }
