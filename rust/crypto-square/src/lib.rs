@@ -27,7 +27,7 @@ where
     T: Clone,
 {
     vec.chunks(num_cols)
-        .map(|row| row.iter().cloned().collect())
+        .map(|row| row.to_vec())
         .collect()
 }
 
@@ -43,9 +43,10 @@ where
         .map(|i| {
             rectangle
                 .iter()
-                .filter_map(|row| at(row, i).map(|t| t.clone()))
+                .filter_map(|row| at(row, i).cloned())
                 .collect()
-        }).collect()
+        })
+        .collect()
 }
 
 fn calculate_dimensions(size: usize) -> (usize, usize) {
@@ -59,7 +60,7 @@ fn calculate_dimensions(size: usize) -> (usize, usize) {
     }
 }
 
-fn at<'a, T>(slice: &'a [T], index: usize) -> Option<&'a T> {
+fn at<T>(slice: &[T], index: usize) -> Option<&T> {
     if index >= slice.len() {
         None
     } else {
