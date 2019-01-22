@@ -25,13 +25,11 @@ fn test_invalid_when_9_digits() {
 }
 
 #[test]
-#[ignore]
 fn test_invalid_when_11_digits_does_not_start_with_a_1() {
     process_clean_case("22234567890", None);
 }
 
 #[test]
-#[ignore]
 fn test_valid_when_11_digits_and_starting_with_1() {
     process_clean_case("12234567890", Some("2234567890"));
 }
