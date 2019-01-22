@@ -1,4 +1,4 @@
-const POWER_PREFIXES: [(u32, &'static str); 6] = [
+const POWER_PREFIXES: [(u32, &str); 6] = [
     (6, "quintillion"),
     (5, "quadrillion"),
     (4, "trillion"),
@@ -88,12 +88,11 @@ fn say_digit(n: u64) -> Option<String> {
         9 => Some("nine"),
         _ => panic!("non-digit parameter to say_digit"),
     };
-    s.map(|s| String::from(s))
+    s.map(String::from)
 }
 
 fn either_or_combine<T, F>(a: Option<T>, b: Option<T>, f: F) -> Option<T>
-where
-    F: FnOnce(T, T) -> T,
+    where F: FnOnce(T, T) -> T
 {
     match (a, b) {
         (Some(a), Some(b)) => Some(f(a, b)),
