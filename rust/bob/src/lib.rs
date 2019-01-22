@@ -12,17 +12,6 @@ fn message_type(message: &str) -> MessageType {
     let yelling = is_yelling(message);
     let question = is_question(message);
     let nothing = is_nothing(message);
-    // if yelling && question {
-    //     MessageType::YellingQuestion
-    // } else if yelling {
-    //     MessageType::Yelling
-    // } else if question {
-    //     MessageType::Question
-    // } else if nothing {
-    //     MessageType::Nothing
-    // } else {
-    //     MessageType::Other
-    // }
     match (yelling, question, nothing) {
         (true, true, _) => MessageType::YellingQuestion,
         (true, _, _) => MessageType::Yelling,
