@@ -1,6 +1,3 @@
-extern crate integer_sqrt;
-extern crate slow_primes;
-
 use integer_sqrt::IntegerSquareRoot;
 use slow_primes::Primes;
 
