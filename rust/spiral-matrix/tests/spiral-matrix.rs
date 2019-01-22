@@ -1,4 +1,3 @@
-extern crate spiral_matrix;
 use spiral_matrix::*;
 
 #[test]
@@ -13,7 +12,6 @@ fn size_one_spiral() {
     expected.push(vec![1]);
     assert_eq!(spiral_matrix(1), expected);
 }
-
 #[test]
 fn size_two_spiral() {
     let mut expected: Vec<Vec<u32>> = Vec::new();
