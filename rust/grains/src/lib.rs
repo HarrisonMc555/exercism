@@ -8,7 +8,7 @@ pub fn square(s: u32) -> u64 {
     // To raise 2 to a power, you simply left shift by that amount. Since we
     // want to raise 2 to one less than the board number (1 indexed vs. 0
     // indexed problems) we subtract one first.
-    0x1 << (s - 1)
+    1 << (s - 1)
 }
 
 pub fn total() -> u64 {
@@ -17,8 +17,8 @@ pub fn total() -> u64 {
     // 2^64 in binary is 1 followed by 64 zeros, and if you subtract 1 it is
     // simply 64 ones. In a 64 bit number, this means every bit is a 1. We can
     // do this easily by simply doing a bitwise negation on a value where every
-    // bit is a 0, i.e. 0x0.
-    !0x0
+    // bit is a 0, i.e. 0.
+    !0
 }
 
 fn _naive_square(s: u32) -> u64 {
