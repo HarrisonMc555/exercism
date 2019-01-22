@@ -26,9 +26,7 @@ fn to_rectangle<T>(vec: &[T], num_cols: usize) -> Vec<Vec<T>>
 where
     T: Clone,
 {
-    vec.chunks(num_cols)
-        .map(|row| row.to_vec())
-        .collect()
+    vec.chunks(num_cols).map(|row| row.to_vec()).collect()
 }
 
 fn transpose_rectangle<T>(rectangle: &[Vec<T>]) -> Vec<Vec<T>>
