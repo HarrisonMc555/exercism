@@ -1,5 +1,3 @@
-extern crate two_bucket;
-
 use two_bucket::{solve, Bucket, BucketStats};
 
 #[test]
@@ -51,7 +49,7 @@ fn test_case_4() {
 }
 
 #[test]
-fn test_case_5() {
+fn goal_equal_to_start_bucket() {
     assert_eq!(
         solve(1, 3, 3, &Bucket::Two),
         BucketStats {
@@ -63,7 +61,7 @@ fn test_case_5() {
 }
 
 #[test]
-fn test_case_6() {
+fn goal_equal_to_other_bucket() {
     assert_eq!(
         solve(2, 3, 3, &Bucket::One),
         BucketStats {

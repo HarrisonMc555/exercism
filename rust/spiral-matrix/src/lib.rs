@@ -27,7 +27,7 @@ fn next_didj((di, dj): (isize, isize)) -> (isize, isize) {
 }
 
 fn next_ij_didj(
-    matrix: &Vec<Vec<u32>>,
+    matrix: &[Vec<u32>],
     (i, j): (usize, usize),
     (di, dj): (isize, isize),
 ) -> ((usize, usize), (isize, isize)) {
@@ -44,7 +44,7 @@ fn next_ij_didj(
     }
 }
 
-fn invalid_indices((i, j): (isize, isize), matrix: &Vec<Vec<u32>>) -> bool {
+fn invalid_indices((i, j): (isize, isize), matrix: &[Vec<u32>]) -> bool {
     let size = matrix.len() as isize;
     i < 0
         || i >= size

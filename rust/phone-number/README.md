@@ -1,33 +1,32 @@
-# RNA Transcription
+# Phone Number
 
-Given a DNA strand, return its RNA complement (per RNA transcription).
+Clean up user-entered phone numbers so that they can be sent SMS messages.
 
-Both DNA and RNA strands are a sequence of nucleotides.
+The **North American Numbering Plan (NANP)** is a telephone numbering system used by many countries in North America like the United States, Canada or Bermuda. All NANP-countries share the same international country code: `1`.
 
-The four nucleotides found in DNA are adenine (**A**), cytosine (**C**),
-guanine (**G**) and thymine (**T**).
+NANP numbers are ten-digit numbers consisting of a three-digit Numbering Plan Area code, commonly known as *area code*, followed by a seven-digit local number. The first three digits of the local number represent the *exchange code*, followed by the unique four-digit number which is the *subscriber number*.
 
-The four nucleotides found in RNA are adenine (**A**), cytosine (**C**),
-guanine (**G**) and uracil (**U**).
+The format is usually represented as
 
-Given a DNA strand, its transcribed RNA strand is formed by replacing
-each nucleotide with its complement:
+```text
+(NXX)-NXX-XXXX
+```
 
-* `G` -> `C`
-* `C` -> `G`
-* `T` -> `A`
-* `A` -> `U`
+where `N` is any digit from 2 through 9 and `X` is any digit from 0 through 9.
 
-## Notes on Rust implementation
+Your task is to clean up differently formatted telephone numbers by removing punctuation and the country code (1) if present.
 
-By using private fields in structs with public `new` functions returning
-`Option` or `Result` (as here with `DNA::new` & `RNA::new`), we can guarantee
-that the internal representation of `DNA` is correct. Because every valid DNA
-string has a valid RNA string, we don't need to return a `Result`/`Option` from
-`to_rna`.
+For example, the inputs
+- `+1 (613)-995-0253`
+- `613-995-0253`
+- `1 613 995 0253`
+- `613.995.0253`
 
-This explains the type signatures you will see in the tests.
+should all produce the output
 
+`6139950253`
+
+**Note:** As this exercise only deals with telephone numbers used in NANP-countries, only 1 is considered a valid country code.
 
 ## Rust Installation
 
@@ -84,7 +83,7 @@ If you want to know more about Exercism, take a look at the [contribution guide]
 
 ## Source
 
-Hyperphysics [http://hyperphysics.phy-astr.gsu.edu/hbase/Organic/transcription.html](http://hyperphysics.phy-astr.gsu.edu/hbase/Organic/transcription.html)
+Event Manager by JumpstartLab [http://tutorials.jumpstartlab.com/projects/eventmanager.html](http://tutorials.jumpstartlab.com/projects/eventmanager.html)
 
 ## Submitting Incomplete Solutions
 It's possible to submit an incomplete solution so you can see how others have completed the exercise.

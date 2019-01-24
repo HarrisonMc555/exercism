@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-const HEADER: &'static str =
+const HEADER: &str =
     "Team                           | MP |  W |  D |  L |  P";
 
 type Match = (String, String, MatchResult);
@@ -32,7 +32,7 @@ pub fn tally(match_results: &str) -> String {
 }
 
 fn get_result(match_result: &str) -> (String, String, MatchResult) {
-    let words: Vec<_> = match_result.split(";").collect();
+    let words: Vec<_> = match_result.split(';').collect();
     let team1 = String::from(words[0]);
     let team2 = String::from(words[1]);
     let result = words[2];

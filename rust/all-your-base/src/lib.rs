@@ -47,7 +47,7 @@ fn from_digits(digits: &[u32], base: u32) -> Result<u32, Error> {
     }
     let mut result = 0;
     let mut power = 1;
-    for (index, &digit) in digits.into_iter().rev().enumerate() {
+    for (index, &digit) in digits.iter().rev().enumerate() {
         if digit >= base {
             let index = digits.len() - index;
             return Err(Error::InvalidDigit(index as u32));

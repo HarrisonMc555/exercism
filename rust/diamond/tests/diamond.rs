@@ -1,4 +1,3 @@
-extern crate diamond;
 use diamond::*;
 
 #[test]
@@ -24,12 +23,7 @@ fn test_d() {
     assert_eq!(
         get_diamond('D'),
         vec![
-            "   A   ",
-            "  B B  ",
-            " C   C ",
-            "D     D",
-            " C   C ",
-            "  B B  ",
+            "   A   ", "  B B  ", " C   C ", "D     D", " C   C ", "  B B  ",
             "   A   ",
         ]
     );

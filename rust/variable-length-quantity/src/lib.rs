@@ -13,7 +13,7 @@ pub enum Error {
 /// Convert a list of numbers to a stream of bytes encoded with variable length
 /// encoding.
 pub fn to_bytes(values: &[u32]) -> Vec<u8> {
-    values.iter().flat_map(|x| value_to_bytes(x)).collect()
+    values.iter().flat_map(|&x| value_to_bytes(x)).collect()
 }
 
 /// Given a stream of bytes, extract all numbers which are encoded in there.
@@ -32,11 +32,11 @@ pub fn from_bytes(bytes: &[u8]) -> Result<Vec<u32>, Error> {
 // Encoding helper functions
 ///////////////////////////////////////////////////////////////////////////////
 
-fn value_to_bytes(value: &u32) -> Vec<u8> {
+fn value_to_bytes(value: u32) -> Vec<u8> {
     let (last, mut rest) = encode_last_byte(value);
     let mut bytes = vec![last];
     while rest > 0 {
-        let (byte, next_rest) = encode_other_byte(&rest);
+        let (byte, next_rest) = encode_other_byte(rest);
         bytes.push(byte);
         rest = next_rest;
     }
@@ -44,16 +44,16 @@ fn value_to_bytes(value: &u32) -> Vec<u8> {
     bytes
 }
 
-fn encode_last_byte(value: &u32) -> (u8, u32) {
+fn encode_last_byte(value: u32) -> (u8, u32) {
     extract_bits(value)
 }
 
-fn encode_other_byte(value: &u32) -> (u8, u32) {
+fn encode_other_byte(value: u32) -> (u8, u32) {
     let (byte, rest) = extract_bits(value);
     (byte | CONTINUE_BIT, rest)
 }
 
-fn extract_bits(value: &u32) -> (u8, u32) {
+fn extract_bits(value: u32) -> (u8, u32) {
     let byte = (value & MASK) as u8;
     let rest = value >> MASK_LENGTH;
     (byte, rest)
@@ -68,12 +68,12 @@ fn decode_value(bytes: &[u8]) -> u32 {
     let other_bytes = &bytes[..last_index];
     let last_byte = bytes[last_index];
     let mut result: u32 = 0;
-    for byte in other_bytes {
+    for &byte in other_bytes {
         result <<= MASK_LENGTH;
         result |= decode_other_byte(byte);
     }
     result <<= MASK_LENGTH;
-    result | decode_last_byte(&last_byte)
+    result | decode_last_byte(last_byte)
 }
 
 fn get_value_bytes(bytes: &[u8]) -> Result<&[u8], Error> {
@@ -86,33 +86,33 @@ fn get_value_bytes(bytes: &[u8]) -> Result<&[u8], Error> {
     }
 }
 
-fn is_last_byte(byte: &u8) -> bool {
+fn is_last_byte(byte: u8) -> bool {
     byte & CONTINUE_BIT == 0
 }
 
 #[allow(dead_code)]
-fn is_other_byte(byte: &u8) -> bool {
+fn is_other_byte(byte: u8) -> bool {
     !is_last_byte(byte)
 }
 
-fn decode_last_byte(byte: &u8) -> u32 {
-    *byte as u32
+fn decode_last_byte(byte: u8) -> u32 {
+    u32::from(byte)
 }
 
-fn decode_other_byte(byte: &u8) -> u32 {
-    (byte ^ CONTINUE_BIT) as u32
+fn decode_other_byte(byte: u8) -> u32 {
+    u32::from(byte ^ CONTINUE_BIT)
 }
 
 fn first_value_length(bytes: &[u8]) -> Result<usize, Error> {
     bytes
         .iter()
         .take(MAX_BYTES)
-        .position(|byte| is_last_byte(byte))
+        .position(|&byte| is_last_byte(byte))
         .map(|index| index + 1)
         .ok_or(Error::IncompleteNumber)
 }
 
 fn is_overflow(bytes: &[u8]) -> bool {
     bytes.len() == MAX_BYTES
-        && decode_other_byte(&bytes[0]) > HIGHEST_BYTE_MAX_VALUE as u32
+        && decode_other_byte(bytes[0]) > u32::from(HIGHEST_BYTE_MAX_VALUE)
 }

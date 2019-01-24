@@ -1,10 +1,10 @@
-const DIAGRAPHS: [&'static str; 6] = ["ch", "qu", "thr", "th", "sch", "rh"];
-const DIAGRAPHS_AFTER_VOWEL: [&'static str; 1] = ["qu"];
-const VOWEL_DIAGRAPHS: [&'static str; 1] = ["xr"];
+const DIAGRAPHS: [&str; 6] = ["ch", "qu", "thr", "th", "sch", "rh"];
+const DIAGRAPHS_AFTER_VOWEL: [&str; 1] = ["qu"];
+const VOWEL_DIAGRAPHS: [&str; 1] = ["xr"];
 
 pub fn translate(input: &str) -> String {
     input
-        .split(" ")
+        .split(' ')
         .map(|word| translate_word(word))
         .collect::<Vec<_>>()
         .join(" ")
@@ -35,7 +35,7 @@ fn get_first(word: &str) -> String {
     get_diagraph(word)
         .or_else(|| get_diagraph_after_vowel(word))
         .or_else(|| word.chars().next().map(|c| c.to_string()))
-        .unwrap_or(String::from(word))
+        .unwrap_or_else(|| String::from(word))
 }
 
 fn get_diagraph(word: &str) -> Option<String> {
@@ -78,7 +78,7 @@ fn starts_with_vowel(word: &str) -> bool {
         return false;
     }
     // 'y' is only a vowel if followed by a consonant
-    let second_letter = word.chars().skip(1).next();
+    let second_letter = word.chars().nth(1);
     match second_letter {
         Some(c) => is_regular_consonant(c),
         None => true,
