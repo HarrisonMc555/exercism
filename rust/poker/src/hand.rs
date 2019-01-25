@@ -1,7 +1,7 @@
+use crate::card::Card;
+use crate::enums::Rank;
 use boolinator::Boolinator;
 use itertools::Itertools;
-use crate::enums::Rank;
-use crate::card::Card;
 
 #[derive(Ord, Eq, PartialOrd, PartialEq)]
 pub struct Hand {
@@ -41,8 +41,12 @@ impl Hand {
     }
 
     fn count_ranks(&self) -> Vec<(usize, Rank)> {
-        self.ranks().iter().group_by(|&r| r).into_iter().map(|(&rank, group)|
-                                                            (group.count(), rank)).collect()
+        self.ranks()
+            .iter()
+            .group_by(|&r| r)
+            .into_iter()
+            .map(|(&rank, group)| (group.count(), rank))
+            .collect()
     }
 
     fn all_in_a_row(&self) -> bool {
@@ -66,6 +70,14 @@ impl Hand {
     fn high_card(&self) -> Option<Card> {
         self.cards.last().cloned()
     }
+
+    fn low_rank(&self) -> Option<Rank> {
+        self.low_card().map(|card| card.rank())
+    }
+
+    fn high_rank(&self) -> Option<Rank> {
+        self.high_card().map(|card| card.rank())
+    }
 }
 
 impl From<&str> for Hand {
@@ -76,24 +88,24 @@ impl From<&str> for Hand {
 
 impl HandScore {
     fn royal_flush(hand: &Hand) -> Option<HandScore> {
-        (hand.all_in_a_row() &&
-         hand.high_card().map(|card| card.rank().is_ace()) == Some(true))
+        let high_is_ace = hand.high_rank().map(|rank| rank.is_ace()) == Some(true);
+        (hand.all_in_a_row() && high_is_ace)
             .as_some(HandScore::RoyalFlush)
     }
 
     fn straight_flush(hand: &Hand) -> Option<HandScore> {
-        let high_rank = hand.high_card().map(|card| card.rank());
-        (hand.all_in_a_row() &&
-         high_rank.map(|rank| rank.is_ace()) == Some(false))
+        let high_rank = hand.high_rank();
+        let high_is_ace = high_rank.map(|rank| rank.is_ace()) == Some(true);
+        (hand.all_in_a_row() && !high_is_ace)
             .as_some(HandScore::StraightFlush(high_rank.unwrap()))
     }
 
     fn four_of_a_kind(hand: &Hand) -> Option<HandScore> {
-//         let groups: Vec<_> = hand.cards.iter().map(|card|
-//                                                    card.rank()).group_by(|x| x).collect();
-//         groups.find(|())
-// into_iter().map(|(_, group)| group.count()).collect();
-//         (groups.len() == 2 && groups.contains(&4)).as_some(HandScore::FourOfAKind)
-        None
+        let rank_with_four = hand
+            .count_ranks()
+            .into_iter()
+            .find(|&(count, _)| count == 4)
+            .map(|(_, rank)| rank);
+        rank_with_four.map(|rank| HandScore::FourOfAKind(rank))
     }
 }

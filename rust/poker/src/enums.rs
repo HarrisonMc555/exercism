@@ -49,7 +49,6 @@ impl Suit {
     pub fn is_club(&self) -> bool {
         self == &Suit::Club
     }
-
 }
 
 impl Rank {
@@ -170,5 +169,4 @@ impl Rank {
     pub fn is_ace(&self) -> bool {
         self == &Rank::Ace
     }
-
 }
