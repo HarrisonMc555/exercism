@@ -17,7 +17,7 @@ impl<'a> From<&'a str> for HandRef<'a> {
     fn from(source: &'a str) -> Self {
         HandRef {
             hand: Hand::from(source),
-            source
+            source,
         }
     }
 }

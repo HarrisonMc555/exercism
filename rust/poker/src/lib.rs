@@ -1,5 +1,5 @@
-mod enums;
 mod card;
+mod enums;
 mod hand;
 mod handref;
 

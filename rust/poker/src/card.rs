@@ -8,6 +8,23 @@ pub struct Card {
     suit: Suit,
 }
 
+impl Card {
+    pub fn new(rank: Rank, suit: Suit) -> Self {
+        Card {
+            rank,
+            suit,
+        }
+    }
+
+    pub fn rank(&self) -> Rank {
+        self.rank
+    }
+
+    pub fn suit(&self) -> Suit {
+        self.suit
+    }
+}
+
 impl Ord for Card {
     fn cmp(&self, other: &Card) -> Ordering {
         self.rank.cmp(&other.rank)
