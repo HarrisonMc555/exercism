@@ -2,7 +2,7 @@ use crate::enums::Rank;
 use crate::enums::Suit;
 use std::cmp::Ordering;
 
-#[derive(Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq)]
 pub struct Card {
     rank: Rank,
     suit: Suit,

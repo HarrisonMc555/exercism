@@ -3,7 +3,7 @@ mod enums;
 mod hand;
 mod handref;
 
-use crate::hand::Hand;
+// use crate::hand::Hand;
 use crate::handref::HandRef;
 
 /// Given a list of poker hands, return a list of those hands which win.

@@ -1,3 +1,4 @@
+use boolinator::Boolinator;
 use crate::enums::Rank;
 use crate::card::Card;
 
@@ -47,6 +48,14 @@ impl Hand {
         }
         true
     }
+
+    fn low_card(&self) -> Option<Card> {
+        self.cards.first().cloned()
+    }
+
+    fn high_card(&self) -> Option<Card> {
+        self.cards.last().cloned()
+    }
 }
 
 impl From<&str> for Hand {
@@ -57,6 +66,8 @@ impl From<&str> for Hand {
 
 impl HandScore {
     fn royal_flush(hand: &Hand) -> Option<HandScore> {
-        None
+        (hand.all_in_a_row() &&
+         hand.high_card().map(|card| card.rank().is_ace()) == Some(true))
+            .as_some(HandScore::RoyalFlush)
     }
 }

@@ -33,6 +33,23 @@ impl Suit {
             _ => None,
         }
     }
+
+    pub fn is_heart(&self) -> bool {
+        self == &Suit::Heart
+    }
+
+    pub fn is_spade(&self) -> bool {
+        self == &Suit::Spade
+    }
+
+    pub fn is_diamond(&self) -> bool {
+        self == &Suit::Diamond
+    }
+
+    pub fn is_club(&self) -> bool {
+        self == &Suit::Club
+    }
+
 }
 
 impl Rank {
@@ -67,7 +84,7 @@ impl Rank {
     }
 
     pub fn next_enum(&self) -> Option<Self> {
-        match(self) {
+        match self {
             Rank::Two => Some(Rank::Three),
             Rank::Three => Some(Rank::Four),
             Rank::Four => Some(Rank::Five),
@@ -85,7 +102,7 @@ impl Rank {
     }
 
     pub fn prev_enum(&self) -> Option<Self> {
-        match(self) {
+        match self {
             Rank::Two => None,
             Rank::Three => Some(Rank::Two),
             Rank::Four => Some(Rank::Three),
@@ -101,4 +118,57 @@ impl Rank {
             Rank::Ace => Some(Rank::King),
         }
     }
+
+    pub fn is_two(&self) -> bool {
+        self == &Rank::Two
+    }
+
+    pub fn is_three(&self) -> bool {
+        self == &Rank::Three
+    }
+
+    pub fn is_four(&self) -> bool {
+        self == &Rank::Four
+    }
+
+    pub fn is_five(&self) -> bool {
+        self == &Rank::Five
+    }
+
+    pub fn is_six(&self) -> bool {
+        self == &Rank::Six
+    }
+
+    pub fn is_seven(&self) -> bool {
+        self == &Rank::Seven
+    }
+
+    pub fn is_eight(&self) -> bool {
+        self == &Rank::Eight
+    }
+
+    pub fn is_nine(&self) -> bool {
+        self == &Rank::Nine
+    }
+
+    pub fn is_ten(&self) -> bool {
+        self == &Rank::Ten
+    }
+
+    pub fn is_jack(&self) -> bool {
+        self == &Rank::Jack
+    }
+
+    pub fn is_queen(&self) -> bool {
+        self == &Rank::Queen
+    }
+
+    pub fn is_king(&self) -> bool {
+        self == &Rank::King
+    }
+
+    pub fn is_ace(&self) -> bool {
+        self == &Rank::Ace
+    }
+
 }
