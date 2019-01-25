@@ -1,11 +1,14 @@
 use crate::card::Card;
 
+#[derive(Ord, Eq, PartialOrd, PartialEq)]
 pub struct Hand {
     cards: Vec<Card>,
 }
 
 impl Hand {
     pub fn new(cards: Vec<Card>) -> Self {
+        let mut cards = cards;
+        cards.sort_unstable();
         Hand { cards }
     }
 
