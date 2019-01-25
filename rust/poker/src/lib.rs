@@ -1,39 +1,10 @@
-pub enum Suit {
-    Heart,
-    Spade,
-    Diamond,
-    Club,
-}
+mod enums;
+mod card;
+mod hand;
+mod handref;
 
-pub enum Rank {
-    Ace,
-    Two,
-    Three,
-    Four,
-    Five,
-    Six,
-    Seven,
-    Eight,
-    Nine,
-    Ten,
-    Jack,
-    Queen,
-    King,
-}
-
-pub struct Card {
-    rank: Rank,
-    suit: Suit,
-}
-
-pub struct Hand {
-    cards: Vec<Card>,
-}
-
-pub struct HandRef<'a> {
-    // hand: Hand,
-    source: &'a str,
-}
+use crate::hand::Hand;
+use crate::handref::HandRef;
 
 /// Given a list of poker hands, return a list of those hands which win.
 ///
@@ -49,40 +20,3 @@ pub fn winning_hands<'a>(hands: &[&'a str]) -> Option<Vec<&'a str>> {
 fn parse_hand_refs<'a>(hand_strings: &[&'a str]) -> Vec<HandRef<'a>> {
     vec![]
 }
-
-impl Hand {
-    pub fn new(cards: Vec<Card>) -> Self {
-        Hand { cards }
-    }
-
-    fn from_string(string: &str) -> Self {
-        Hand { cards: vec![] }
-    }
-}
-
-impl From<&str> for Hand {
-    fn from(string: &str) -> Self {
-        Hand::from_string(string)
-    }
-}
-
-impl<'a> HandRef<'a> {
-    // pub fn new(hand: Hand, source: &'a str) -> Self {
-    pub fn new(source: &'a str) -> Self {
-        // HandRef { hand, source }
-        HandRef { source }
-    }
-}
-
-impl<'a> From<&'a str> for HandRef<'a> {
-    fn from(source: &'a str) -> Self {
-        HandRef {
-            // hand: Hand::from(source),
-            source
-        }
-    }
-}
-
-// impl<'a> Ord for HandRef<'a> {
-
-// }
