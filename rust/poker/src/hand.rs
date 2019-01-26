@@ -89,15 +89,13 @@ impl From<&str> for Hand {
 impl HandScore {
     fn royal_flush(hand: &Hand) -> Option<HandScore> {
         let high_is_ace = hand.high_rank().map(|rank| rank.is_ace()) == Some(true);
-        (hand.all_in_a_row() && high_is_ace)
-            .as_some(HandScore::RoyalFlush)
+        (hand.all_in_a_row() && high_is_ace).as_some(HandScore::RoyalFlush)
     }
 
     fn straight_flush(hand: &Hand) -> Option<HandScore> {
         let high_rank = hand.high_rank();
         let high_is_ace = high_rank.map(|rank| rank.is_ace()) == Some(true);
-        (hand.all_in_a_row() && !high_is_ace)
-            .as_some(HandScore::StraightFlush(high_rank.unwrap()))
+        (hand.all_in_a_row() && !high_is_ace).as_some(HandScore::StraightFlush(high_rank.unwrap()))
     }
 
     fn four_of_a_kind(hand: &Hand) -> Option<HandScore> {
@@ -107,5 +105,16 @@ impl HandScore {
             .find(|&(count, _)| count == 4)
             .map(|(_, rank)| rank);
         rank_with_four.map(|rank| HandScore::FourOfAKind(rank))
+    }
+
+    fn full_house(hand: &Hand) -> Option<HandScore> {
+        let counted_ranks = hand.count_ranks();
+        counted_ranks.sort_unstable_by_key(|&(count, _)| count);
+        let counts = counted_ranks.into_iter().map(|&(count, _)| count).collect();
+        if counts != vec![2, 3] {
+            return None
+        }
+        let (rank_with_two, rank_with_three) = (counts[0], counts[1]);
+        HandScore::FullHouse(rank_with_three, rank_with_two)
     }
 }
