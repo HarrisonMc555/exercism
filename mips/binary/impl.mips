@@ -29,8 +29,8 @@ loop:
   lb    $t2, 0($a0)         # Load current character
   beq   $t2, $zero, done    # Exit loop at null byte
   add   $v0, $v0, $v0       # We haven't reached the end, so double current answer
-  beq   $t2, $t0, next_loop # Move on if ascii '0'
-  beq   $t2, $t1, increment # Add base if ascii '1'
+  beq   $t2, $t0, next_loop # Do not increment if ascii '0'
+  beq   $t2, $t1, increment # Increment if ascii '1'
   j     invalid_char        # If not either of those, the character is invalid
 
 increment:
