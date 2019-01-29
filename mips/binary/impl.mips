@@ -1,0 +1,50 @@
+# binary_convert
+#
+# Inputs:
+# a0 - Address of null-terminated string
+#
+# Outputs:
+# v0 - Integer result of binary conversion
+#
+# Temporaries:
+# t0 - ASCII character for '0'
+# t1 - ASCII character for '1'
+# t2 - Current ASCII character
+
+  .data
+
+ascii_zero: .word 0x30
+ascii_one: .word 0x31
+invalid_char_msg: .asciiz "Invalid binary character"
+
+  .text
+  .globlbinary_convert
+
+binary_convert:
+  move  $v0, $zero          # Clear return value
+  lw    $t0, ascii_zero     # Load ASCII zero
+  lw    $t1, ascii_one      # Load ASCII one
+
+loop:
+  lb    $t2, 0($a0)         # Load current character
+  beq   $t2, $zero, done    # Exit loop at null byte
+  add   $v0, $v0, $v0       # We haven't reached the end, so double current answer
+  beq   $t2, $t0, next_loop # Move on if ascii '0'
+  beq   $t2, $t1, increment # Add base if ascii '1'
+  j     invalid_char        # If not either of those, the character is invalid
+
+increment:
+  addi  $v0, $v0, 1         # Add current base to result
+
+next_loop:
+  addi  $a0, $a0, 1         # Move to next character in input string
+  j     loop
+
+invalid_char:
+  la    $a0, invalid_char_msg
+  li    $v0, 4              # 4 is print string opcode
+  syscall
+  li    $v0 -1
+
+done:
+  jr    $ra
