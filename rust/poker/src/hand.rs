@@ -242,7 +242,6 @@ impl HandScore {
     }
 
     pub fn straight(hand: &Hand) -> Option<HandScore> {
-        println!("straight: {}", hand);
         let high_rank = hand.highest_card_when_in_a_row()?;
         Some(HandScore::new(
             PartialHandScore::Straight(high_rank),
@@ -314,29 +313,13 @@ impl Ord for HandScore {
         let self_partial = &self.partial_score;
         let other_partial = &other.partial_score;
         if self_partial != other_partial {
-            println!(
-                "HandScore::cmp A -> {:?} {:?} {:?}\n",
-                self_partial,
-                self_partial.cmp(&other_partial),
-                other_partial
-            );
             return self_partial.cmp(&other_partial);
         }
-        println!("HandScore::cmp B ->\n\t{:?}\n\t==\n\t{:?}", self, other);
         if self.remaining_hand.is_empty() || other.remaining_hand.is_empty() {
-            println!("\t...but one is empty");
-            println!(
-                "\t...answer is {:?}\n",
-                self.remaining_hand.cards.cmp(&other.remaining_hand.cards)
-            );
             return self.remaining_hand.cards.cmp(&other.remaining_hand.cards);
         }
         let self_next_hand_score = self.remaining_hand.score();
         let other_next_hand_score = other.remaining_hand.score();
-        println!(
-            "\nHandScore::cmp C ->\n\t{:?}\n\t??\n\t{:?}...\n",
-            self_next_hand_score, other_next_hand_score
-        );
         self_next_hand_score.cmp(&other_next_hand_score)
     }
 }
