@@ -13,8 +13,8 @@ use itertools::Itertools;
 /// the winning hand(s) as were passed in, not reconstructed strings which
 /// happen to be equal.
 pub fn winning_hands<'a>(hands: &[&'a str]) -> Option<Vec<&'a str>> {
+    println!("winning_hands.A");
     let mut hand_refs = parse_hand_refs(hands)?;
-    hand_refs.sort_unstable_by_key(|hand_ref| hand_ref.score());
     hand_refs.reverse(); // High-to-low
     let groups = hand_refs.iter().group_by(|&hr| hr.score());
     let (_, highest_scoring_hand_refs) = groups.into_iter().next()?;
