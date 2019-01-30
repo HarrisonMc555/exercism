@@ -40,7 +40,8 @@ impl Suit {
             Suit::Spade => "S",
             Suit::Diamond => "D",
             Suit::Club => "C",
-        }.to_string()
+        }
+        .to_string()
     }
 }
 
@@ -119,7 +120,8 @@ impl Rank {
             Rank::Queen => "Q",
             Rank::King => "K",
             Rank::Ace => "A",
-        }.to_string()
+        }
+        .to_string()
     }
 
     pub fn is_ace(&self) -> bool {
