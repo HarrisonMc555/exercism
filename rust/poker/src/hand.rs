@@ -133,17 +133,9 @@ impl Hand {
         self.cards.len() == Hand::NUM_CARDS_IN_FULL_HAND
     }
 
-    // fn low_card(&self) -> Option<Card> {
-    //     self.cards.first().cloned()
-    // }
-
     fn high_card(&self) -> Option<Card> {
         self.cards.first().cloned()
     }
-
-    // fn low_rank(&self) -> Option<Rank> {
-    //     Some(self.low_card()?.rank())
-    // }
 
     fn high_rank(&self) -> Option<Rank> {
         Some(self.high_card()?.rank())
@@ -165,10 +157,6 @@ impl Hand {
     }
 
     fn remove_up_to_n_matching_rank(&self, num: usize, rank: Rank) -> Self {
-        // println!("remove_up_to_n_matching_rank:");
-        // println!("\tself: {}", self);
-        // println!("\tnum: {}", num);
-        // println!("\trank: {}", rank);
         let max_matching_index = self
             .cards
             .iter()
@@ -178,7 +166,6 @@ impl Hand {
             .take(num)
             .last()
             .unwrap_or_else(|| self.cards.len());
-        // println!("\tmax_matching_index: {}", max_matching_index);
         let up_to_n = &self.cards[..=max_matching_index];
         let after_n = &self.cards[max_matching_index + 1..];
         let remaining_cards = up_to_n
@@ -187,16 +174,7 @@ impl Hand {
             .filter(|card| card.rank() != rank)
             .chain(after_n.iter().cloned())
             .collect();
-        // println!("\tremaining_cards: {:?}", remaining_cards);
         Hand::new(remaining_cards)
-        // let cards = self
-        //     .cards
-        //     .iter()
-        //     .cloned()
-        //     .filter(|c| c.rank() != rank)
-        //     .take(num)
-        //     .collect();
-        // Hand::new(cards)
     }
 }
 
@@ -211,19 +189,9 @@ impl HandScore {
         }
     }
 
-    pub fn remaining_hand(&self) -> Hand {
-        self.remaining_hand.clone()
-    }
-
-    pub fn partial_score(&self) -> PartialHandScore {
-        self.partial_score.clone()
-    }
-
     pub fn royal_flush(hand: &Hand) -> Option<HandScore> {
-        // let high_is_ace = hand.high_rank()?.is_ace();
         let high_rank = hand.highest_card_when_in_a_row()?;
         let is_royal_flush = hand.all_same_suit() && high_rank.is_ace();
-        // hand.highest_card_when_in_a_row().is_some() && hand.all_same_suit() && high_is_ace;
         is_royal_flush.as_some(HandScore::new(
             PartialHandScore::RoyalFlush,
             Hand::empty(),
@@ -231,8 +199,6 @@ impl HandScore {
     }
 
     pub fn straight_flush(hand: &Hand) -> Option<HandScore> {
-        // let high_rank = hand.high_rank()?;
-        // let is_straight_flush = hand.highest_card_when_in_a_row() && hand.all_same_suit();
         let high_rank = hand.highest_card_when_in_a_row()?;
         let is_straight_flush = hand.all_same_suit();
         is_straight_flush.as_some(HandScore::new(
@@ -244,7 +210,6 @@ impl HandScore {
     pub fn four_of_a_kind(hand: &Hand) -> Option<HandScore> {
         let rank_with_four = hand.n_of_a_kind(4)?;
         let remaining_hand =
-            // hand.remove_up_to_n_matching(|card| card.rank() == rank_with_four, 4);
             hand.remove_up_to_n_matching_rank(4, rank_with_four);
         Some(HandScore::new(
             PartialHandScore::FourOfAKind(rank_with_four),
@@ -304,10 +269,6 @@ impl HandScore {
         let remaining_hand = hand
             .remove_up_to_n_matching_rank(2, high_rank)
             .remove_up_to_n_matching_rank(2, low_rank);
-        // println!(
-        //     "TwoPair({}, {}), remaining = {:?} (original = {})",
-        //     high_rank, low_rank, remaining_hand, hand
-        // );
         is_two_pair.as_some(HandScore::new(
             PartialHandScore::TwoPair(high_rank, low_rank),
             remaining_hand,
@@ -331,14 +292,6 @@ impl HandScore {
             PartialHandScore::HighCard(high_rank),
             remaining_hand,
         ))
-        // let ranks = hand.ranks();
-        // if ranks.is_empty() {
-        //     return None;
-        // }
-        // Some(HandScore::new(
-        //     PartialHandScore::HighCard(ranks),
-        //     Hand::empty(),
-        // ))
     }
 }
 
