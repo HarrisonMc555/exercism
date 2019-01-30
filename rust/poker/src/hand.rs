@@ -35,7 +35,7 @@ impl Hand {
         let cards = card_strings
             .map(Card::from_string)
             .collect::<Option<Vec<_>>>()?;
-        Some(Hand { cards })
+        Some(Hand::new(cards))
     }
 
     fn get_score(&self) -> HandScore {
@@ -59,8 +59,9 @@ impl Hand {
         if self.cards.is_empty() {
             return true;
         }
-        let mut cur = self.cards[0].rank();
-        for next in self.cards.iter().map(|card| card.rank()) {
+        let ranks: Vec<_> = self.cards.iter().map(|card| card.rank()).collect();
+        let mut cur = ranks[0];
+        for next in ranks {
             if cur.next_enum() != Some(next) {
                 return false;
             }
@@ -135,15 +136,3 @@ impl PartialOrd for Hand {
         Some(self.cmp(other))
     }
 }
-
-// impl Ord for HandScore {
-//     fn cmp(&self, other: &HandScore) -> Ordering {
-//         Ordering::Less
-//     }
-// }
-
-// impl PartialOrd for HandScore {
-//     fn partial_cmp(&self, other: &HandScore) -> Option<Ordering> {
-//         Some(self.cmp(other))
-//     }
-// }
