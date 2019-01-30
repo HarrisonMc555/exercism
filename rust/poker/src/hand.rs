@@ -2,12 +2,14 @@ use crate::card::Card;
 use crate::enums::Rank;
 use boolinator::Boolinator;
 use itertools::Itertools;
+use std::cmp::Ordering;
 
-#[derive(Ord, Eq, PartialOrd, PartialEq)]
+#[derive(Eq, PartialEq)]
 pub struct Hand {
     cards: Vec<Card>,
 }
 
+#[derive(Ord, PartialOrd, Eq, PartialEq)]
 enum HandScore {
     HighCard(Rank),
     Pair(Rank),
@@ -28,8 +30,12 @@ impl Hand {
         Hand { cards }
     }
 
-    fn from_string(string: &str) -> Self {
-        Hand { cards: vec![] }
+    pub fn from_string(string: &str) -> Option<Self> {
+        let card_strings = string.split_whitespace();
+        let cards = card_strings
+            .map(Card::from_string)
+            .collect::<Option<Vec<_>>>()?;
+        Some(Hand { cards })
     }
 
     fn get_score(&self) -> HandScore {
@@ -80,22 +86,18 @@ impl Hand {
     }
 }
 
-impl From<&str> for Hand {
-    fn from(string: &str) -> Self {
-        Hand::from_string(string)
-    }
-}
-
 impl HandScore {
     fn royal_flush(hand: &Hand) -> Option<HandScore> {
-        let high_is_ace = hand.high_rank().map(|rank| rank.is_ace()) == Some(true);
+        let high_is_ace =
+            hand.high_rank().map(|rank| rank.is_ace()) == Some(true);
         (hand.all_in_a_row() && high_is_ace).as_some(HandScore::RoyalFlush)
     }
 
     fn straight_flush(hand: &Hand) -> Option<HandScore> {
         let high_rank = hand.high_rank();
         let high_is_ace = high_rank.map(|rank| rank.is_ace()) == Some(true);
-        (hand.all_in_a_row() && !high_is_ace).as_some(HandScore::StraightFlush(high_rank.unwrap()))
+        (hand.all_in_a_row() && !high_is_ace)
+            .as_some(HandScore::StraightFlush(high_rank.unwrap()))
     }
 
     fn four_of_a_kind(hand: &Hand) -> Option<HandScore> {
@@ -108,13 +110,40 @@ impl HandScore {
     }
 
     fn full_house(hand: &Hand) -> Option<HandScore> {
-        let counted_ranks = hand.count_ranks();
+        let mut counted_ranks = hand.count_ranks();
         counted_ranks.sort_unstable_by_key(|&(count, _)| count);
-        let counts = counted_ranks.into_iter().map(|&(count, _)| count).collect();
+        let counts: Vec<_> =
+            counted_ranks.iter().map(|&(count, _)| count).collect();
         if counts != vec![2, 3] {
-            return None
+            return None;
         }
-        let (rank_with_two, rank_with_three) = (counts[0], counts[1]);
-        HandScore::FullHouse(rank_with_three, rank_with_two)
+        let ranks: Vec<_> =
+            counted_ranks.iter().map(|&(_, rank)| rank).collect();
+        let (rank_with_two, rank_with_three) = (ranks[0], ranks[1]);
+        Some(HandScore::FullHouse(rank_with_three, rank_with_two))
     }
 }
+
+impl Ord for Hand {
+    fn cmp(&self, other: &Hand) -> Ordering {
+        self.get_score().cmp(&other.get_score())
+    }
+}
+
+impl PartialOrd for Hand {
+    fn partial_cmp(&self, other: &Hand) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+// impl Ord for HandScore {
+//     fn cmp(&self, other: &HandScore) -> Ordering {
+//         Ordering::Less
+//     }
+// }
+
+// impl PartialOrd for HandScore {
+//     fn partial_cmp(&self, other: &HandScore) -> Option<Ordering> {
+//         Some(self.cmp(other))
+//     }
+// }

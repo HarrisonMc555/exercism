@@ -20,6 +20,10 @@ impl Card {
     pub fn suit(&self) -> Suit {
         self.suit
     }
+
+    pub fn from_string(string: &str) -> Option<Self> {
+        None
+    }
 }
 
 impl Ord for Card {

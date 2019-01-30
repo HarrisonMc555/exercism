@@ -8,17 +8,19 @@ pub struct HandRef<'a> {
 }
 
 impl<'a> HandRef<'a> {
-    pub fn new(hand: Hand, source: &'a str) -> Self {
+    pub fn _new(hand: Hand, source: &'a str) -> Self {
         HandRef { hand, source }
     }
-}
 
-impl<'a> From<&'a str> for HandRef<'a> {
-    fn from(source: &'a str) -> Self {
-        HandRef {
-            hand: Hand::from(source),
+    pub fn source(&self) -> &'a str {
+        self.source
+    }
+
+    pub fn from_string(source: &'a str) -> Option<Self> {
+        Some(HandRef {
+            hand: Hand::from_string(source)?,
             source,
-        }
+        })
     }
 }
 
