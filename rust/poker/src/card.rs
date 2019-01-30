@@ -2,7 +2,7 @@ use crate::enums::Rank;
 use crate::enums::Suit;
 use std::cmp::Ordering;
 
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Debug, Copy, Clone, Eq, PartialEq)]
 pub struct Card {
     rank: Rank,
     suit: Suit,
@@ -28,7 +28,7 @@ impl Card {
         let rank = Rank::from_string(&rank_str)?;
         let suit_char = letters.get(letters.len() - 1)?;
         let suit = Suit::from_char(*suit_char)?;
-        Some(Card { rank, suit })
+        Some(Card::new(rank, suit))
     }
 }
 
@@ -41,5 +41,11 @@ impl Ord for Card {
 impl PartialOrd for Card {
     fn partial_cmp(&self, other: &Card) -> Option<Ordering> {
         Some(self.cmp(other))
+    }
+}
+
+impl std::fmt::Display for Card {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "{}{}", self.rank, self.suit)
     }
 }

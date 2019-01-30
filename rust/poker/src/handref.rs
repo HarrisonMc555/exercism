@@ -1,7 +1,7 @@
 use crate::hand::Hand;
 use std::cmp::Ordering;
 
-#[derive(Eq)]
+#[derive(Debug, Eq)]
 pub struct HandRef<'a> {
     hand: Hand,
     source: &'a str,
@@ -22,6 +22,10 @@ impl<'a> HandRef<'a> {
             source,
         })
     }
+
+    pub fn score(&self) -> crate::hand::HandScore {
+        self.hand.score()
+    }
 }
 
 impl<'a> Ord for HandRef<'a> {
@@ -39,5 +43,11 @@ impl<'a> PartialOrd for HandRef<'a> {
 impl<'a> PartialEq for HandRef<'a> {
     fn eq(&self, other: &HandRef) -> bool {
         self.hand.eq(&other.hand)
+    }
+}
+
+impl<'a> std::fmt::Display for HandRef<'a> {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "({}, {})", self.hand, self.source)
     }
 }
