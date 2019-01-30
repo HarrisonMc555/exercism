@@ -55,32 +55,27 @@ fn test_high_card_can_be_low_card_in_an_otherwise_tie() {
 }
 
 #[test]
-#[ignore]
 fn test_one_pair_beats_high_card() {
     test(&["4S 5H 6C 8D KH", "2S 4H 6S 4D JH"], &["2S 4H 6S 4D JH"])
 }
 
 #[test]
-#[ignore]
 fn test_highest_pair_wins() {
     test(&["4S 2H 6S 2D JH", "2S 4H 6C 4D JD"], &["2S 4H 6C 4D JD"])
 }
 
 #[test]
-#[ignore]
 fn test_two_pairs_beats_one_pair() {
     test(&["2S 8H 6S 8D JH", "4S 5H 4C 8C 5C"], &["4S 5H 4C 8C 5C"])
 }
 
 #[test]
-#[ignore]
 fn test_two_pair_ranks() {
     // both hands have two pairs, highest ranked pair wins
     test(&["2S 8H 2D 8D 3H", "4S 5H 4C 8S 5D"], &["2S 8H 2D 8D 3H"])
 }
 
 #[test]
-#[ignore]
 fn test_two_pairs_second_pair_cascade() {
     // both hands have two pairs, with the same highest ranked pair,
     // tie goes to low pair
@@ -88,7 +83,6 @@ fn test_two_pairs_second_pair_cascade() {
 }
 
 #[test]
-#[ignore]
 fn test_two_pairs_last_card_cascade() {
     // both hands have two identically ranked pairs,
     // tie goes to remaining card (kicker)
@@ -96,7 +90,6 @@ fn test_two_pairs_last_card_cascade() {
 }
 
 #[test]
-#[ignore]
 fn test_three_of_a_kind_beats_two_pair() {
     test(&["2S 8H 2H 8D JH", "4S 5H 4C 8S 4H"], &["4S 5H 4C 8S 4H"])
 }

@@ -11,7 +11,7 @@ pub struct Hand {
 #[derive(Debug, Ord, PartialOrd, Eq, PartialEq)]
 pub enum HandScore {
     None, // No cards
-    HighCard(Rank),
+    HighCard(Vec<Rank>),
     Pair(Rank),
     TwoPair(Rank, Rank), // High, low
     ThreeOfAKind(Rank),
@@ -27,6 +27,7 @@ impl Hand {
     pub fn new(cards: Vec<Card>) -> Self {
         let mut cards = cards;
         cards.sort_unstable();
+        cards.reverse(); // High-to-low
         Hand { cards }
     }
 
@@ -160,7 +161,7 @@ impl HandScore {
     fn flush(hand: &Hand) -> Option<HandScore> {
         let all_same_suit = hand.all_same_suit();
         // Need to list ranks highest to lowest for comparing
-        let ranks = hand.ranks().into_iter().rev().collect();
+        let ranks = hand.ranks().into_iter().collect();
         all_same_suit.as_some(HandScore::Flush(ranks))
     }
 
@@ -189,7 +190,11 @@ impl HandScore {
     }
 
     fn high_card(hand: &Hand) -> Option<HandScore> {
-        Some(HandScore::HighCard(hand.high_rank()?))
+        let ranks = hand.ranks();
+        if ranks.is_empty() {
+            return None;
+        }
+        Some(HandScore::HighCard(ranks))
     }
 }
 
