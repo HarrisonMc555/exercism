@@ -83,21 +83,40 @@ impl Rank {
         })
     }
 
-    pub fn next_enum(&self) -> Option<Self> {
+    #[allow(dead_code)]
+    pub fn circular_next_enum(&self) -> Self {
         match self {
-            Rank::Two => Some(Rank::Three),
-            Rank::Three => Some(Rank::Four),
-            Rank::Four => Some(Rank::Five),
-            Rank::Five => Some(Rank::Six),
-            Rank::Six => Some(Rank::Seven),
-            Rank::Seven => Some(Rank::Eight),
-            Rank::Eight => Some(Rank::Nine),
-            Rank::Nine => Some(Rank::Ten),
-            Rank::Ten => Some(Rank::Jack),
-            Rank::Jack => Some(Rank::Queen),
-            Rank::Queen => Some(Rank::King),
-            Rank::King => Some(Rank::Ace),
-            Rank::Ace => None,
+            Rank::Two => Rank::Three,
+            Rank::Three => Rank::Four,
+            Rank::Four => Rank::Five,
+            Rank::Five => Rank::Six,
+            Rank::Six => Rank::Seven,
+            Rank::Seven => Rank::Eight,
+            Rank::Eight => Rank::Nine,
+            Rank::Nine => Rank::Ten,
+            Rank::Ten => Rank::Jack,
+            Rank::Jack => Rank::Queen,
+            Rank::Queen => Rank::King,
+            Rank::King => Rank::Ace,
+            Rank::Ace => Rank::Two,
+        }
+    }
+
+    pub fn circular_prev_enum(&self) -> Self {
+        match self {
+            Rank::Two => Rank::Ace,
+            Rank::Three => Rank::Two,
+            Rank::Four => Rank::Three,
+            Rank::Five => Rank::Four,
+            Rank::Six => Rank::Five,
+            Rank::Seven => Rank::Six,
+            Rank::Eight => Rank::Seven,
+            Rank::Nine => Rank::Eight,
+            Rank::Ten => Rank::Nine,
+            Rank::Jack => Rank::Ten,
+            Rank::Queen => Rank::Jack,
+            Rank::King => Rank::Queen,
+            Rank::Ace => Rank::King,
         }
     }
 
@@ -118,24 +137,6 @@ impl Rank {
             Rank::Ace => "A",
         }.to_string()
     }
-
-    // pub fn prev_enum(&self) -> Option<Self> {
-    //     match self {
-    //         Rank::Two => None,
-    //         Rank::Three => Some(Rank::Two),
-    //         Rank::Four => Some(Rank::Three),
-    //         Rank::Five => Some(Rank::Four),
-    //         Rank::Six => Some(Rank::Five),
-    //         Rank::Seven => Some(Rank::Six),
-    //         Rank::Eight => Some(Rank::Seven),
-    //         Rank::Nine => Some(Rank::Eight),
-    //         Rank::Ten => Some(Rank::Nine),
-    //         Rank::Jack => Some(Rank::Ten),
-    //         Rank::Queen => Some(Rank::Jack),
-    //         Rank::King => Some(Rank::Queen),
-    //         Rank::Ace => Some(Rank::King),
-    //     }
-    // }
 
     // pub fn is_two(&self) -> bool {
     //     self == &Rank::Two

@@ -102,19 +102,41 @@ impl Hand {
             .collect()
     }
 
-    fn all_in_a_row(&self) -> bool {
-        if self.cards.is_empty() {
-            return true;
+    fn all_in_a_row(&self) -> Option<Rank> {
+        if !self.is_full_hand() {
+            return None;
         }
         let ranks = self.ranks();
         let mut cur = ranks[0];
-        for next in ranks {
-            if cur.next_enum() != Some(next) {
-                return false;
-            }
-            cur = next;
+        // println!("all_in_a_row:");
+        // println!("\tcur: {:?}", cur);
+        let all_match_next =
+            ranks.windows(2).all(|w| w[0].circular_prev_enum() == w[1]);
+        if all_match_next {
+            return Some(ranks[0]);
         }
-        true
+        let first_at_end: Vec<_> =
+            ranks.iter().skip(1).chain(ranks.first()).collect();
+        let all_match_next_with_first_at_end = first_at_end
+            .windows(2)
+            .all(|w| w[0].circular_prev_enum() == *w[1]);
+        if all_match_next_with_first_at_end {
+            return Some(ranks[1]);
+        }
+        None
+        // for next in ranks.into_iter().skip(1) {
+        //     // println!("\t\tnext: {:?}", next);
+        //     if cur.circular_prev_enum() != next {
+        //         // println!(
+        //         //     "\t\tcur.prev_enum() = {:?} != {:?} = Some(next)",
+        //         //     cur.prev_enum(),
+        //         //     Some(next)
+        //         // );
+        //         return false;
+        //     }
+        //     cur = next;
+        // }
+        // true
     }
 
     fn all_same_suit(&self) -> bool {
@@ -217,12 +239,10 @@ impl HandScore {
     }
 
     pub fn royal_flush(hand: &Hand) -> Option<HandScore> {
-        if !hand.is_full_hand() {
-            return None;
-        }
-        let high_is_ace = hand.high_rank()?.is_ace();
-        let is_royal_flush =
-            hand.all_in_a_row() && hand.all_same_suit() && high_is_ace;
+        // let high_is_ace = hand.high_rank()?.is_ace();
+        let high_rank = hand.all_in_a_row()?;
+        let is_royal_flush = hand.all_same_suit() && high_rank.is_ace();
+            // hand.all_in_a_row().is_some() && hand.all_same_suit() && high_is_ace;
         is_royal_flush.as_some(HandScore::new(
             PartialHandScore::RoyalFlush,
             Hand::empty(),
@@ -230,11 +250,10 @@ impl HandScore {
     }
 
     pub fn straight_flush(hand: &Hand) -> Option<HandScore> {
-        if !hand.is_full_hand() {
-            return None;
-        }
-        let high_rank = hand.high_rank()?;
-        let is_straight_flush = hand.all_in_a_row() && hand.all_same_suit();
+        // let high_rank = hand.high_rank()?;
+        // let is_straight_flush = hand.all_in_a_row() && hand.all_same_suit();
+        let high_rank = hand.all_in_a_row()?;
+        let is_straight_flush = hand.all_same_suit();
         is_straight_flush.as_some(HandScore::new(
             PartialHandScore::StraightFlush(high_rank),
             Hand::empty(),
@@ -277,14 +296,20 @@ impl HandScore {
     }
 
     pub fn straight(hand: &Hand) -> Option<HandScore> {
-        if !hand.is_full_hand() {
-            return None;
-        }
-        let is_straight = hand.all_in_a_row();
-        is_straight.as_some(HandScore::new(
-            PartialHandScore::Straight(hand.high_rank()?),
-            Hand::empty(),
-        ))
+        println!("straight: {}", hand);
+        // if !hand.is_full_hand() {
+        //     println!("\tnot a full hand");
+        //     return None;
+        // }
+        let high_rank = hand.all_in_a_row()?;
+        // if !is_straight {
+        //     println!("\tnot all in a row");
+        // }
+        Some(HandScore::new(PartialHandScore::Straight(high_rank), Hand::empty()))
+        // is_straight.as_some(HandScore::new(
+        //     PartialHandScore::Straight(hand.high_rank()?),
+        //     Hand::empty(),
+        // ))
     }
 
     pub fn three_of_a_kind(hand: &Hand) -> Option<HandScore> {
@@ -398,6 +423,6 @@ impl PartialOrd for HandScore {
 
 impl PartialEq for HandScore {
     fn eq(&self, other: &HandScore) -> bool {
-        return self.cmp(&other) == Ordering::Equal
+        return self.cmp(&other) == Ordering::Equal;
     }
 }
