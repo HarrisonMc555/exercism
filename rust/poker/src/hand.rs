@@ -2,9 +2,8 @@ use crate::card::Card;
 use crate::enums::{Rank, Suit};
 use boolinator::Boolinator;
 use itertools::Itertools;
-use std::cmp::Ordering;
 
-#[derive(Debug, Eq, PartialEq)]
+#[derive(Debug, Ord, PartialOrd, Eq, PartialEq)]
 pub struct Hand {
     cards: Vec<Card>,
 }
@@ -191,18 +190,6 @@ impl HandScore {
 
     fn high_card(hand: &Hand) -> Option<HandScore> {
         Some(HandScore::HighCard(hand.high_rank()?))
-    }
-}
-
-impl Ord for Hand {
-    fn cmp(&self, other: &Hand) -> Ordering {
-        self.score().cmp(&other.score())
-    }
-}
-
-impl PartialOrd for Hand {
-    fn partial_cmp(&self, other: &Hand) -> Option<Ordering> {
-        Some(self.cmp(other))
     }
 }
 

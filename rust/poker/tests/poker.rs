@@ -48,7 +48,6 @@ fn test_a_tie_has_multiple_winners() {
 }
 
 #[test]
-#[ignore]
 fn test_high_card_can_be_low_card_in_an_otherwise_tie() {
     // multiple hands with the same high cards, tie compares next highest ranked,
     // down to last card
