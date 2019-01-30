@@ -71,11 +71,6 @@ impl Hand {
         ];
         for scoring_function in scoring_functions.iter() {
             if let Some(hand_score) = scoring_function(self) {
-                // if self.cards.len() <= hand_score.remaining_hand.cards.len() {
-                //     println!("Original hand : {}", self);
-                //     println!("Remaining hand: {}", hand_score.remaining_hand);
-                //     println!("hand_score: {:?}", hand_score);
-                // }
                 assert!(
                     self.cards.len() > hand_score.remaining_hand.cards.len()
                 );
@@ -102,41 +97,27 @@ impl Hand {
             .collect()
     }
 
-    fn all_in_a_row(&self) -> Option<Rank> {
+    fn highest_card_when_in_a_row(&self) -> Option<Rank> {
         if !self.is_full_hand() {
             return None;
         }
+
         let ranks = self.ranks();
-        let mut cur = ranks[0];
-        // println!("all_in_a_row:");
-        // println!("\tcur: {:?}", cur);
-        let all_match_next =
-            ranks.windows(2).all(|w| w[0].circular_prev_enum() == w[1]);
-        if all_match_next {
+        if Hand::all_in_a_row(&ranks) {
             return Some(ranks[0]);
         }
-        let first_at_end: Vec<_> =
-            ranks.iter().skip(1).chain(ranks.first()).collect();
-        let all_match_next_with_first_at_end = first_at_end
-            .windows(2)
-            .all(|w| w[0].circular_prev_enum() == *w[1]);
-        if all_match_next_with_first_at_end {
+
+        let first_at_end: Vec<Rank> =
+            ranks.iter().skip(1).chain(ranks.first()).cloned().collect();
+        if Hand::all_in_a_row(&first_at_end) {
             return Some(ranks[1]);
         }
+
         None
-        // for next in ranks.into_iter().skip(1) {
-        //     // println!("\t\tnext: {:?}", next);
-        //     if cur.circular_prev_enum() != next {
-        //         // println!(
-        //         //     "\t\tcur.prev_enum() = {:?} != {:?} = Some(next)",
-        //         //     cur.prev_enum(),
-        //         //     Some(next)
-        //         // );
-        //         return false;
-        //     }
-        //     cur = next;
-        // }
-        // true
+    }
+
+    fn all_in_a_row(ranks: &[Rank]) -> bool {
+        ranks.windows(2).all(|w| w[0].circular_prev_enum() == w[1])
     }
 
     fn all_same_suit(&self) -> bool {
@@ -240,9 +221,9 @@ impl HandScore {
 
     pub fn royal_flush(hand: &Hand) -> Option<HandScore> {
         // let high_is_ace = hand.high_rank()?.is_ace();
-        let high_rank = hand.all_in_a_row()?;
+        let high_rank = hand.highest_card_when_in_a_row()?;
         let is_royal_flush = hand.all_same_suit() && high_rank.is_ace();
-            // hand.all_in_a_row().is_some() && hand.all_same_suit() && high_is_ace;
+        // hand.highest_card_when_in_a_row().is_some() && hand.all_same_suit() && high_is_ace;
         is_royal_flush.as_some(HandScore::new(
             PartialHandScore::RoyalFlush,
             Hand::empty(),
@@ -251,8 +232,8 @@ impl HandScore {
 
     pub fn straight_flush(hand: &Hand) -> Option<HandScore> {
         // let high_rank = hand.high_rank()?;
-        // let is_straight_flush = hand.all_in_a_row() && hand.all_same_suit();
-        let high_rank = hand.all_in_a_row()?;
+        // let is_straight_flush = hand.highest_card_when_in_a_row() && hand.all_same_suit();
+        let high_rank = hand.highest_card_when_in_a_row()?;
         let is_straight_flush = hand.all_same_suit();
         is_straight_flush.as_some(HandScore::new(
             PartialHandScore::StraightFlush(high_rank),
@@ -297,19 +278,11 @@ impl HandScore {
 
     pub fn straight(hand: &Hand) -> Option<HandScore> {
         println!("straight: {}", hand);
-        // if !hand.is_full_hand() {
-        //     println!("\tnot a full hand");
-        //     return None;
-        // }
-        let high_rank = hand.all_in_a_row()?;
-        // if !is_straight {
-        //     println!("\tnot all in a row");
-        // }
-        Some(HandScore::new(PartialHandScore::Straight(high_rank), Hand::empty()))
-        // is_straight.as_some(HandScore::new(
-        //     PartialHandScore::Straight(hand.high_rank()?),
-        //     Hand::empty(),
-        // ))
+        let high_rank = hand.highest_card_when_in_a_row()?;
+        Some(HandScore::new(
+            PartialHandScore::Straight(high_rank),
+            Hand::empty(),
+        ))
     }
 
     pub fn three_of_a_kind(hand: &Hand) -> Option<HandScore> {
