@@ -4,12 +4,14 @@ use boolinator::Boolinator;
 use itertools::Itertools;
 use std::cmp::Ordering;
 
-#[derive(Debug, Clone, Ord, PartialOrd, Eq)]
+#[derive(Debug, Clone, Ord, PartialOrd, Eq, PartialEq)]
 pub struct Hand {
-    cards: Vec<Card>,
+    cards: Vec<Card>, // High-to-low
 }
 
-#[derive(Debug, Eq)]
+// Do NOT auto-derive Ord and PartialEq, we want our own rules for those. Eq
+// is a no-op and PartialOrd should just use our custom Ord implementation.
+#[derive(Debug, PartialOrd, Eq)]
 pub struct HandScore {
     partial_score: PartialHandScore,
     remaining_hand: Hand,
@@ -101,24 +103,24 @@ impl Hand {
         }
 
         let ranks = self.ranks();
-        if Hand::all_in_a_row(&ranks) {
+        if Hand::is_all_in_a_row(&ranks) {
             return Some(ranks[0]);
         }
 
         let first_at_end: Vec<Rank> =
             ranks.iter().skip(1).chain(ranks.first()).cloned().collect();
-        if Hand::all_in_a_row(&first_at_end) {
+        if Hand::is_all_in_a_row(&first_at_end) {
             return Some(ranks[1]);
         }
 
         None
     }
 
-    fn all_in_a_row(ranks: &[Rank]) -> bool {
+    fn is_all_in_a_row(ranks: &[Rank]) -> bool {
         ranks.windows(2).all(|w| w[0].circular_prev_enum() == w[1])
     }
 
-    fn all_same_suit(&self) -> bool {
+    fn is_all_same_suit(&self) -> bool {
         let suits = self.suits();
         let first_suit = match suits.iter().next() {
             Some(s) => s,
@@ -189,7 +191,7 @@ impl HandScore {
 
     pub fn royal_flush(hand: &Hand) -> Option<HandScore> {
         let high_rank = hand.highest_card_when_in_a_row()?;
-        let is_royal_flush = hand.all_same_suit() && high_rank.is_ace();
+        let is_royal_flush = hand.is_all_same_suit() && high_rank.is_ace();
         is_royal_flush.as_some(HandScore::new(
             PartialHandScore::RoyalFlush,
             Hand::empty(),
@@ -198,7 +200,7 @@ impl HandScore {
 
     pub fn straight_flush(hand: &Hand) -> Option<HandScore> {
         let high_rank = hand.highest_card_when_in_a_row()?;
-        let is_straight_flush = hand.all_same_suit();
+        let is_straight_flush = hand.is_all_same_suit();
         is_straight_flush.as_some(HandScore::new(
             PartialHandScore::StraightFlush(high_rank),
             Hand::empty(),
@@ -228,9 +230,9 @@ impl HandScore {
     }
 
     pub fn flush(hand: &Hand) -> Option<HandScore> {
-        let all_same_suit = hand.all_same_suit();
+        let is_flush = hand.is_all_same_suit();
         let ranks = hand.ranks();
-        all_same_suit.as_some(HandScore::new(
+        is_flush.as_some(HandScore::new(
             PartialHandScore::Flush(ranks),
             Hand::empty(),
         ))
@@ -297,12 +299,6 @@ impl std::fmt::Display for Hand {
     }
 }
 
-impl PartialEq for Hand {
-    fn eq(&self, other: &Hand) -> bool {
-        self.cmp(&other) == Ordering::Equal
-    }
-}
-
 impl Ord for HandScore {
     fn cmp(&self, other: &HandScore) -> Ordering {
         let self_partial = &self.partial_score;
@@ -316,12 +312,6 @@ impl Ord for HandScore {
         let self_next_hand_score = self.remaining_hand.score();
         let other_next_hand_score = other.remaining_hand.score();
         self_next_hand_score.cmp(&other_next_hand_score)
-    }
-}
-
-impl PartialOrd for HandScore {
-    fn partial_cmp(&self, other: &HandScore) -> Option<Ordering> {
-        return Some(self.cmp(other));
     }
 }
 
