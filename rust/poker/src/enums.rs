@@ -6,6 +6,7 @@ pub enum Suit {
     Club,
 }
 
+// The order here is precedence (lowest to highest)
 #[derive(Copy, Clone, Ord, Eq, PartialOrd, PartialEq, Debug)]
 pub enum Rank {
     Two,

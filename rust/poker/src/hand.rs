@@ -15,6 +15,7 @@ pub struct HandScore {
     remaining_hand: Hand,
 }
 
+// The order here is precedence (lowest to highest)
 #[derive(Clone, Debug, Ord, PartialOrd, Eq, PartialEq)]
 pub enum PartialHandScore {
     None, // No cards
@@ -57,6 +58,7 @@ impl Hand {
     }
 
     pub fn score(&self) -> HandScore {
+        // The order of this function determines which order we test them in
         let scoring_functions = [
             HandScore::royal_flush,
             HandScore::straight_flush,
@@ -69,15 +71,11 @@ impl Hand {
             HandScore::pair,
             HandScore::high_card,
         ];
-        for scoring_function in scoring_functions.iter() {
-            if let Some(hand_score) = scoring_function(self) {
-                assert!(
-                    self.cards.len() > hand_score.remaining_hand.cards.len()
-                );
-                return hand_score;
-            }
-        }
-        HandScore::new(PartialHandScore::None, self.clone())
+        scoring_functions
+            .iter()
+            .flat_map(|fun| fun(self)) // Apply functions, skipping None
+            .next() // Get first one or default
+            .unwrap_or_else(|| HandScore::new(PartialHandScore::None, self.clone()))
     }
 
     fn suits(&self) -> Vec<Suit> {
@@ -230,9 +228,6 @@ impl HandScore {
     }
 
     pub fn flush(hand: &Hand) -> Option<HandScore> {
-        if !hand.is_full_hand() {
-            return None;
-        }
         let all_same_suit = hand.all_same_suit();
         let ranks = hand.ranks();
         all_same_suit.as_some(HandScore::new(
