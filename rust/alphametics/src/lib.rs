@@ -41,6 +41,12 @@ fn parse_alphametic(input: &str) -> Option<Problem> {
         })
         .collect();
     let result = cap.name("res")?.as_str().chars().rev().collect();
+    // println!("input: {}", input);
+    // println!("sr1: {:?}", cap.name("sr1")?);
+    // println!("srn: {:?}", cap.name("srn")?);
+    // println!("res: {:?}", cap.name("res")?);
+    // println!("sources_transposed: {:?}", sources_transposed);
+    // println!("result: {:?}", result);
     Some((sources_transposed, result))
 }
 
@@ -67,11 +73,38 @@ fn find_solution_helper<'a>(
     remaining_letters: &[char],
     mut remaining_numbers: &mut HashSet<u8>,
 ) -> bool {
-    match is_correct_solution(problem, &solution) {
+    // println!(
+    //     "rsh: solution({}), letters({}), numbers({})",
+    //     solution.len(),
+    //     remaining_letters.len(),
+    //     remaining_numbers.len()
+    // );
+    // println!("rsh: {:?} ({:?})", solution, remaining_letters);
+    let solution_is_real = solution.get(&'L') == Some(&0)
+        && solution.get(&'B') == Some(&9)
+        && solution.get(&'I') == Some(&1);
+    // if solution_is_real {
+    //     println!("find_solution_helper");
+    //     println!("\tsolution so far: {:?}", solution);
+    //     println!("\tremaining letters: {:?}", remaining_letters);
+    //     println!("\tremaining numbers: {:?}", remaining_numbers.iter());
+    //     println!(
+    //         "is_correct_solution: {:?}",
+    //         is_correct_solution(problem, &solution, true)
+    //     );
+    // }
+    match is_correct_solution(problem, &solution, false) {
         Some(true) => return true,
         Some(false) => return false,
         None => (),
     }
+    // let real_solution = {
+    //     let mut hash = HashMap::new();
+    //     hash.insert('L', 0);
+    //     hash.insert('B', 9);
+    //     hash.insert('I', 1);
+    //     hash
+    // };
     assert!(!remaining_letters.is_empty());
     let letter = remaining_letters[0];
     let next_remaining_letters = &remaining_letters[1..];
@@ -79,43 +112,94 @@ fn find_solution_helper<'a>(
     for number in remaining_numbers_cached {
         solution.insert(letter, number);
         remaining_numbers.remove(&number);
-        if find_solution_helper(
+        let found_solution = find_solution_helper(
             problem,
             solution,
             next_remaining_letters,
             &mut remaining_numbers,
-        ) {
+        );
+        if found_solution {
             return true;
         }
         solution.remove(&letter);
+        remaining_numbers.insert(number);
     }
     false
 }
 
-fn is_correct_solution(problem: &Problem, solution: &Solution) -> Option<bool> {
+fn is_correct_solution(
+    problem: &Problem,
+    solution: &Solution,
+    debug: bool,
+) -> Option<bool> {
     let (sources, result) = problem;
     let num_digits = std::cmp::max(sources.len(), result.len());
-    let mut carry = 0;
+    // if debug {
+    //     println!("num_digits: {}", num_digits)
+    // };
+    let mut carry: u32 = 0;
     // let
     for index in 0..num_digits {
-        let source_chars = sources.get(index)?;
+        // if debug {
+        //     println!("\tindex = {}", index);
+        //     println!("\tcarry = {}", carry);
+        // };
+        // if debug {
+        //     println!("\tresult_char = ...")
+        // };
         let result_char = match result.get(index) {
             Some(digit) => digit,
             None => return Some(false), // more source digits than result
         };
+        // if debug {
+        //     println!("\t\t{}", result_char)
+        // };
+        let result_digit = *solution.get(result_char)?;
+        // if debug {
+        //     println!("\tresult_digit: {}", result_digit)
+        // };
+
+        // if debug {
+        //     println!("\tsource_chars = ...");
+        // };
+        let source_chars = match sources.get(index) {
+            Some(chars) => chars,
+            // If we're out of source digits, then the final result must be the
+            // carry
+            None => return Some(carry == u32::from(result_digit)),
+        };
+        // if debug {
+        //     println!("\t\t{:?}", source_chars)
+        // };
         let source_digits = source_chars
             .iter()
             .map(|c| solution.get(c))
             .collect::<Option<Vec<_>>>()?;
-        let result_digit = *solution.get(result_char)?;
-        let source_sum: u32 =
-            source_digits.iter().fold(0, |sum, &&digit| sum + u32::from(digit))
+        // if debug {
+        //     println!("\tsource_digits: {:?}", source_digits)
+        // };
+
+        let source_sum: u32 = source_digits
+            .iter()
+            .fold(0, |sum, &&digit| sum + u32::from(digit))
             + carry;
-        let source_sum_digit = source_sum / BASE;
+        // if debug {
+        //     println!("\tsource_sum: {}", source_sum)
+        // };
+        let source_sum_digit = source_sum % BASE;
+        // if debug {
+        //     println!("\tsource_sum_digit: {}", source_sum_digit)
+        // };
         if u32::from(result_digit) != source_sum_digit {
+            // if debug {
+            //     println!(
+            //         "\tresult_digit != source_sum_digit\n\t{} != {}",
+            //         result_digit, source_sum_digit
+            //     );
+            // };
             return Some(false);
         }
-        carry = source_sum % BASE;
+        carry = source_sum / BASE;
     }
     // There should be no carry when all is said and done
     Some(carry == 0)
@@ -123,14 +207,31 @@ fn is_correct_solution(problem: &Problem, solution: &Solution) -> Option<bool> {
 
 fn extract_all_letters(problem: &Problem) -> Vec<char> {
     let (sources, result) = problem;
-    let all_letters = sources.iter().chain(Some(result)).fold(
-        HashSet::new(),
-        |mut all_letters, letters| {
-            all_letters.extend(letters.iter());
-            all_letters
-        },
-    );
-    all_letters.iter().cloned().collect()
+    let num_digits = std::cmp::max(sources.len(), result.len());
+    let mut letters = Vec::with_capacity(num_digits);
+    let mut cache = HashSet::with_capacity(num_digits);
+    for index in 0..num_digits {
+        for &c in sources
+            .iter()
+            .flat_map(|source| source.get(index))
+            .chain(result.get(index))
+        {
+            if !cache.contains(&c) {
+                letters.push(c);
+                cache.insert(c);
+            }
+        }
+    }
+    letters
+    // let all_letters = sources.iter().chain(Some(result)).fold(
+    //     HashSet::new(),
+    //     |mut all_letters, letters| {
+    //         all_letters.extend(letters.iter());
+    //         all_letters
+    //     },
+    // );
+    // println!("all_letters: {:?}", all_letters);
+    // all_letters.iter().cloned().collect()
 }
 
 fn get_all_digits(base: u8) -> HashSet<u8> {
