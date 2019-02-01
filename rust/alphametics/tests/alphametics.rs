@@ -13,14 +13,12 @@ fn test_with_three_letters() {
 }
 
 #[test]
-#[ignore]
 fn test_must_have_unique_value_for_each_letter() {
     let answer = alphametics::solve("A == B");
     assert_eq!(answer, None);
 }
 
 #[test]
-#[ignore]
 fn test_leading_zero_solution_is_invalid() {
     let answer = alphametics::solve("ACA + DD == BD");
     assert_eq!(answer, None);

@@ -6,4 +6,4 @@ version = "1.3.0"
 [dependencies]
 regex = "1.1"
 lazy_static = "1.2"
-boolinator = "2.4"
+# boolinator = "2.4"
