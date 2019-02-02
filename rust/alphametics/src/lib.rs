@@ -5,7 +5,7 @@ use regex::Regex;
 use std::collections::HashMap;
 use std::collections::HashSet;
 
-type Problem = (Vec<Vec<char>>, Vec<char>);
+type Problem = (Vec<Vec<char>>, Vec<char>, usize);
 type Solution = HashMap<char, u8>;
 const BASE: u32 = 10;
 
@@ -15,22 +15,38 @@ pub fn solve(input: &str) -> Option<Solution> {
 }
 
 lazy_static! {
-    static ref RE: Regex =
+    static ref SR1_RE: Regex = Regex::new(r"^ *(?P<sr1>\w+)").unwrap();
+    static ref SRN_RE: Regex = Regex::new(r"\+ *(?P<srn>\w+)").unwrap();
+    static ref RES_RE: Regex = Regex::new(r"== *(?P<res>\w+) *$").unwrap();
+    static ref _RE: Regex =
         Regex::new(r"(?P<sr1>\w+)(?: *\+ *(?P<srn>\w+))* *== *(?P<res>\w+)")
             .unwrap();
 }
 
 fn parse_alphametic(input: &str) -> Option<Problem> {
-    let cap = RE.captures(input)?;
-    let mut sources: Vec<Vec<char>> = Vec::new();
-    sources.push(cap.name("sr1")?.as_str().chars().rev().collect());
-    // Need to get multiple...
-    if let Some(srn) = cap.name("srn") {
-        sources.push(srn.as_str().chars().rev().collect());
+    let sr1: Vec<_> = SR1_RE
+        .captures(input)?
+        .name("sr1")?
+        .as_str()
+        .chars()
+        .rev()
+        .collect();
+    for caps in SRN_RE.captures_iter(input) {
+        println!("{:?}", caps);
     }
+    let srns = SRN_RE
+        .captures_iter(input)
+        .map(|caps| caps["srn"].chars().rev().collect::<Vec<_>>());
+    let result: Vec<_> = RES_RE
+        .captures(input)?
+        .name("res")?
+        .as_str()
+        .chars()
+        .rev()
+        .collect();
+    let sources: Vec<_> = Some(sr1).into_iter().chain(srns).collect();
     // transpose (want each element in 'sources' to be one column, not one row)
-    let num_digits: usize =
-        sources.iter().map(|source| source.len()).max().unwrap_or(0);
+    let num_digits = max_digits(&sources[..]).unwrap_or(0);
     let sources_transposed = (0..num_digits)
         .map(|index| {
             sources
@@ -40,14 +56,13 @@ fn parse_alphametic(input: &str) -> Option<Problem> {
                 .collect()
         })
         .collect();
-    let result = cap.name("res")?.as_str().chars().rev().collect();
-    // println!("input: {}", input);
-    // println!("sr1: {:?}", cap.name("sr1")?);
-    // println!("srn: {:?}", cap.name("srn")?);
-    // println!("res: {:?}", cap.name("res")?);
-    // println!("sources_transposed: {:?}", sources_transposed);
-    // println!("result: {:?}", result);
-    Some((sources_transposed, result))
+    let num_digits = std::cmp::max(num_digits, result.len());
+    println!(
+        "{} -> {:?}",
+        &input,
+        Some((&sources_transposed, &result, num_digits))
+    );
+    Some((sources_transposed, result, num_digits))
 }
 
 fn find_solution(problem: &Problem) -> Option<Solution> {
@@ -80,9 +95,9 @@ fn find_solution_helper<'a>(
     //     remaining_numbers.len()
     // );
     // println!("rsh: {:?} ({:?})", solution, remaining_letters);
-    let solution_is_real = solution.get(&'L') == Some(&0)
-        && solution.get(&'B') == Some(&9)
-        && solution.get(&'I') == Some(&1);
+    // let solution_is_real = solution.get(&'L') == Some(&0)
+    //     && solution.get(&'B') == Some(&9)
+    //     && solution.get(&'I') == Some(&1);
     // if solution_is_real {
     //     println!("find_solution_helper");
     //     println!("\tsolution so far: {:?}", solution);
@@ -130,16 +145,15 @@ fn find_solution_helper<'a>(
 fn is_correct_solution(
     problem: &Problem,
     solution: &Solution,
-    debug: bool,
+    _debug: bool,
 ) -> Option<bool> {
-    let (sources, result) = problem;
-    let num_digits = std::cmp::max(sources.len(), result.len());
+    let (sources, result, num_digits) = problem;
     // if debug {
     //     println!("num_digits: {}", num_digits)
     // };
     let mut carry: u32 = 0;
     // let
-    for index in 0..num_digits {
+    for index in 0..*num_digits {
         // if debug {
         //     println!("\tindex = {}", index);
         //     println!("\tcarry = {}", carry);
@@ -206,8 +220,9 @@ fn is_correct_solution(
 }
 
 fn extract_all_letters(problem: &Problem) -> Vec<char> {
-    let (sources, result) = problem;
-    let num_digits = std::cmp::max(sources.len(), result.len());
+    let (sources, result, num_digits) = problem;
+    // let num_digits = std::cmp::max(sources.len(), result.len());
+    let num_digits = *num_digits;
     let mut letters = Vec::with_capacity(num_digits);
     let mut cache = HashSet::with_capacity(num_digits);
     for index in 0..num_digits {
@@ -239,4 +254,8 @@ fn get_all_digits(base: u8) -> HashSet<u8> {
         s.insert(n);
         s
     })
+}
+
+fn max_digits<T>(words: &[Vec<T>]) -> Option<usize> {
+    words.iter().map(|word| word.len()).max()
 }
