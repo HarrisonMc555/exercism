@@ -33,13 +33,11 @@ fn puzzle_with_two_digits_final_carry() {
 }
 
 #[test]
-#[ignore]
 fn test_puzzle_with_four_letters() {
     assert_alphametic_solution_eq("AS + A == MOM", &[('A', 9), ('S', 2), ('M', 1), ('O', 0)]);
 }
 
 #[test]
-#[ignore]
 fn test_puzzle_with_six_letters() {
     assert_alphametic_solution_eq(
         "NO + NO + TOO == LATE",
@@ -48,7 +46,6 @@ fn test_puzzle_with_six_letters() {
 }
 
 #[test]
-#[ignore]
 fn test_puzzle_with_seven_letters() {
     assert_alphametic_solution_eq(
         "HE + SEES + THE == LIGHT",
@@ -65,7 +62,6 @@ fn test_puzzle_with_seven_letters() {
 }
 
 #[test]
-#[ignore]
 fn test_puzzle_with_eight_letters() {
     assert_alphametic_solution_eq(
         "SEND + MORE == MONEY",
@@ -83,7 +79,6 @@ fn test_puzzle_with_eight_letters() {
 }
 
 #[test]
-#[ignore]
 fn test_puzzle_with_ten_letters() {
     assert_alphametic_solution_eq(
         "AND + A + STRONG + OFFENSE + AS + A + GOOD == DEFENSE",
