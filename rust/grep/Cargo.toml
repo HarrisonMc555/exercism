@@ -1,5 +1,7 @@
 [dependencies]
 failure = "0.1.1"
+failure_derive = "0.1"
+itertools = "0.8"
 
 [package]
 edition = "2018"
