@@ -1,5 +1,5 @@
 use std::cmp;
-use std::ops::Add;
+use std::ops::{Add, Sub};
 
 const BASE_32_BITS: u32 = 10;
 const BASE_8_BITS: u8 = 10;
@@ -27,9 +27,9 @@ impl Decimal {
                         leading,
                         trailing: Vec::new(),
                     };
-                    println!("d: {:?}", d);
+                    println!("Before stripping: d: {:?}", d);
                     d.strip_leading_trailing_zeros();
-                    println!("d: {:?}", d);
+                    println!("After stripping: d: {:?}", d);
                     return Some(d);
                 }
             }
@@ -44,22 +44,29 @@ impl Decimal {
             }
         }
         let mut d = Decimal { leading, trailing };
-        println!("d: {:?}", d);
+        println!("Before stripping: d: {:?}", d);
         d.strip_leading_trailing_zeros();
-        println!("d: {:?}", d);
+        println!("After stripping: d: {:?}", d);
         Some(d)
     }
 
     fn strip_leading_trailing_zeros(&mut self) {
+        if self.leading.is_empty() {
+            self.leading = vec![0];
+        }
         let num_leading_zeros =
             self.leading.iter().take_while(|&&digit| digit == 0).count();
         let num_leading_to_strip =
             cmp::min(num_leading_zeros, self.leading.len() - 1);
         self.leading.drain(0..num_leading_to_strip);
 
+        if self.trailing.is_empty() {
+            self.trailing = vec![0];
+        }
         let num_trailing_zeros = self
             .trailing
             .iter()
+            .rev()
             .take_while(|&&digit| digit == 0)
             .count();
         let num_trailing_to_strip =
@@ -100,4 +107,57 @@ impl Add for Decimal {
         d.strip_leading_trailing_zeros();
         d
     }
+}
+
+impl Sub for Decimal {
+    type Output = Self;
+
+    fn sub(self, other: Self) -> Self {
+        println!("sub: {:?} - {:?}", self, other);
+
+        let mut borrow: u8 = 0;
+
+        let mut trailing = Vec::new();
+        for (digit1, digit2) in
+            self.trailing.iter().rev().zip(other.trailing.iter().rev())
+        {
+            let mut digit1 = *digit1;
+            print!("{} (- {}) - {}", digit1, borrow, digit2);
+            let to_subtract = digit2 + borrow;
+            if to_subtract > digit1 {
+                borrow = 1;
+                digit1 += BASE_8_BITS;
+            } else {
+                borrow = 0;
+            };
+            let difference = digit1 - to_subtract;
+            println!(" = {} (borrow {})", difference, borrow);
+            trailing.push(difference);
+        }
+        trailing.reverse();
+
+        let mut leading = Vec::new();
+        for (digit1, digit2) in
+            self.leading.iter().rev().zip(other.leading.iter().rev())
+        {
+            print!("{} (- {}) - {}", digit1, borrow, digit2);
+            let mut digit1 = *digit1;
+            let to_subtract = digit2 + borrow;
+            if to_subtract > digit1 {
+                borrow = 1;
+                digit1 += BASE_8_BITS;
+            } else {
+                borrow = 0;
+            };
+            let difference = digit1 - to_subtract;
+            println!(" = {} (borrow {})", difference, borrow);
+            leading.push(difference);
+        }
+        leading.reverse();
+
+        let mut d = Decimal { leading, trailing };
+        d.strip_leading_trailing_zeros();
+        d
+    }
+    
 }
