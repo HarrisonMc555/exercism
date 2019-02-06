@@ -1,6 +1,7 @@
 const BASE: u32 = 10;
 
 /// Type implementing arbitrary-precision decimal arithmetic
+#[derive(Eq, PartialEq)]
 pub struct Decimal {
     leading: Vec<u8>,
     trailing: Vec<u8>,
