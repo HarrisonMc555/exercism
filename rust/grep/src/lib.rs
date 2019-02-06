@@ -58,9 +58,10 @@ pub fn grep(
     files: &[&str],
 ) -> Result<Vec<String>, Error> {
     let pattern_re = compile_regex_from_flags(&pattern, &flags)?;
+    let multiple_files = files.len() > 1;
     files
         .iter()
-        .map(|file| get_matches(&pattern_re, flags, file))
+        .map(|file| get_matches(&pattern_re, flags, file, multiple_files))
         .fold_results(Vec::new(), |mut all_matches, matches| {
             all_matches.extend(matches);
             all_matches
@@ -71,6 +72,7 @@ fn get_matches(
     pattern: &Regex,
     flags: &Flags,
     filename: &str,
+    multiple_files: bool,
 ) -> Result<Vec<String>, Error> {
     let file = File::open(filename)?;
     let lines = BufReader::new(file).lines();
@@ -82,9 +84,13 @@ fn get_matches(
             continue;
         }
         if flags.only_file_names() {
-            return Ok(vec![filename.to_string()]);
+            return Ok(vec![filename.to_owned()]);
         }
         let mut result = String::new();
+        if multiple_files {
+            result.push_str(filename);
+            result.push(':');
+        }
         if flags.line_numbers() {
             result.push_str(&format!("{}:", line_num));
         }

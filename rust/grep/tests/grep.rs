@@ -206,7 +206,6 @@ test_one_file_one_match_print_line_numbers_flag(
 ));
 
 set_up_test_case!(#[test]
-#[ignore]
 test_one_file_one_match_caseinsensitive_flag(
     pattern = "FORBIDDEN",
     flags = ["-i"],
@@ -215,7 +214,6 @@ test_one_file_one_match_caseinsensitive_flag(
 ));
 
 set_up_test_case!(#[test]
-#[ignore]
 test_one_file_one_match_print_file_names_flag(
     pattern = "Forbidden",
     flags = ["-l"],
@@ -224,7 +222,6 @@ test_one_file_one_match_print_file_names_flag(
 ));
 
 set_up_test_case!(#[test]
-#[ignore]
 test_one_file_one_match_match_entire_lines_flag(
     pattern = "With loss of Eden, till one greater Man",
     flags = ["-x"],
@@ -233,7 +230,6 @@ test_one_file_one_match_match_entire_lines_flag(
 ));
 
 set_up_test_case!(#[test]
-#[ignore]
 test_one_file_one_match_multiple_flags(
     pattern = "OF ATREUS, Agamemnon, KIng of MEN.",
     flags = ["-x", "-i", "-n"],
@@ -242,7 +238,6 @@ test_one_file_one_match_multiple_flags(
 ));
 
 set_up_test_case!(#[test]
-#[ignore]
 test_one_file_several_matches_no_flags(
     pattern = "may",
     flags = [],
@@ -255,7 +250,6 @@ test_one_file_several_matches_no_flags(
 ));
 
 set_up_test_case!(#[test]
-#[ignore]
 test_one_file_several_matches_print_line_numbers_flag(
     pattern = "may",
     flags = ["-n"],
@@ -268,7 +262,6 @@ test_one_file_several_matches_print_line_numbers_flag(
 ));
 
 set_up_test_case!(#[test]
-#[ignore]
 test_one_file_several_matches_match_entire_lines_flag(
     pattern = "may",
     flags = ["-x"],
@@ -277,7 +270,6 @@ test_one_file_several_matches_match_entire_lines_flag(
 ));
 
 set_up_test_case!(#[test]
-#[ignore]
 test_one_file_several_matches_caseinsensitive_flag(
     pattern = "ACHILLES",
     flags = ["-i"],
@@ -289,7 +281,6 @@ test_one_file_several_matches_caseinsensitive_flag(
 ));
 
 set_up_test_case!(#[test]
-#[ignore]
 test_one_file_several_matches_inverted_flag(
     pattern = "Of",
     flags = ["-v"],
@@ -304,7 +295,6 @@ test_one_file_several_matches_inverted_flag(
 ));
 
 set_up_test_case!(#[test]
-#[ignore]
 test_one_file_no_matches_various_flags(
     pattern = "Gandalf",
     flags = ["-n", "-l", "-x", "-i"],
@@ -314,7 +304,6 @@ test_one_file_no_matches_various_flags(
 
 set_up_test_case!(
     #[test]
-    #[ignore]
     test_one_file_several_matches_inverted_and_match_entire_lines_flags(
         pattern = "Illustrious into Ades premature,",
         flags = ["-x", "-v"],
@@ -334,7 +323,6 @@ set_up_test_case!(
 
 set_up_test_case!(
     #[test]
-    #[ignore]
     test_one_file_one_match_file_flag_takes_precedence_over_line_flag(
         pattern = "ten",
         flags = ["-n", "-l"],
@@ -346,7 +334,6 @@ set_up_test_case!(
 // Test grepping multiples files at once
 
 set_up_test_case!(#[test]
-#[ignore]
 test_multiple_files_one_match_no_flags(
     pattern = "Agamemnon",
     flags = [],
@@ -355,7 +342,6 @@ test_multiple_files_one_match_no_flags(
 ));
 
 set_up_test_case!(#[test]
-#[ignore]
 test_multiple_files_several_matches_no_flags(
     pattern = "may",
     flags = [],
@@ -368,7 +354,6 @@ test_multiple_files_several_matches_no_flags(
 ));
 
 set_up_test_case!(#[test]
-#[ignore]
 test_multiple_files_several_matches_print_line_numbers_flag(
     pattern = "that",
     flags = ["-n"],
@@ -382,7 +367,6 @@ test_multiple_files_several_matches_print_line_numbers_flag(
 ));
 
 set_up_test_case!(#[test]
-#[ignore]
 test_multiple_files_one_match_print_file_names_flag(
     pattern = "who",
     flags = ["-l"],
@@ -391,7 +375,6 @@ test_multiple_files_one_match_print_file_names_flag(
 ));
 
 set_up_test_case!(#[test]
-#[ignore]
 test_multiple_files_several_matches_caseinsensitive_flag(
     pattern = "TO",
     flags = ["-i"],
@@ -412,7 +395,6 @@ test_multiple_files_several_matches_caseinsensitive_flag(
 
 set_up_test_case!(
     #[test]
-    #[ignore]
     test_multiple_files_several_matches_caseinsensitive_flag_utf8(
         pattern = "В", // This letter stands for cyrillic 'Ve' and not latin 'B'. Therefore there should be no matches from paradise_lost.txt
         flags = ["-i"],
@@ -427,7 +409,6 @@ set_up_test_case!(
 );
 
 set_up_test_case!(#[test]
-#[ignore]
 test_multiple_files_several_matches_inverted_flag(
     pattern = "a",
     flags = ["-v"],
@@ -440,7 +421,6 @@ test_multiple_files_several_matches_inverted_flag(
 ));
 
 set_up_test_case!(#[test]
-#[ignore]
 test_multiple_files_one_match_match_entire_lines_flag(
     pattern = "But I beseech your grace that I may know",
     flags = ["-x"],
@@ -449,7 +429,6 @@ test_multiple_files_one_match_match_entire_lines_flag(
 ));
 
 set_up_test_case!(#[test]
-#[ignore]
 test_multiple_files_one_match_multiple_flags(
     pattern = "WITH LOSS OF EDEN, TILL ONE GREATER MAN",
     flags = ["-n", "-i", "-x"],
@@ -458,7 +437,6 @@ test_multiple_files_one_match_multiple_flags(
 ));
 
 set_up_test_case!(#[test]
-#[ignore]
 test_multiple_files_no_matches_various_flags(
     pattern = "Frodo",
     flags = ["-n", "-i", "-x", "-l"],
@@ -468,7 +446,6 @@ test_multiple_files_no_matches_various_flags(
 
 set_up_test_case!(
     #[test]
-    #[ignore]
     test_multiple_files_several_matches_file_flag_takes_precedence_over_line_number_flag(
         pattern = "who",
         flags = ["-n", "-l"],
@@ -479,7 +456,6 @@ set_up_test_case!(
 
 set_up_test_case!(
     #[test]
-    #[ignore]
     test_multiple_files_several_matches_inverted_and_match_entire_lines_flags(
         pattern = "Illustrious into Ades premature,",
         flags = ["-x", "-v"],
