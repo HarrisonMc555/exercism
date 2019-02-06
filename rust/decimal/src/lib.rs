@@ -1,5 +1,5 @@
 use std::cmp;
-use std::ops::{Add, Sub};
+use std::ops::{Add, Mul, Sub};
 
 const BASE_32_BITS: u32 = 10;
 const BASE_8_BITS: u8 = 10;
@@ -159,5 +159,39 @@ impl Sub for Decimal {
         d.strip_leading_trailing_zeros();
         d
     }
-    
 }
+
+// impl Mul for Decimal {
+//     type Output = Self;
+
+//     fn mul(self, other: Self) -> Self {
+//         let mut carry: u8 = 0;
+
+//         let mut trailing = Vec::new();
+//         let all_other_digits =
+//             other.leading.iter().chain(other.trailing.iter());
+//         for (digit1, digit2) in self.trailing.iter().rev().zip(all_other_digits.rev())
+//         {
+//             let total = digit1 * digit2 + carry;
+//             let added_digit = total % BASE_8_BITS;
+//             carry = total / BASE_8_BITS;
+//             trailing.push(added_digit);
+//         }
+//         trailing.reverse();
+
+//         let mut leading = Vec::new();
+//         for (digit1, digit2) in
+//             self.leading.iter().rev().zip(other.leading.iter().rev())
+//         {
+//             let total = digit1 * digit2 + carry;
+//             let added_digit = total % BASE_8_BITS;
+//             carry = total / BASE_8_BITS;
+//             leading.push(added_digit);
+//         }
+//         leading.reverse();
+
+//         let mut d = Decimal { leading, trailing };
+//         d.strip_leading_trailing_zeros();
+//         d
+//     }
+// }

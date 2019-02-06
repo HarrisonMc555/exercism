@@ -61,7 +61,6 @@ fn test_sub() {
 }
 
 // #[test]
-// #[ignore]
 // fn test_mul() {
 //     for big in BIGS.iter() {
 //         assert_eq!(decimal(big) * decimal("2"), decimal(big) + decimal(big));
