@@ -173,7 +173,6 @@ fn test_nonexistent_file_returns_error() {
 }
 
 #[test]
-#[ignore]
 fn test_grep_returns_result() {
     let pattern = "Agamemnon";
 
@@ -191,7 +190,6 @@ fn test_grep_returns_result() {
 // Test grepping a single file
 
 set_up_test_case!(#[test]
-#[ignore]
 test_one_file_one_match_no_flags(
     pattern = "Agamemnon",
     flags = [],
@@ -200,7 +198,6 @@ test_one_file_one_match_no_flags(
 ));
 
 set_up_test_case!(#[test]
-#[ignore]
 test_one_file_one_match_print_line_numbers_flag(
     pattern = "Forbidden",
     flags = ["-n"],
