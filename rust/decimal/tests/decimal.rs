@@ -25,30 +25,27 @@ fn test_eq() {
     }
 }
 
-// #[test]
-// #[ignore]
-// fn test_ne() {
-//     assert!(decimal("0.0") != decimal("1.0"));
-//     assert!(decimal(BIGS[0]) != decimal(BIGS[1]));
-// }
+#[test]
+fn test_ne() {
+    assert!(decimal("0.0") != decimal("1.0"));
+    assert!(decimal(BIGS[0]) != decimal(BIGS[1]));
+}
 
-// #[test]
-// #[ignore]
-// fn test_gt() {
-//     for slice_2 in BIGS.windows(2) {
-//         assert!(decimal(slice_2[1]) > decimal(slice_2[0]));
-//         assert!(!(decimal(slice_2[0]) > decimal(slice_2[1])));
-//     }
-// }
+#[test]
+fn test_gt() {
+    for slice_2 in BIGS.windows(2) {
+        assert!(decimal(slice_2[1]) > decimal(slice_2[0]));
+        assert!(!(decimal(slice_2[0]) > decimal(slice_2[1])));
+    }
+}
 
-// #[test]
-// #[ignore]
-// fn test_lt() {
-//     for slice_2 in BIGS.windows(2) {
-//         assert!(decimal(slice_2[0]) < decimal(slice_2[1]));
-//         assert!(!(decimal(slice_2[1]) < decimal(slice_2[0])));
-//     }
-// }
+#[test]
+fn test_lt() {
+    for slice_2 in BIGS.windows(2) {
+        assert!(decimal(slice_2[0]) < decimal(slice_2[1]));
+        assert!(!(decimal(slice_2[1]) < decimal(slice_2[0])));
+    }
+}
 
 // #[test]
 // #[ignore]
