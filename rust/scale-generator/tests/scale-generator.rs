@@ -41,7 +41,6 @@ fn test_chromatic_scale_with_sharps() {
 }
 
 #[test]
-#[ignore]
 /// Chromatic scale with flats
 fn test_chromatic_scale_with_flats() {
     process_chromatic_case(
@@ -57,7 +56,6 @@ fn test_chromatic_scale_with_flats() {
 // traversals of the scale.
 
 #[test]
-#[ignore]
 /// Simple major scale
 ///
 /// The simplest major scale, with no sharps or flats.
@@ -66,7 +64,6 @@ fn test_simple_major_scale() {
 }
 
 #[test]
-#[ignore]
 /// Major scale with sharps
 fn test_major_scale_with_sharps() {
     process_interval_case(
@@ -77,7 +74,6 @@ fn test_major_scale_with_sharps() {
 }
 
 #[test]
-#[ignore]
 /// Major scale with flats
 fn test_major_scale_with_flats() {
     process_interval_case(
@@ -88,7 +84,6 @@ fn test_major_scale_with_flats() {
 }
 
 #[test]
-#[ignore]
 /// Minor scale with sharps
 fn test_minor_scale_with_sharps() {
     process_interval_case(
@@ -99,7 +94,6 @@ fn test_minor_scale_with_sharps() {
 }
 
 #[test]
-#[ignore]
 /// Minor scale with flats
 fn test_minor_scale_with_flats() {
     process_interval_case(
@@ -110,14 +104,12 @@ fn test_minor_scale_with_flats() {
 }
 
 #[test]
-#[ignore]
 /// Dorian mode
 fn test_dorian_mode() {
     process_interval_case("d", "MmMMMmM", &["D", "E", "F", "G", "A", "B", "C"]);
 }
 
 #[test]
-#[ignore]
 /// Mixolydian mode
 fn test_mixolydian_mode() {
     process_interval_case(
@@ -128,7 +120,6 @@ fn test_mixolydian_mode() {
 }
 
 #[test]
-#[ignore]
 /// Lydian mode
 fn test_lydian_mode() {
     process_interval_case(
@@ -139,14 +130,12 @@ fn test_lydian_mode() {
 }
 
 #[test]
-#[ignore]
 /// Phrygian mode
 fn test_phrygian_mode() {
     process_interval_case("e", "mMMMmMM", &["E", "F", "G", "A", "B", "C", "D"]);
 }
 
 #[test]
-#[ignore]
 /// Locrian mode
 fn test_locrian_mode() {
     process_interval_case(
