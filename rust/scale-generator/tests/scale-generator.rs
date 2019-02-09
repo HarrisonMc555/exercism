@@ -136,6 +136,7 @@ fn test_phrygian_mode() {
 }
 
 #[test]
+#[ignore]
 /// Locrian mode
 fn test_locrian_mode() {
     process_interval_case(
@@ -146,10 +147,10 @@ fn test_locrian_mode() {
 }
 
 #[test]
-#[ignore]
 /// Harmonic minor
 ///
 /// Note that this case introduces the accidental interval (A)
+#[ignore]
 fn test_harmonic_minor() {
     process_interval_case(
         "d",
@@ -159,7 +160,6 @@ fn test_harmonic_minor() {
 }
 
 #[test]
-#[ignore]
 /// Octatonic
 fn test_octatonic() {
     process_interval_case(
@@ -170,21 +170,18 @@ fn test_octatonic() {
 }
 
 #[test]
-#[ignore]
 /// Hexatonic
 fn test_hexatonic() {
     process_interval_case("Db", "MMMMMM", &["Db", "Eb", "F", "G", "A", "B"]);
 }
 
 #[test]
-#[ignore]
 /// Pentatonic
 fn test_pentatonic() {
     process_interval_case("A", "MMAMA", &["A", "B", "C#", "E", "F#"]);
 }
 
 #[test]
-#[ignore]
 /// Enigmatic
 fn test_enigmatic() {
     process_interval_case(

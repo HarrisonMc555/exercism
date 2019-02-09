@@ -168,8 +168,9 @@ struct Interval(pub i8);
 impl Interval {
     fn try_from_char(c: char) -> Option<Interval> {
         let interval = match c {
-            'M' => Interval(2),
             'm' => Interval(1),
+            'M' => Interval(2),
+            'A' => Interval(3),
             _ => return None,
         };
         Some(interval)
