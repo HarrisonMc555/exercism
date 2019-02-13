@@ -8,20 +8,35 @@ const DISCOUNTS: [(usize, u32); 4] = [
 ];
 
 pub fn lowest_price(books: &[u32]) -> u32 {
-    0
+    best_discount(books, &DISCOUNTS)
 }
 
 fn best_discount(books: &[u32], discounts: &[(usize, u32)]) -> u32 {
-    0
+    if discounts.is_empty() {
+        return BOOK_COST * books.len() as u32;
+    }
+    let rem_discounts = &discounts[1..];
+    let mut best_price = best_discount(books, rem_discounts);
+    let (num_books, discount_percent) = discounts[0];
+    let mut books: Vec<u32> = books.to_vec();
+    while let Some((rem_books, price)) = discount(num_books, discount_percent, &books)
+    {
+        let this_price = price + best_discount(&rem_books, rem_discounts);
+        if this_price < best_price {
+            best_price = this_price;
+        }
+        books = rem_books;
+    }
+    best_price
 }
 
 fn discount(
     num: usize,
     discount_percent: u32,
     books: &[u32],
-) -> (Vec<u32>, u32) {
+) -> Option<(Vec<u32>, u32)> {
     if books.len() < num {
-        return (books.iter().cloned().collect(), 0);
+        return None;
     }
     let books_to_discount = &books[..num];
     if books_to_discount.iter().all(|&c| c >= 1) {
@@ -33,15 +48,15 @@ fn discount(
         let cost = BOOK_COST * num as u32;
         let discount = cost * discount_percent;
         let discounted_cost = cost - discount;
-        return (all_remaining_books, discounted_cost);
+        return Some((all_remaining_books, discounted_cost));
     }
-    (books.iter().cloned().collect(), 0)
+    None
 }
 
-fn at_least_n_matching<I, F, T>(iterable: I, pred: F, count: usize) -> bool
-where
-    I: IntoIterator<Item = T>,
-    F: Fn(&T) -> bool,
-{
-    iterable.into_iter().filter(pred).take(count).count() >= count
-}
+// fn at_least_n_matching<I, F, T>(iterable: I, pred: F, count: usize) -> bool
+// where
+//     I: IntoIterator<Item = T>,
+//     F: Fn(&T) -> bool,
+// {
+//     iterable.into_iter().filter(pred).take(count).count() >= count
+// }
