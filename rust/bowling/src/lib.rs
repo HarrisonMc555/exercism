@@ -2,7 +2,8 @@ use std::cmp::Ordering;
 
 const NUM_FRAMES: usize = 10;
 const MAX_ROLLS_PER_FRAME: usize = 2;
-const MAX_ROLLS: usize = NUM_FRAMES * MAX_ROLLS_PER_FRAME + 1;
+const MAX_ROLLS_LAST_FRAME: usize = MAX_ROLLS_PER_FRAME + 1;
+const MAX_ROLLS: usize = (NUM_FRAMES * MAX_ROLLS_PER_FRAME) + 1;
 const NUM_PINS: u16 = 10;
 
 #[derive(Debug, PartialEq)]
@@ -11,7 +12,7 @@ pub enum Error {
     GameComplete,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Default, Debug, PartialEq)]
 pub struct BowlingGame {
     rolls: Vec<u16>,
     frame_indices: Vec<usize>,
@@ -30,13 +31,9 @@ impl BowlingGame {
 
     pub fn roll(&mut self, pins: u16) -> Result<(), Error> {
         if self.is_complete() {
-            println!("Tried  to roll when already complete");
             return Err(Error::GameComplete);
         }
         if self.is_invalid_roll(pins) {
-            println!("Invalid roll: {}", pins);
-            println!("\trolls: {:?}", self.rolls);
-            println!("\tframe_indices: {:?}", self.frame_indices);
             return Err(Error::NotEnoughPinsLeft);
         }
         self.rolls.push(pins);
@@ -73,7 +70,7 @@ impl BowlingGame {
         if pins > NUM_PINS {
             return false;
         }
-        if self.cur_frame_pins().len() >= MAX_ROLLS_PER_FRAME + 1 {
+        if self.cur_frame_pins().len() >= MAX_ROLLS_LAST_FRAME {
             return false;
         }
         let last_frame_index = self.last_frame_index();
@@ -93,17 +90,12 @@ impl BowlingGame {
             true
         } else if first_is_strike {
             second_roll + pins <= NUM_PINS
-        } else if first_is_spare {
-            true
         } else {
-            false
+            first_is_spare            
         }
     }
 
     fn cur_frame_is_finished(&self) -> bool {
-        println!("cur_frame_is_finished: {:?}", self);
-        println!("\tcur_frames_pins: {:?}", self.cur_frame_pins());
-        println!("\tcur_frame_roll_total: {:?}", self.cur_frame_roll_total());
         if self.is_last_frame() {
             return self.is_last_frame_finished();
         }
