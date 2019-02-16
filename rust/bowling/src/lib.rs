@@ -1,6 +1,8 @@
 use std::cmp::Ordering;
 
 const NUM_FRAMES: usize = 10;
+const MAX_ROLLS_PER_FRAME: usize = 2;
+const MAX_ROLLS: usize = NUM_FRAMES * MAX_ROLLS_PER_FRAME + 1;
 const NUM_PINS: u16 = 10;
 
 #[derive(Debug, PartialEq)]
@@ -9,41 +11,37 @@ pub enum Error {
     GameComplete,
 }
 
-#[derive(Debug, PartialEq, Clone, Copy)]
-struct Frame {
-    first_roll: u16,
-    second_roll: Option<u16>,
-}
-
 #[derive(Debug, PartialEq)]
 pub struct BowlingGame {
-    frames: [Option<Frame>; NUM_FRAMES],
-    index: usize,
+    rolls: Vec<u16>,
+    frame_indices: Vec<usize>,
 }
 
 impl BowlingGame {
     pub fn new() -> Self {
+        let rolls = Vec::with_capacity(MAX_ROLLS);
+        let mut frame_indices = Vec::with_capacity(NUM_FRAMES);
+        frame_indices.push(0);
         BowlingGame {
-            frames: [None; NUM_FRAMES],
-            index: 0,
+            rolls,
+            frame_indices,
         }
     }
 
     pub fn roll(&mut self, pins: u16) -> Result<(), Error> {
         if self.is_complete() {
+            println!("Tried  to roll when already complete");
             return Err(Error::GameComplete);
         }
-        let cur_frame = self.frames[self.index];
-        if let Some(cur_frame) = cur_frame {
-            let new_frame = cur_frame.add_roll(pins)?;
-            self.frames[self.index] = Some(new_frame);
-            self.index += 1;
-        } else {
-            let new_frame = Frame::new(pins)?;
-            self.frames[self.index] = Some(new_frame);
-            if !new_frame.is_unfinished() {
-                self.index += 1;
-            }
+        if self.is_invalid_roll(pins) {
+            println!("Invalid roll: {}", pins);
+            println!("\trolls: {:?}", self.rolls);
+            println!("\tframe_indices: {:?}", self.frame_indices);
+            return Err(Error::NotEnoughPinsLeft);
+        }
+        self.rolls.push(pins);
+        if self.cur_frame_is_finished() && !self.is_complete() {
+            self.frame_indices.push(self.rolls.len());
         }
         Ok(())
     }
@@ -57,66 +55,120 @@ impl BowlingGame {
     }
 
     fn is_complete(&self) -> bool {
-        self.index == NUM_FRAMES
+        self.frame_indices.len() >= NUM_FRAMES && self.cur_frame_is_finished()
+    }
+
+    fn is_valid_roll(&self, pins: u16) -> bool {
+        if self.is_last_frame() {
+            return self.is_valid_last_frame(pins);
+        }
+        pins + self.cur_frame_roll_total() <= NUM_PINS
+    }
+
+    fn is_invalid_roll(&self, pins: u16) -> bool {
+        !self.is_valid_roll(pins)
+    }
+
+    fn is_valid_last_frame(&self, pins: u16) -> bool {
+        if pins > NUM_PINS {
+            return false;
+        }
+        if self.cur_frame_pins().len() >= MAX_ROLLS_PER_FRAME + 1 {
+            return false;
+        }
+        let last_frame_index = self.last_frame_index();
+        let first_roll = match self.rolls.get(last_frame_index) {
+            Some(&roll) => roll,
+            None => return true,
+        };
+        let first_is_strike = first_roll == NUM_PINS;
+        let second_roll = match self.rolls.get(last_frame_index + 1) {
+            Some(&roll) => roll,
+            None => return true,
+        };
+        let first_is_spare = first_roll + second_roll == NUM_PINS;
+        let second_is_strike = second_roll == NUM_PINS;
+
+        if first_is_strike && second_is_strike {
+            true
+        } else if first_is_strike {
+            second_roll + pins <= NUM_PINS
+        } else if first_is_spare {
+            true
+        } else {
+            false
+        }
+    }
+
+    fn cur_frame_is_finished(&self) -> bool {
+        println!("cur_frame_is_finished: {:?}", self);
+        println!("\tcur_frames_pins: {:?}", self.cur_frame_pins());
+        println!("\tcur_frame_roll_total: {:?}", self.cur_frame_roll_total());
+        if self.is_last_frame() {
+            return self.is_last_frame_finished();
+        }
+        self.cur_frame_pins().len() == MAX_ROLLS_PER_FRAME
+            || self.cur_frame_roll_total() == NUM_PINS
+    }
+
+    fn is_last_frame(&self) -> bool {
+        self.frame_indices.len() == NUM_FRAMES
+    }
+
+    fn is_last_frame_finished(&self) -> bool {
+        let num_rolls = self.cur_frame_pins().len();
+        match num_rolls.cmp(&MAX_ROLLS_PER_FRAME) {
+            Ordering::Less => false,
+            Ordering::Equal => self.cur_frame_roll_total() < NUM_PINS,
+            Ordering::Greater => true,
+        }
+    }
+
+    fn cur_frame_roll_total(&self) -> u16 {
+        self.cur_frame_pins().iter().sum()
+    }
+
+    fn cur_frame_pins(&self) -> &[u16] {
+        &self.rolls[self.last_frame_index()..]
+    }
+
+    fn last_frame_index(&self) -> usize {
+        // We start with one and we never remove, so this should never panic
+        self.frame_indices
+            .last()
+            .cloned()
+            .expect("Empty frame indices vector")
     }
 
     fn score_so_far(&self) -> u16 {
-        self.frames
+        self.frame_indices
             .iter()
-            .map(|op_frame| op_frame.map_or(0, |f| f.score().unwrap_or(0)))
+            .map(|&i| self.score_frame(i).unwrap_or(0))
             .sum()
     }
-}
 
-impl Frame {
-    fn new(first_roll: u16) -> Result<Self, Error> {
-        if first_roll > NUM_PINS {
-            Err(Error::NotEnoughPinsLeft)
+    fn score_frame(&self, frame_index: usize) -> Option<u16> {
+        let first_roll = self.rolls[frame_index];
+        if first_roll == NUM_PINS {
+            return self.score_strike(frame_index);
+        }
+        let second_roll = self.rolls.get(frame_index + 1)?;
+        let frame_total = first_roll + second_roll;
+        if frame_total == NUM_PINS {
+            self.score_spare(frame_index)
         } else {
-            Ok(Frame { first_roll: first_roll,
-                       second_roll: None})
+            Some(frame_total)
         }
     }
 
-    fn add_roll(&self, new_roll: u16) -> Result<Self, Error> {
-        match self.second_roll {
-            Some(_) => Err(Error::NotEnoughPinsLeft),
-            None => Ok(Self { second_roll: Some(new_roll), ..*self })
-        }
+    fn score_strike(&self, roll_index: usize) -> Option<u16> {
+        let next_roll = self.rolls.get(roll_index + 1)?;
+        let next_next_roll = self.rolls.get(roll_index + 2)?;
+        Some(NUM_PINS + next_roll + next_next_roll)
     }
 
-    fn score(&self, next_rolls: (u16, u16)) -> u16 {
-        let (first_roll, second_roll) = next_rolls;
-        if self.is_strike() {
-            NUM_PINS + first_roll + second_roll
-        } else if self.is_spare() {
-            NUM_PINS + first_roll
-        } else {
-            self.first_roll + self.second_roll.unwrap_or(0)
-        }
-    }
-
-    fn is_strike(&self) -> bool {
-        self.first_roll == NUM_PINS
-    }
-
-    fn is_spare(&self) -> bool {
-        self.first_roll + self.second_roll.unwrap_or(0) == NUM_PINS
-    }
-
-    fn is_finished(&self) -> bool {
-        self.first_roll == NUM_PINS || !self.second_roll.is_none()
-    }
-
-    fn is_unfinished(&self) -> bool {
-        !self.is_finished()
-    }
-
-    fn two_rolls(&self, next_frame: Frame) -> (u16, u16) {
-        let second_roll = match self.second_roll {
-            Some(second_roll) => second_roll,
-            None => next_frame.first_roll
-        };
-        (self.first_roll, second_roll)
+    fn score_spare(&self, roll_index: usize) -> Option<u16> {
+        let next_roll = self.rolls.get(roll_index + 2)?;
+        Some(NUM_PINS + next_roll)
     }
 }
