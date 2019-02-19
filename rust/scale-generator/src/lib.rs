@@ -13,23 +13,34 @@ pub type Error = ();
 
 pub struct Scale {
     notes: Vec<Note>,
+    // modality: Modality,
+}
+
+#[derive(Debug, Copy, Clone)]
+enum Modality {
+    Major,
+    Minor,
 }
 
 impl Scale {
     pub fn new(tonic: &str, intervals: &str) -> Result<Scale, Error> {
+        // let modality = Scale::tonic_modality(tonic);
         let tonic = Note::try_from_string(tonic).ok_or(())?;
         let intervals = intervals
             .chars()
             .map(|c| Interval::try_from_char(c).ok_or(()))
             .collect::<Result<Vec<_>, _>>()?;
+        // let mut notes = tonic.build_from_intervals(&intervals, &modality);
         let mut notes = tonic.build_from_intervals(&intervals);
         if notes.first().unwrap() == notes.last().unwrap() {
             notes.pop();
         }
+        // Ok(Scale { notes, modality })
         Ok(Scale { notes })
     }
 
     pub fn chromatic(tonic: &str) -> Result<Scale, Error> {
+        // let modality = Scale::tonic_modality(tonic);
         let tonic = Note::try_from_string(tonic).ok_or(())?;
         let mut notes = vec![tonic];
         let mut cur = tonic.half_step_up();
@@ -37,11 +48,21 @@ impl Scale {
             notes.push(cur);
             cur = cur.half_step_up();
         }
+        // Ok(Scale { notes, modality })
         Ok(Scale { notes })
     }
 
     pub fn enumerate(&self) -> Vec<String> {
         self.notes.iter().map(|note| note.to_string()).collect()
+    }
+
+    fn tonic_modality(tonic: &str) -> Modality {
+        let is_major = tonic
+            .chars()
+            .next()
+            .map(|c| c.is_ascii_uppercase())
+            .unwrap_or(true);
+        Modality::from_is_major(is_major)
     }
 }
 
@@ -132,30 +153,41 @@ impl Note {
             (10, _) => "G",
             (11, NoteModifier::Sharp) => "G#",
             (11, NoteModifier::Flat) => "Ab",
-            (_, _) => panic!("Invalid note value"),
+            (_, _) => panic!("Invalid note value {:?}", self),
         }
         .to_string()
     }
 
     fn try_from_string(s: &str) -> Option<Self> {
-        let note = match uppercase_first_letter(s).as_str() {
-            "A" => Note::new(0, NoteModifier::Sharp),
-            "A#" => Note::new(1, NoteModifier::Sharp),
-            "Bb" => Note::new(1, NoteModifier::Flat),
-            "B" => Note::new(2, NoteModifier::Sharp),
+        // let is_major = s.chars().next()?.is_ascii_uppercase();
+        // let modality = Modality::from_is_major(is_major);
+        let note = match s {
             "C" => Note::new(3, NoteModifier::Sharp),
-            "C#" => Note::new(4, NoteModifier::Sharp),
-            "Db" => Note::new(4, NoteModifier::Flat),
-            "D" => Note::new(5, NoteModifier::Sharp),
-            "D#" => Note::new(6, NoteModifier::Sharp),
-            "Eb" => Note::new(6, NoteModifier::Flat),
-            "E" => Note::new(7, NoteModifier::Sharp),
-            "F" => Note::new(8, NoteModifier::Flat),
-            "F#" => Note::new(9, NoteModifier::Sharp),
-            "Gb" => Note::new(9, NoteModifier::Flat),
+            "a" => Note::new(0, NoteModifier::Sharp),
             "G" => Note::new(10, NoteModifier::Sharp),
-            "G#" => Note::new(11, NoteModifier::Sharp),
+            "D" => Note::new(5, NoteModifier::Sharp),
+            "A" => Note::new(0, NoteModifier::Sharp),
+            "E" => Note::new(7, NoteModifier::Sharp),
+            "B" => Note::new(2, NoteModifier::Sharp),
+            "F#" => Note::new(9, NoteModifier::Sharp),
+            "e" => Note::new(7, NoteModifier::Sharp),
+            "b" => Note::new(2, NoteModifier::Sharp),
+            "f#" => Note::new(9, NoteModifier::Sharp),
+            "c#" => Note::new(4, NoteModifier::Sharp),
+            "g#" => Note::new(11, NoteModifier::Sharp),
+            "d#" => Note::new(6, NoteModifier::Sharp),
+            "F" => Note::new(8, NoteModifier::Flat),
+            "Bb" => Note::new(1, NoteModifier::Flat),
+            "Eb" => Note::new(6, NoteModifier::Flat),
             "Ab" => Note::new(11, NoteModifier::Flat),
+            "Db" => Note::new(4, NoteModifier::Flat),
+            "Gb" => Note::new(9, NoteModifier::Flat),
+            "d" => Note::new(5, NoteModifier::Flat),
+            "g" => Note::new(10, NoteModifier::Flat),
+            "c" => Note::new(3, NoteModifier::Flat),
+            "f" => Note::new(8, NoteModifier::Flat),
+            "bb" => Note::new(1, NoteModifier::Flat),
+            "eb" => Note::new(6, NoteModifier::Flat),
             _ => return None,
         };
         Some(note)
@@ -179,6 +211,7 @@ impl Interval {
 
 #[derive(Debug, Copy, Clone, Ord, PartialOrd, Eq, PartialEq)]
 enum NoteModifier {
+    Natural,
     Sharp,
     Flat,
 }
@@ -188,5 +221,14 @@ fn uppercase_first_letter(s: &str) -> String {
     match c.next() {
         None => String::new(),
         Some(f) => f.to_uppercase().collect::<String>() + c.as_str(),
+    }
+}
+
+impl Modality {
+    fn from_is_major(is_major: bool) -> Self {
+        match is_major {
+            true => Modality::Major,
+            false => Modality::Minor,
+        }
     }
 }
