@@ -35,14 +35,12 @@ fn test_two_of_the_same_book() {
 }
 
 #[test]
-#[ignore]
 /// Empty basket
 fn test_empty_basket() {
     process_total_case((vec![], vec![]), 0);
 }
 
 #[test]
-#[ignore]
 /// Two different books
 fn test_two_different_books() {
     process_total_case((vec![1, 2], vec![vec![1, 2]]), 1_520);
