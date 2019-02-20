@@ -23,7 +23,8 @@ fn get_normal(user_number: &[char]) -> Option<&[char]> {
 
 fn is_valid_normal(user_number: &[char]) -> bool {
     user_number.len() == PHONE_NUMBER_LENGTH
-    
+        && is_valid_area_code(&user_number[0..3])
+        && is_valid_exchange_code(&user_number[3..6])
 }
 
 fn get_usa(user_number: &[char]) -> Option<&[char]> {
@@ -36,5 +37,33 @@ fn get_usa(user_number: &[char]) -> Option<&[char]> {
 
 fn is_valid_usa(user_number: &[char]) -> bool {
     user_number.len() == PHONE_NUMBER_LENGTH + 1
-        && user_number[0] == '1'
+        && is_usa_country_code(user_number[0])
+        && is_valid_area_code(&user_number[1..4])
+        && is_valid_exchange_code(&user_number[4..7])
+}
+
+const USA_COUNTRY_CODE: char = '1';
+
+fn is_usa_country_code(country_code: char) -> bool {
+    country_code == USA_COUNTRY_CODE
+}
+
+const INVALID_LEADING_AREA_CODE_DIGITS: [char; 2] = ['0', '1'];
+
+fn is_valid_area_code(area_code: &[char]) -> bool {
+    let leading_area_code_digit = area_code[0];
+    let invalid = INVALID_LEADING_AREA_CODE_DIGITS
+        .iter()
+        .any(|&c| c == leading_area_code_digit);
+    !invalid
+}
+
+const INVALID_LEADING_EXCHANGE_CODE_DIGITS: [char; 2] = ['0', '1'];
+
+fn is_valid_exchange_code(exchange_code: &[char]) -> bool {
+    let leading_exchange_code_digit = exchange_code[0];
+    let invalid = INVALID_LEADING_EXCHANGE_CODE_DIGITS
+        .iter()
+        .any(|&c| c == leading_exchange_code_digit);
+    !invalid
 }

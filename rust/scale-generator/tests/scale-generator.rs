@@ -136,7 +136,6 @@ fn test_phrygian_mode() {
 }
 
 #[test]
-#[ignore]
 /// Locrian mode
 fn test_locrian_mode() {
     process_interval_case(
@@ -150,7 +149,6 @@ fn test_locrian_mode() {
 /// Harmonic minor
 ///
 /// Note that this case introduces the accidental interval (A)
-#[ignore]
 fn test_harmonic_minor() {
     process_interval_case(
         "d",
