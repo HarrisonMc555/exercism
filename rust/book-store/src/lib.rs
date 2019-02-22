@@ -8,101 +8,93 @@ const PERCENT: u32 = 100;
 pub fn lowest_price(books: &[u32]) -> u32 {
     let mut book_counts = get_book_counts(books);
     sort_filter_book_counts(&mut book_counts);
-    // best_discount(&books, &DISCOUNTS)
-    let price = best_discount(&book_counts, &DISCOUNTS);
-    eprintln!("Total lowest price: {}", price);
-    price
+    best_price_with_discounts(&book_counts, &DISCOUNTS)
 }
 
-fn best_discount(book_counts: &[u32], discounts: &[(usize, u32)]) -> u32 {
-    let indent: String = (0..4 - discounts.len()).map(|_| "  ").collect();
-    eprintln!("{}best_discount:", indent);
-    eprintln!("{}book counts: {:?}", indent, book_counts);
-    eprintln!("{}discounts: {:?}", indent, discounts);
+fn best_price_with_discounts(
+    book_counts: &[u32],
+    discounts: &[(usize, u32)],
+) -> u32 {
     if discounts.is_empty() {
-        let num_books: u32 = book_counts.iter().sum();
-        eprintln!(
-            "{}no discounts, full price for all {} books",
-            indent, num_books
-        );
         return get_full_price(book_counts);
     }
-    let rem_discounts = &discounts[1..];
-    let mut best_price = best_discount(book_counts, rem_discounts);
-    eprintln!("{}Best price from other discounts: {}", indent, best_price);
     let (num_books, discount_percent) = discounts[0];
+    let rem_discounts = &discounts[1..];
+
+    // Initialize the current best price to the price you would get without the
+    // current discount
+    let mut best_price = best_price_with_discounts(book_counts, rem_discounts);
     let mut book_counts: Vec<u32> = book_counts.to_vec();
+
+    // Keep track of the price of the previous books you've bought with this
+    // discount
     let mut price_for_previous_books = 0;
-    while let Some((rem_books, discounted_price)) =
+
+    // Keep applying this discount again and again until we don't have enough
+    // books to apply this discount any more
+    while let Some((rem_books, cur_discounted_price)) =
         get_discounted_price(num_books, discount_percent, &book_counts)
     {
-        eprintln!(
-            "{}Got a discount with ({}, {})",
-            indent, num_books, discount_percent
-        );
-        eprintln!("{}Discounted price is {}", indent, discounted_price);
-        // let this_price = price - best_discount(&rem_books, rem_discounts);
-        // let the_best_discount = best_discount(&rem_books, rem_discounts);
-        // eprintln!("price: {}, best_discount: {}", price, the_best_discount);
-        // let this_price = price - the_best_discount;
-        // eprintln!("Price: {}", this_price);
+        let price_of_remaining =
+            best_price_with_discounts(&rem_books, rem_discounts);
+        let this_total_price = price_for_previous_books
+            + cur_discounted_price
+            + price_of_remaining;
 
-        let price_of_rest = best_discount(&rem_books, rem_discounts);
-        let this_total_price =
-            price_for_previous_books + discounted_price + price_of_rest;
         if this_total_price < best_price {
-            eprintln!(
-                "{}{} is better than last price! ({})",
-                indent, this_total_price, best_price
-            );
             best_price = this_total_price;
         }
+
         book_counts = rem_books;
-        price_for_previous_books += discounted_price;
+        price_for_previous_books += cur_discounted_price;
     }
-    eprintln!(
-        "{}Best price for {} books with {} discounts: {}",
-        indent,
-        book_counts.len(),
-        discounts.len(),
-        best_price
-    );
+
     best_price
 }
 
 fn get_discounted_price(
     num: usize,
     discount_percent: u32,
-    books: &[u32],
+    book_counts: &[u32],
 ) -> Option<(Vec<u32>, u32)> {
-    if books.len() < num {
+    // You can only use the discount if you have at least `num` books
+    if book_counts.len() < num {
         return None;
     }
-    let books_to_discount = &books[..num];
-    if books_to_discount.iter().all(|&c| c >= 1) {
-        let remaining_discounted_books =
-            books_to_discount.iter().map(|c| c - 1);
-        let other_books = books[num..].iter().cloned();
-        let mut all_remaining_books: Vec<_> =
-            remaining_discounted_books.chain(other_books).collect();
-        // all_remaining_books.sort_unstable_by(|a, b| b.cmp(a));
-        sort_filter_book_counts(&mut all_remaining_books);
-        let cost = BOOK_COST * num as u32;
-        let discount = cost * discount_percent / PERCENT;
-        eprintln!("For {} books, cost: {}, discount: {}", num, cost, discount);
-        let discounted_cost = cost - discount;
-        eprintln!("discounted_cost: {}", discounted_cost);
-        return Some((all_remaining_books, discounted_cost));
-        // return Some((all_remaining_books, discount));
+    
+    let books_to_discount = &book_counts[..num];
+    // You need to have at least one of each book
+    // The current implementation removes zeros, so this should never happen
+    if !books_to_discount.iter().all(|&c| c >= 1) {
+        return None;
     }
-    None
+
+    // We've applied a discount to some of these books, but there may be others
+    // remaining that didn't get discounted
+    let remaining_discounted_books =
+        books_to_discount.iter().map(|c| c - 1);
+    let other_books = book_counts[num..].iter().cloned();
+
+    // We return the books that did not get discounted. The books that we
+    // discounted were removed so they're not discounted again.
+    let mut all_remaining_books: Vec<_> =
+        remaining_discounted_books.chain(other_books).collect();
+    sort_filter_book_counts(&mut all_remaining_books);
+
+    // This is what the cost would have been if they were full price
+    let cost = BOOK_COST * num as u32;
+    let discount = cost * discount_percent / PERCENT;
+    let discounted_cost = cost - discount;
+    Some((all_remaining_books, discounted_cost))
 }
 
+// Sort books counts from high to low, removing zeros
 fn sort_filter_book_counts(book_counts: &mut Vec<u32>) {
     book_counts.retain(|&count| count != 0);
     book_counts.sort_unstable_by(|a, b| b.cmp(a));
 }
 
+// Return the number of each book in `books` (without preserving the book "id")
 fn get_book_counts(books: &[u32]) -> Vec<u32> {
     let mut books = books.to_vec();
     books.sort_unstable();
