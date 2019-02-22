@@ -17,24 +17,24 @@ pub fn lowest_price(books: &[u32]) -> u32 {
 fn best_discount(book_counts: &[u32], discounts: &[(usize, u32)]) -> u32 {
     let indent: String = (0..4 - discounts.len()).map(|_| "  ").collect();
     eprintln!("{}best_discount:", indent);
-    eprintln!("{}books: {:?}", indent, book_counts);
+    eprintln!("{}book counts: {:?}", indent, book_counts);
     eprintln!("{}discounts: {:?}", indent, discounts);
     if discounts.is_empty() {
         let num_books: u32 = book_counts.iter().sum();
         eprintln!(
             "{}no discounts, full price for all {} books",
-            indent,
-            num_books
+            indent, num_books
         );
-        return BOOK_COST * num_books as u32;
+        return get_full_price(book_counts);
     }
     let rem_discounts = &discounts[1..];
     let mut best_price = best_discount(book_counts, rem_discounts);
     eprintln!("{}Best price from other discounts: {}", indent, best_price);
     let (num_books, discount_percent) = discounts[0];
-    let mut books: Vec<u32> = book_counts.to_vec();
+    let mut book_counts: Vec<u32> = book_counts.to_vec();
+    let mut price_for_previous_books = 0;
     while let Some((rem_books, discounted_price)) =
-        get_discounted_price(num_books, discount_percent, &books)
+        get_discounted_price(num_books, discount_percent, &book_counts)
     {
         eprintln!(
             "{}Got a discount with ({}, {})",
@@ -48,7 +48,8 @@ fn best_discount(book_counts: &[u32], discounts: &[(usize, u32)]) -> u32 {
         // eprintln!("Price: {}", this_price);
 
         let price_of_rest = best_discount(&rem_books, rem_discounts);
-        let this_total_price = discounted_price + price_of_rest;
+        let this_total_price =
+            price_for_previous_books + discounted_price + price_of_rest;
         if this_total_price < best_price {
             eprintln!(
                 "{}{} is better than last price! ({})",
@@ -56,12 +57,13 @@ fn best_discount(book_counts: &[u32], discounts: &[(usize, u32)]) -> u32 {
             );
             best_price = this_total_price;
         }
-        books = rem_books;
+        book_counts = rem_books;
+        price_for_previous_books += discounted_price;
     }
     eprintln!(
         "{}Best price for {} books with {} discounts: {}",
         indent,
-        books.len(),
+        book_counts.len(),
         discounts.len(),
         best_price
     );
@@ -87,7 +89,7 @@ fn get_discounted_price(
         sort_filter_book_counts(&mut all_remaining_books);
         let cost = BOOK_COST * num as u32;
         let discount = cost * discount_percent / PERCENT;
-        eprintln!("cost: {}, discount: {}", cost, discount);
+        eprintln!("For {} books, cost: {}, discount: {}", num, cost, discount);
         let discounted_cost = cost - discount;
         eprintln!("discounted_cost: {}", discounted_cost);
         return Some((all_remaining_books, discounted_cost));
@@ -110,4 +112,9 @@ fn get_book_counts(books: &[u32]) -> Vec<u32> {
         .into_iter()
         .map(|(_, group)| group.count() as u32)
         .collect()
+}
+
+fn get_full_price(book_counts: &[u32]) -> u32 {
+    let num_books: u32 = book_counts.iter().sum();
+    BOOK_COST * num_books
 }

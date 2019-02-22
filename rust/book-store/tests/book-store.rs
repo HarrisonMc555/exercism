@@ -47,28 +47,24 @@ fn test_two_different_books() {
 }
 
 #[test]
-#[ignore]
 /// Three different books
 fn test_three_different_books() {
     process_total_case((vec![1, 2, 3], vec![vec![1, 2, 3]]), 2_160);
 }
 
 #[test]
-#[ignore]
 /// Four different books
 fn test_four_different_books() {
     process_total_case((vec![1, 2, 3, 4], vec![vec![1, 2, 3, 4]]), 2_560);
 }
 
 #[test]
-#[ignore]
 /// Five different books
 fn test_five_different_books() {
     process_total_case((vec![1, 2, 3, 4, 5], vec![vec![1, 2, 3, 4, 5]]), 3_000);
 }
 
 #[test]
-#[ignore]
 /// Two groups of four is cheaper than group of five plus group of three
 fn test_two_groups_of_four_is_cheaper_than_group_of_five_plus_group_of_three() {
     process_total_case(
