@@ -1,7 +1,9 @@
 #include "sum_of_multiples.h"
 #include <unordered_set>
 
-int sum_of_multiples::to(const std::vector<int> factors, int max_num) {
+int sum_of_multiples::to(const std::initializer_list<unsigned int> &factors,
+                         int max_num) {
+
     std::unordered_set<int> multiples;
 
     for (int factor : factors) {
