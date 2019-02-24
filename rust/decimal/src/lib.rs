@@ -1,18 +1,26 @@
 use std::cmp;
-use std::ops::{Add, Mul, Sub};
+use std::ops::{Add, Mul, Sub, AddAssign};
 
 const BASE_32_BITS: u32 = 10;
 const BASE_8_BITS: u8 = 10;
 
 /// Type implementing arbitrary-precision decimal arithmetic
-#[derive(Debug, Ord, PartialOrd, Eq, PartialEq)]
+#[derive(Debug, Clone, Ord, PartialOrd, Eq, PartialEq)]
 pub struct Decimal {
     leading: Vec<u8>,
     trailing: Vec<u8>,
 }
 
 impl Decimal {
-    pub fn try_from(input: &str) -> Option<Decimal> {
+    pub fn zero() -> Self {
+        Decimal { leading: vec![0], trailing: vec![0] }
+    }
+
+    pub fn from_digit(digit: u8) -> Self {
+        Decimal { leading: vec![digit], trailing: vec![0] }
+    }
+
+    pub fn try_from(input: &str) -> Option<Self> {
         let mut leading = Vec::new();
         let mut chars = input.chars();
         loop {
@@ -37,6 +45,26 @@ impl Decimal {
             }
         }
         Some(Decimal::cleaned(leading, trailing))
+    }
+
+    pub fn shift_left(&mut self, amount: usize) {
+        let mut new_leading = Vec::new();
+        self.trailing.reverse();
+        for _ in 0..amount {
+            new_leading.push(self.trailing.pop().unwrap_or(0));
+        }
+        self.trailing.reverse();
+        self.trailing.extend(&new_leading);
+    }
+
+    pub fn shift_right(&mut self, amount: usize) {
+        let mut new_trailing = Vec::new();
+        for _ in 0..amount {
+            new_trailing.push(self.leading.pop().unwrap_or(0));
+        }
+        new_trailing.reverse();
+        new_trailing.extend(&self.trailing);
+        self.trailing = new_trailing
     }
 
     fn cleaned(leading: Vec<u8>, trailing: Vec<u8>) -> Self {
@@ -77,6 +105,10 @@ impl Decimal {
             cmp::min(num_trailing_zeros, self.trailing.len() - 1);
         self.trailing.drain(0..num_trailing_to_strip);
     }
+
+    fn multiply_by_digit(&mut self, digit: u8) {
+        
+    }
 }
 
 impl Add for Decimal {
@@ -108,6 +140,12 @@ impl Add for Decimal {
         leading.reverse();
 
         Decimal::cleaned(leading, trailing)
+    }
+}
+
+impl AddAssign for Decimal {
+    fn add_assign(&mut self, rhs: Decimal) {
+        self = self + rhs;
     }
 }
 
@@ -161,38 +199,23 @@ impl Sub for Decimal {
     }
 }
 
-// impl Mul for Decimal {
-//     type Output = Self;
+impl Mul for Decimal {
+    type Output = Self;
 
-//     fn mul(self, other: Self) -> Self {
-//         let mut carry: u8 = 0;
+    fn mul(self, other: Self) -> Self {
+        let mut result = Decimal::zero();
+        let mut carry: u8 = 0;
 
-//         let mut trailing = Vec::new();
-//         let all_other_digits =
-//             other.leading.iter().chain(other.trailing.iter());
-//         for (digit1, digit2) in
-//             self.trailing.iter().rev().zip(all_other_digits.rev())
-//         {
-//             let total = digit1 * digit2 + carry;
-//             let added_digit = total % BASE_8_BITS;
-//             carry = total / BASE_8_BITS;
-//             trailing.push(added_digit);
-//         }
-//         trailing.reverse();
+        for (offset, &digit) in other.trailing.iter().enumerate().rev() {
+            let mut copy = self.clone();
+            let shift_amount = offset + 1;
+            copy.shift_right(shift_amount);
+            copy.multiply_by_digit(digit);
+            result += copy;
+        }
 
-//         let mut leading = Vec::new();
-//         for (digit1, digit2) in
-//             self.leading.iter().rev().zip(other.leading.iter().rev())
-//         {
-//             let total = digit1 * digit2 + carry;
-//             let added_digit = total % BASE_8_BITS;
-//             carry = total / BASE_8_BITS;
-//             leading.push(added_digit);
-//         }
-//         leading.reverse();
+        // for (offset, &digit) in 
 
-//         let mut d = Decimal { leading, trailing };
-//         d.clean();
-//         d
-//     }
-// }
+        result
+    }
+}
