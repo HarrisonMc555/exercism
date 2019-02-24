@@ -39,7 +39,7 @@ impl Decimal {
                 _ => return None,
             }
         }
-        let exponent = maybe_exponent.unwrap_or(digits.len() as i32);
+        let exponent = maybe_exponent.unwrap_or(digits.len() as i32 - 1);
         Some(Decimal::cleaned(digits, exponent))
     }
 
@@ -52,6 +52,14 @@ impl Decimal {
             .get(adjusted_index as usize)
             .cloned()
             .unwrap_or(0)
+    }
+
+    pub fn get_digit_mut(&mut self, exponent_index: i32) -> Option<&mut u8> {
+        let adjusted_index = self.exponent - exponent_index;
+        if adjusted_index < 0 {
+            return None;
+        }
+        self.digits.get_mut(adjusted_index as usize)
     }
 
     fn cleaned(digits: Vec<u8>, exponent: i32) -> Self {
@@ -86,6 +94,25 @@ impl Decimal {
 
     fn max_exponent(&self) -> i32 {
         self.exponent
+    }
+
+    fn shift_right(&mut self, offset: i32) {
+        self.exponent += offset;
+    }
+
+    fn multiply_by_digit(&mut self, multiplicand: u8) {
+        let mut carry = 0;
+        for digit in self.digits.iter_mut() {
+            let result = *digit * multiplicand;
+            *digit = result % BASE_8_BITS;
+            carry = result / BASE_8_BITS;
+        }
+        while carry > 0 {
+            let new_digit = carry % BASE_8_BITS;
+            carry /= BASE_8_BITS;
+            self.exponent += 1;
+            self.digits.insert(0, new_digit);
+        }
     }
 }
 
@@ -181,23 +208,17 @@ impl Sub for Decimal {
     }
 }
 
-// impl Mul for Decimal {
-//     type Output = Self;
+impl Mul for Decimal {
+    type Output = Self;
 
-//     fn mul(self, other: Self) -> Self {
-//         let mut result = Decimal::zero();
-//         let mut carry: u8 = 0;
-
-//         for (offset, &digit) in other.trailing.iter().enumerate().rev() {
-//             let mut copy = self.clone();
-//             let shift_amount = offset + 1;
-//             copy.shift_right(shift_amount);
-//             copy.multiply_by_digit(digit);
-//             result += copy;
-//         }
-
-//         // for (offset, &digit) in
-
-//         result
-//     }
-// }
+    fn mul(self, other: Self) -> Self {
+        other.digits.iter().enumerate().fold(Decimal::zero(), |result, (offset,
+        &digit)| {
+            let exponent = other.exponent - offset as i32;
+            let mut copy = self.clone();
+            copy.shift_right(exponent);
+            copy.multiply_by_digit(digit);
+            result + copy
+        })
+    }
+}
