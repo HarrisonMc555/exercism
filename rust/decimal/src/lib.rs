@@ -23,14 +23,7 @@ impl Decimal {
                     _ => return None,
                 },
                 None => {
-                    let mut d = Decimal {
-                        leading,
-                        trailing: Vec::new(),
-                    };
-                    println!("Before stripping: d: {:?}", d);
-                    d.strip_leading_trailing_zeros();
-                    println!("After stripping: d: {:?}", d);
-                    return Some(d);
+                    return Some(Decimal::cleaned(leading, Vec::new()));
                 }
             }
         }
@@ -43,14 +36,23 @@ impl Decimal {
                 trailing.push(c.to_digit(BASE_32_BITS)? as u8);
             }
         }
-        let mut d = Decimal { leading, trailing };
-        println!("Before stripping: d: {:?}", d);
-        d.strip_leading_trailing_zeros();
-        println!("After stripping: d: {:?}", d);
-        Some(d)
+        Some(Decimal::cleaned(leading, trailing))
     }
 
-    fn strip_leading_trailing_zeros(&mut self) {
+    fn cleaned(leading: Vec<u8>, trailing: Vec<u8>) -> Self {
+        let mut d = Decimal { leading, trailing };
+        println!("Before stripping: {:?}", d);
+        d.clean();
+        println!("After stripping: {:?}", d);
+        d
+    }
+
+    fn clean(&mut self) {
+        self.strip_leading_zeros();
+        self.strip_trailing_zeros();
+    }
+
+    fn strip_leading_zeros(&mut self) {
         if self.leading.is_empty() {
             self.leading = vec![0];
         }
@@ -59,7 +61,9 @@ impl Decimal {
         let num_leading_to_strip =
             cmp::min(num_leading_zeros, self.leading.len() - 1);
         self.leading.drain(0..num_leading_to_strip);
+    }
 
+    fn strip_trailing_zeros(&mut self) {
         if self.trailing.is_empty() {
             self.trailing = vec![0];
         }
@@ -103,9 +107,7 @@ impl Add for Decimal {
         }
         leading.reverse();
 
-        let mut d = Decimal { leading, trailing };
-        d.strip_leading_trailing_zeros();
-        d
+        Decimal::cleaned(leading, trailing)
     }
 }
 
@@ -155,9 +157,7 @@ impl Sub for Decimal {
         }
         leading.reverse();
 
-        let mut d = Decimal { leading, trailing };
-        d.strip_leading_trailing_zeros();
-        d
+        Decimal::cleaned(leading, trailing)
     }
 }
 
@@ -170,7 +170,8 @@ impl Sub for Decimal {
 //         let mut trailing = Vec::new();
 //         let all_other_digits =
 //             other.leading.iter().chain(other.trailing.iter());
-//         for (digit1, digit2) in self.trailing.iter().rev().zip(all_other_digits.rev())
+//         for (digit1, digit2) in
+//             self.trailing.iter().rev().zip(all_other_digits.rev())
 //         {
 //             let total = digit1 * digit2 + carry;
 //             let added_digit = total % BASE_8_BITS;
@@ -191,7 +192,7 @@ impl Sub for Decimal {
 //         leading.reverse();
 
 //         let mut d = Decimal { leading, trailing };
-//         d.strip_leading_trailing_zeros();
+//         d.clean();
 //         d
 //     }
 // }
