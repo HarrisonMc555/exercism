@@ -1,5 +1,6 @@
 use std::cmp;
-use std::ops::{Add, Mul, Sub, AddAssign};
+// use std::ops::{Add, AddAssign, Mul, Sub};
+use std::ops::{Add, AddAssign, Mul, Sub};
 
 const BASE_32_BITS: u32 = 10;
 const BASE_8_BITS: u8 = 10;
@@ -7,68 +8,54 @@ const BASE_8_BITS: u8 = 10;
 /// Type implementing arbitrary-precision decimal arithmetic
 #[derive(Debug, Clone, Ord, PartialOrd, Eq, PartialEq)]
 pub struct Decimal {
-    leading: Vec<u8>,
-    trailing: Vec<u8>,
+    digits: Vec<u8>,
+    exponent: i32,
 }
 
 impl Decimal {
     pub fn zero() -> Self {
-        Decimal { leading: vec![0], trailing: vec![0] }
+        Decimal {
+            digits: vec![0],
+            exponent: 0,
+        }
     }
 
     pub fn from_digit(digit: u8) -> Self {
-        Decimal { leading: vec![digit], trailing: vec![0] }
+        Decimal {
+            digits: vec![digit],
+            exponent: 0,
+        }
     }
 
     pub fn try_from(input: &str) -> Option<Self> {
-        let mut leading = Vec::new();
-        let mut chars = input.chars();
-        loop {
-            match chars.next() {
-                Some(c) => match c {
-                    '0'..='9' => leading.push(c.to_digit(BASE_32_BITS)? as u8),
-                    '.' => break,
-                    _ => return None,
-                },
-                None => {
-                    return Some(Decimal::cleaned(leading, Vec::new()));
+        let mut digits = Vec::new();
+        let mut maybe_exponent = None;
+        for (index, c) in input.chars().enumerate() {
+            match c {
+                '0'..='9' => digits.push(c.to_digit(BASE_32_BITS)? as u8),
+                '.' if maybe_exponent.is_none() => {
+                    maybe_exponent = Some(index as i32 - 1);
                 }
+                _ => return None,
             }
         }
-
-        let mut trailing = Vec::new();
-        for c in chars {
-            if !c.is_ascii_digit() {
-                return None;
-            } else {
-                trailing.push(c.to_digit(BASE_32_BITS)? as u8);
-            }
-        }
-        Some(Decimal::cleaned(leading, trailing))
+        let exponent = maybe_exponent.unwrap_or(digits.len() as i32);
+        Some(Decimal::cleaned(digits, exponent))
     }
 
-    pub fn shift_left(&mut self, amount: usize) {
-        let mut new_leading = Vec::new();
-        self.trailing.reverse();
-        for _ in 0..amount {
-            new_leading.push(self.trailing.pop().unwrap_or(0));
+    pub fn get_digit(&self, exponent_index: i32) -> u8 {
+        let adjusted_index = self.exponent - exponent_index;
+        if adjusted_index < 0 {
+            return 0;
         }
-        self.trailing.reverse();
-        self.trailing.extend(&new_leading);
+        self.digits
+            .get(adjusted_index as usize)
+            .cloned()
+            .unwrap_or(0)
     }
 
-    pub fn shift_right(&mut self, amount: usize) {
-        let mut new_trailing = Vec::new();
-        for _ in 0..amount {
-            new_trailing.push(self.leading.pop().unwrap_or(0));
-        }
-        new_trailing.reverse();
-        new_trailing.extend(&self.trailing);
-        self.trailing = new_trailing
-    }
-
-    fn cleaned(leading: Vec<u8>, trailing: Vec<u8>) -> Self {
-        let mut d = Decimal { leading, trailing };
+    fn cleaned(digits: Vec<u8>, exponent: i32) -> Self {
+        let mut d = Decimal { digits, exponent };
         println!("Before stripping: {:?}", d);
         d.clean();
         println!("After stripping: {:?}", d);
@@ -76,38 +63,60 @@ impl Decimal {
     }
 
     fn clean(&mut self) {
-        self.strip_leading_zeros();
         self.strip_trailing_zeros();
     }
 
-    fn strip_leading_zeros(&mut self) {
-        if self.leading.is_empty() {
-            self.leading = vec![0];
-        }
-        let num_leading_zeros =
-            self.leading.iter().take_while(|&&digit| digit == 0).count();
-        let num_leading_to_strip =
-            cmp::min(num_leading_zeros, self.leading.len() - 1);
-        self.leading.drain(0..num_leading_to_strip);
-    }
-
     fn strip_trailing_zeros(&mut self) {
-        if self.trailing.is_empty() {
-            self.trailing = vec![0];
-        }
         let num_trailing_zeros = self
-            .trailing
+            .digits
             .iter()
             .rev()
             .take_while(|&&digit| digit == 0)
             .count();
-        let num_trailing_to_strip =
-            cmp::min(num_trailing_zeros, self.trailing.len() - 1);
-        self.trailing.drain(0..num_trailing_to_strip);
+        let num_digits_to_keep = self.digits.len() - num_trailing_zeros;
+        if num_digits_to_keep == 0 {
+            return;
+        }
+        self.digits.truncate(num_digits_to_keep);
     }
 
-    fn multiply_by_digit(&mut self, digit: u8) {
-        
+    fn min_exponent(&self) -> i32 {
+        self.exponent - self.digits.len() as i32 + 1
+    }
+
+    fn max_exponent(&self) -> i32 {
+        self.exponent
+    }
+}
+
+impl<'a, 'b> Add<&'b Decimal> for &'a Decimal {
+    type Output = Decimal;
+
+    fn add(self, other: &'b Decimal) -> Decimal {
+        let min_exponent = cmp::min(self.min_exponent(), other.min_exponent());
+        let max_exponent = cmp::max(self.max_exponent(), other.max_exponent());
+        let num_digits = (max_exponent - min_exponent + 1) as usize;
+        let mut digits = vec![0; num_digits];
+
+        let mut carry: u8 = 0;
+        for exponent in min_exponent..=max_exponent {
+            let digit_total =
+                self.get_digit(exponent) + other.get_digit(exponent) + carry;
+            let added_digit = digit_total % BASE_8_BITS;
+            carry = digit_total / BASE_8_BITS;
+            let index = (max_exponent - exponent) as usize;
+            digits[index] = added_digit;
+        }
+
+        let exponent = if carry == 0 {
+            max_exponent
+        } else {
+            assert!(carry < BASE_8_BITS);
+            digits.insert(0, carry);
+            max_exponent + 1
+        };
+
+        Decimal::cleaned(digits, exponent)
     }
 }
 
@@ -115,37 +124,52 @@ impl Add for Decimal {
     type Output = Self;
 
     fn add(self, other: Self) -> Self {
-        let mut carry: u8 = 0;
-
-        let mut trailing = Vec::new();
-        for (digit1, digit2) in
-            self.trailing.iter().rev().zip(other.trailing.iter().rev())
-        {
-            let total = digit1 + digit2 + carry;
-            let added_digit = total % BASE_8_BITS;
-            carry = total / BASE_8_BITS;
-            trailing.push(added_digit);
-        }
-        trailing.reverse();
-
-        let mut leading = Vec::new();
-        for (digit1, digit2) in
-            self.leading.iter().rev().zip(other.leading.iter().rev())
-        {
-            let total = digit1 + digit2 + carry;
-            let added_digit = total % BASE_8_BITS;
-            carry = total / BASE_8_BITS;
-            leading.push(added_digit);
-        }
-        leading.reverse();
-
-        Decimal::cleaned(leading, trailing)
+        &self + &other
     }
 }
 
 impl AddAssign for Decimal {
     fn add_assign(&mut self, rhs: Decimal) {
-        self = self + rhs;
+        let lhs: &Decimal = self;
+        let result = lhs + &rhs;
+        *self = result;
+    }
+}
+
+impl<'a, 'b> Sub<&'b Decimal> for &'a Decimal {
+    type Output = Decimal;
+
+    fn sub(self, other: &'b Decimal) -> Decimal {
+        println!("sub: {:?} - {:?}", self, other);
+
+        let min_exponent = cmp::min(self.min_exponent(), other.min_exponent());
+        let max_exponent = cmp::max(self.max_exponent(), other.max_exponent());
+        let num_digits = (max_exponent - min_exponent + 1) as usize;
+        let mut digits = vec![0; num_digits];
+
+        let mut borrow: u8 = 0;
+
+        for exponent in (min_exponent..=max_exponent).rev() {
+            let to_subtract = other.get_digit(exponent) + borrow;
+            let mut self_digit = self.get_digit(exponent);
+            if to_subtract > self_digit {
+                borrow = 1;
+                self_digit += BASE_8_BITS;
+            } else {
+                borrow = 0;
+            }
+            let difference = self_digit - to_subtract;
+            let index = (max_exponent - exponent) as usize;
+            digits[index] = difference;
+        }
+
+        if borrow > 0 {
+            panic!("Attempted to subtract with underflow");
+        }
+
+        let exponent = max_exponent;
+
+        Decimal::cleaned(digits, exponent)
     }
 }
 
@@ -153,69 +177,27 @@ impl Sub for Decimal {
     type Output = Self;
 
     fn sub(self, other: Self) -> Self {
-        println!("sub: {:?} - {:?}", self, other);
-
-        let mut borrow: u8 = 0;
-
-        let mut trailing = Vec::new();
-        for (digit1, digit2) in
-            self.trailing.iter().rev().zip(other.trailing.iter().rev())
-        {
-            let mut digit1 = *digit1;
-            print!("{} (- {}) - {}", digit1, borrow, digit2);
-            let to_subtract = digit2 + borrow;
-            if to_subtract > digit1 {
-                borrow = 1;
-                digit1 += BASE_8_BITS;
-            } else {
-                borrow = 0;
-            };
-            let difference = digit1 - to_subtract;
-            println!(" = {} (borrow {})", difference, borrow);
-            trailing.push(difference);
-        }
-        trailing.reverse();
-
-        let mut leading = Vec::new();
-        for (digit1, digit2) in
-            self.leading.iter().rev().zip(other.leading.iter().rev())
-        {
-            print!("{} (- {}) - {}", digit1, borrow, digit2);
-            let mut digit1 = *digit1;
-            let to_subtract = digit2 + borrow;
-            if to_subtract > digit1 {
-                borrow = 1;
-                digit1 += BASE_8_BITS;
-            } else {
-                borrow = 0;
-            };
-            let difference = digit1 - to_subtract;
-            println!(" = {} (borrow {})", difference, borrow);
-            leading.push(difference);
-        }
-        leading.reverse();
-
-        Decimal::cleaned(leading, trailing)
+        &self - &other
     }
 }
 
-impl Mul for Decimal {
-    type Output = Self;
+// impl Mul for Decimal {
+//     type Output = Self;
 
-    fn mul(self, other: Self) -> Self {
-        let mut result = Decimal::zero();
-        let mut carry: u8 = 0;
+//     fn mul(self, other: Self) -> Self {
+//         let mut result = Decimal::zero();
+//         let mut carry: u8 = 0;
 
-        for (offset, &digit) in other.trailing.iter().enumerate().rev() {
-            let mut copy = self.clone();
-            let shift_amount = offset + 1;
-            copy.shift_right(shift_amount);
-            copy.multiply_by_digit(digit);
-            result += copy;
-        }
+//         for (offset, &digit) in other.trailing.iter().enumerate().rev() {
+//             let mut copy = self.clone();
+//             let shift_amount = offset + 1;
+//             copy.shift_right(shift_amount);
+//             copy.multiply_by_digit(digit);
+//             result += copy;
+//         }
 
-        // for (offset, &digit) in 
+//         // for (offset, &digit) in
 
-        result
-    }
-}
+//         result
+//     }
+// }
