@@ -1,15 +1,23 @@
 use std::cmp;
-// use std::ops::{Add, AddAssign, Mul, Sub};
+use std::cmp::Ordering;
 use std::ops::{Add, AddAssign, Mul, Sub};
 
 const BASE_32_BITS: u32 = 10;
 const BASE_8_BITS: u8 = 10;
 
 /// Type implementing arbitrary-precision decimal arithmetic
-#[derive(Debug, Clone, Ord, PartialOrd, Eq, PartialEq)]
+// #[derive(Debug, Clone, Ord, PartialOrd, Eq, PartialEq)]
+#[derive(Debug, Clone, Eq, PartialEq)]
 pub struct Decimal {
-    digits: Vec<u8>,
+    sign: Sign,
     exponent: i32,
+    digits: Vec<u8>,
+}
+
+#[derive(Debug, Copy, Clone, Ord, PartialOrd, Eq, PartialEq)]
+enum Sign {
+    Negative,
+    Positive,
 }
 
 impl Decimal {
@@ -17,21 +25,23 @@ impl Decimal {
         Decimal {
             digits: vec![0],
             exponent: 0,
+            sign: Sign::Positive,
         }
     }
 
-    pub fn from_digit(digit: u8) -> Self {
-        Decimal {
-            digits: vec![digit],
-            exponent: 0,
-        }
+    pub fn is_zero(&self) -> bool {
+        self == &Decimal::zero()
     }
 
     pub fn try_from(input: &str) -> Option<Self> {
         let mut digits = Vec::new();
         let mut maybe_exponent = None;
+        let mut sign = Sign::Positive;
+
         for (index, c) in input.chars().enumerate() {
             match c {
+                '+' if index == 0 => sign = Sign::Positive,
+                '-' if index == 0 => sign = Sign::Negative,
                 '0'..='9' => digits.push(c.to_digit(BASE_32_BITS)? as u8),
                 '.' if maybe_exponent.is_none() => {
                     maybe_exponent = Some(index as i32 - 1);
@@ -40,7 +50,7 @@ impl Decimal {
             }
         }
         let exponent = maybe_exponent.unwrap_or(digits.len() as i32 - 1);
-        Some(Decimal::cleaned(digits, exponent))
+        Some(Decimal::cleaned(digits, exponent, sign))
     }
 
     pub fn get_digit(&self, exponent_index: i32) -> u8 {
@@ -62,8 +72,12 @@ impl Decimal {
         self.digits.get_mut(adjusted_index as usize)
     }
 
-    fn cleaned(digits: Vec<u8>, exponent: i32) -> Self {
-        let mut d = Decimal { digits, exponent };
+    fn cleaned(digits: Vec<u8>, exponent: i32, sign: Sign) -> Self {
+        let mut d = Decimal {
+            digits,
+            exponent,
+            sign,
+        };
         println!("Before stripping: {:?}", d);
         d.clean();
         println!("After stripping: {:?}", d);
@@ -71,7 +85,23 @@ impl Decimal {
     }
 
     fn clean(&mut self) {
+        self.strip_leading_zeros();
         self.strip_trailing_zeros();
+    }
+
+    fn strip_leading_zeros(&mut self) {
+        let num_leading_zeros = self
+            .digits
+            .iter()
+            .take_while(|&&digit| digit == 0)
+            .count();
+        let num_digits_to_keep = self.digits.len() - num_leading_zeros;
+        if num_digits_to_keep == 0 {
+            *self = Decimal::zero();
+            return;
+        }
+        self.digits.drain(..num_leading_zeros);
+        self.exponent -= num_leading_zeros as i32;
     }
 
     fn strip_trailing_zeros(&mut self) {
@@ -83,6 +113,7 @@ impl Decimal {
             .count();
         let num_digits_to_keep = self.digits.len() - num_trailing_zeros;
         if num_digits_to_keep == 0 {
+            *self = Decimal::zero();
             return;
         }
         self.digits.truncate(num_digits_to_keep);
@@ -114,12 +145,26 @@ impl Decimal {
             self.digits.insert(0, new_digit);
         }
     }
+
+    fn negated(&self) -> Decimal {
+        Decimal {
+            sign: self.sign.negated(),
+            ..self.clone()
+        }
+    }
 }
 
 impl<'a, 'b> Add<&'b Decimal> for &'a Decimal {
     type Output = Decimal;
 
     fn add(self, other: &'b Decimal) -> Decimal {
+        match (self.sign, other.sign) {
+            (Sign::Positive, Sign::Positive) => (),
+            (Sign::Positive, Sign::Negative) => return self - &other.negated(),
+            (Sign::Negative, Sign::Positive) => return other - &self.negated(),
+            (Sign::Negative, Sign::Negative) => (),
+        }
+
         let min_exponent = cmp::min(self.min_exponent(), other.min_exponent());
         let max_exponent = cmp::max(self.max_exponent(), other.max_exponent());
         let num_digits = (max_exponent - min_exponent + 1) as usize;
@@ -143,7 +188,7 @@ impl<'a, 'b> Add<&'b Decimal> for &'a Decimal {
             max_exponent + 1
         };
 
-        Decimal::cleaned(digits, exponent)
+        Decimal::cleaned(digits, exponent, self.sign)
     }
 }
 
@@ -168,6 +213,13 @@ impl<'a, 'b> Sub<&'b Decimal> for &'a Decimal {
 
     fn sub(self, other: &'b Decimal) -> Decimal {
         println!("sub: {:?} - {:?}", self, other);
+
+        match (self.sign, other.sign) {
+            (Sign::Positive, Sign::Positive) => (),
+            (Sign::Positive, Sign::Negative) => return self + &other.negated(),
+            (Sign::Negative, Sign::Positive) => return other + &self.negated(),
+            (Sign::Negative, Sign::Negative) => (),
+        }
 
         let min_exponent = cmp::min(self.min_exponent(), other.min_exponent());
         let max_exponent = cmp::max(self.max_exponent(), other.max_exponent());
@@ -196,7 +248,7 @@ impl<'a, 'b> Sub<&'b Decimal> for &'a Decimal {
 
         let exponent = max_exponent;
 
-        Decimal::cleaned(digits, exponent)
+        Decimal::cleaned(digits, exponent, self.sign)
     }
 }
 
@@ -212,13 +264,53 @@ impl Mul for Decimal {
     type Output = Self;
 
     fn mul(self, other: Self) -> Self {
-        other.digits.iter().enumerate().fold(Decimal::zero(), |result, (offset,
-        &digit)| {
-            let exponent = other.exponent - offset as i32;
-            let mut copy = self.clone();
-            copy.shift_right(exponent);
-            copy.multiply_by_digit(digit);
-            result + copy
-        })
+        other.digits.iter().enumerate().fold(
+            Decimal::zero(),
+            |result, (offset, &digit)| {
+                let exponent = other.exponent - offset as i32;
+                let mut copy = self.clone();
+                copy.shift_right(exponent);
+                copy.multiply_by_digit(digit);
+                result + copy
+            },
+        )
+    }
+}
+
+impl PartialOrd for Decimal {
+    fn partial_cmp(&self, other: &Decimal) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl Ord for Decimal {
+    fn cmp(&self, other: &Decimal) -> Ordering {
+        match (self.sign, other.sign) {
+            (Sign::Positive, Sign::Positive) => (),
+            (Sign::Positive, Sign::Negative) => return Ordering::Greater,
+            (Sign::Negative, Sign::Positive) => return Ordering::Less,
+            (Sign::Negative, Sign::Negative) => return other.cmp(self),
+        }
+        // Now we know that both are positive
+        match (self.is_zero(), other.is_zero()) {
+            (true, true) => return Ordering::Equal,
+            (true, false) => return Ordering::Less,
+            (false, true) => return Ordering::Greater,
+            (false, false) => (),
+        }
+        if self.exponent != other.exponent {
+            return self.exponent.cmp(&other.exponent);
+        }
+        self.digits.cmp(&other.digits)
+    }
+}
+
+
+impl Sign {
+    pub fn negated(&self) -> Sign {
+        match self {
+            Sign::Positive => Sign::Negative,
+            Sign::Negative => Sign::Positive,
+        }
     }
 }

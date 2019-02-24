@@ -95,7 +95,6 @@ fn test_gt_positive_and_zero() {
 }
 
 #[test]
-#[ignore]
 fn test_gt_negative_and_zero() {
     assert!(decimal("0.0") > decimal("-0.1"));
     assert!(decimal("0.0") > decimal("-1.0"));
@@ -103,20 +102,17 @@ fn test_gt_negative_and_zero() {
 
 // tests of arbitrary precision behavior
 #[test]
-#[ignore]
 fn test_add_uneven_position() {
     assert_eq!(decimal("0.1") + decimal("0.02"), decimal("0.12"));
 }
 
 #[test]
-#[ignore]
 fn test_eq_vary_sig_digits() {
     assert!(decimal("0") == decimal("0000000000000.0000000000000000000000"));
     assert!(decimal("1") == decimal("00000000000000001.000000000000000000"));
 }
 
 #[test]
-#[ignore]
 fn test_add_vary_precision() {
     assert_eq!(
         decimal("100000000000000000000000000000000000000000000")
@@ -126,7 +122,6 @@ fn test_add_vary_precision() {
 }
 
 #[test]
-#[ignore]
 fn test_cleanup_precision() {
     assert_eq!(
         decimal("10000000000000000000000000000000000000000000000.999999999999999999999999998",)
@@ -138,7 +133,6 @@ fn test_cleanup_precision() {
 }
 
 #[test]
-#[ignore]
 fn test_gt_varying_positive_precisions() {
     assert!(decimal("1.1") > decimal("1.01"));
     assert!(decimal("1.01") > decimal("1.0"));
@@ -147,7 +141,6 @@ fn test_gt_varying_positive_precisions() {
 }
 
 #[test]
-#[ignore]
 fn test_gt_positive_and_negative() {
     assert!(decimal("1.0") > decimal("-1.0"));
     assert!(decimal("1.1") > decimal("-1.1"));
