@@ -3,3 +3,4 @@
 .#*
 *_flymake*
 tmp.*
+.ccls-cache
