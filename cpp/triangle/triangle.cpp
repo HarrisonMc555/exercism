@@ -1,39 +1,48 @@
 #include "triangle.h"
+#include <vector>
+#include <algorithm>
 
 class Triangle {
-    double a;
-    double b;
-    double c;
+    const double a;
+    const double b;
+    const double c;
 
 public:
-    Triangle(double a, double b, double c) : a(a), b(b), c(c) {}
+    static Triangle create(double x, double y, double z);
 
-    triangle::flavor kind();
-    bool isValidTringle();
-    bool isInvalidTriangle();
+    triangle::flavor kind() const;
+    bool isValidTringle() const;
+    bool isInvalidTriangle() const;
 
 private:
-    bool allSidesPositive();
-    bool allSidesLessThanSumOfOthers();
-    bool allSidesEqual();
-    bool atLeastTwoSidesEqual();
+    Triangle(double a, double b, double c) : a(a), b(b), c(c) {};
+    bool allSidesPositive() const;
+    bool allSidesLessThanSumOfOthers() const;
+    bool allSidesEqual() const;
+    bool atLeastTwoSidesEqual() const;
 };
 
 
 
 namespace triangle {
     flavor kind(double a, double b, double c) {
-        Triangle t(a, b, c);
+        Triangle t = Triangle::create(a, b, c);
         return t.kind();
     }
 }
 
 
-
-triangle::flavor Triangle::kind() {
-    if (isInvalidTriangle()) {
+Triangle Triangle::create(double x, double y, double z) {
+    std::vector<double> sides { x, y, z };
+    std::sort(sides.begin(), sides.end());
+    Triangle t = Triangle(sides[0], sides[1], sides[2]);
+    if (t.isInvalidTriangle()) {
         throw std::domain_error("Invalid triangle");
     }
+    return t;
+}
+
+triangle::flavor Triangle::kind() const {
     if (allSidesEqual()) {
         return triangle::equilateral;
     } else if (atLeastTwoSidesEqual()) {
@@ -43,33 +52,32 @@ triangle::flavor Triangle::kind() {
     }
 }
 
-bool Triangle::isValidTringle() {
+bool Triangle::isValidTringle() const {
     return allSidesPositive()
         && allSidesLessThanSumOfOthers();
 }
 
-bool Triangle::isInvalidTriangle() {
+bool Triangle::isInvalidTriangle() const {
     return !isValidTringle();
 }
 
-bool Triangle::allSidesPositive() {
+bool Triangle::allSidesPositive() const {
     return (a > 0)
         && (b > 0)
         && (c > 0);
 }
 
-bool Triangle::allSidesLessThanSumOfOthers() {
-    return (a < b + c)
-        && (b < c + a)
-        && (c < a + b);
+bool Triangle::allSidesLessThanSumOfOthers() const {
+    // Since c is the largest side, it's the only one we need to worry about
+    return c < a + b;
 }
 
-bool Triangle::allSidesEqual() {
+bool Triangle::allSidesEqual() const {
     return (a == b)
         && (b == c);
 }
 
-bool Triangle::atLeastTwoSidesEqual() {
+bool Triangle::atLeastTwoSidesEqual() const {
     return (a == b)
         || (b == c)
         || (c == a);
