@@ -1,7 +1,5 @@
 #include <vector>
 #include <cmath>
-#include <algorithm>
-
 #include <iostream>
 
 #include "prime_factors.h"
@@ -23,12 +21,12 @@ namespace prime_factors {
             }
         }
 
-        // Check if the starting number was prime
+        // Check if there was a prime larger than the square root.
+        // There can only be one of these, so if anything is left it must be a
+        // single prime number.
         if (number != 1) {
             factors.push_back(number);
         }
-
-        std::sort(factors.begin(), factors.end());
 
         return factors;
     }
@@ -42,7 +40,7 @@ std::vector<uint> prime_sieve(uint max_num) {
         uint is_composite = sieve.at(num);
         if (is_composite) continue;
         primes.push_back(num);
-        for (uint multiple = num*2; multiple < max_num; multiple += num) {
+        for (uint multiple = num*2; multiple <= max_num; multiple += num) {
             sieve.at(multiple) = true;
         }
     }
