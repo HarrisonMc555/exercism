@@ -5,3 +5,4 @@ version = "0.0.0"
 
 [dependencies]
 crossbeam = "0.7"
+libmath = "0.2"

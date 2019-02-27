@@ -1,25 +1,16 @@
-use crossbeam::thread;
 use std::collections::HashMap;
-use std::sync::Arc;
+use crossbeam::thread;
 
-pub fn frequency(input: &[&str], mut worker_count: usize) -> HashMap<char, usize> {
-    let data = Arc::new(input);
-    let mut num_per_worker = input.len() / worker_count;
-    if num_per_worker == 0 {
-        num_per_worker = input.len();
-        worker_count = 1;
-    }
+pub fn frequency(input: &[&str], worker_count: usize) -> HashMap<char, usize> {
+    let num_per_worker = get_worker_size(input, worker_count);
     println!("input: {:?}", input);
+    if input.is_empty() {
+        return HashMap::new();
+    }
     thread::scope(|s| {
-        let handles = (0..worker_count).map(|index| {
-            let start_index = num_per_worker * index;
-            let end_index = start_index + num_per_worker;
-            let data_clone = Arc::clone(&data); // Clone Arc, bump reference count
-            let slice = &data_clone[start_index..end_index];
-            println!("Spawning thread to deal with: {:?}", slice);
-            s.spawn(move |_| frequency_helper(slice))
-        });
-
+        let handles = input
+            .chunks(num_per_worker)
+            .map(|slice| s.spawn(move |_| frequency_helper(slice)));
         let mut result = HashMap::new();
         for handle in handles {
             let partial_result = handle.join().unwrap();
@@ -55,4 +46,14 @@ fn combine_frequencies(result: &mut HashMap<char, usize>, partial_result: HashMa
         let result_counter = result.entry(letter).or_insert(0);
         *result_counter += count;
     }
+}
+
+fn get_worker_size<T>(data: &[T], worker_count: usize) -> usize {
+    let length = data.len() as f64;
+    let worker_count = worker_count as f64;
+    let num_per_worker = math::round::ceil(length / worker_count, 0) as usize;
+    if num_per_worker == 0 {
+        return data.len();
+    }
+    num_per_worker
 }
