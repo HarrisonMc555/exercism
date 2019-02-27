@@ -1,9 +1,8 @@
-use std::collections::HashMap;
 use crossbeam::thread;
+use std::collections::HashMap;
 
 pub fn frequency(input: &[&str], worker_count: usize) -> HashMap<char, usize> {
     let num_per_worker = get_worker_size(input, worker_count);
-    println!("input: {:?}", input);
     if input.is_empty() {
         return HashMap::new();
     }
@@ -14,28 +13,21 @@ pub fn frequency(input: &[&str], worker_count: usize) -> HashMap<char, usize> {
         let mut result = HashMap::new();
         for handle in handles {
             let partial_result = handle.join().unwrap();
-            println!("partial_result: {:?}", partial_result);
             combine_frequencies(&mut result, partial_result);
         }
-        println!("result: {:?}", result);
         result
     })
-    .unwrap_or_else(|e| {
-        eprintln!("Error: {:?}", e);
-        HashMap::new()
-    })
+    .unwrap_or_else(|_| HashMap::new())
 }
 
 fn frequency_helper(input: &[&str]) -> HashMap<char, usize> {
     let mut frequencies = HashMap::new();
     for string in input {
-        for letter in string
-            .chars()
-            .filter(|c| c.is_alphabetic())
-            .map(|c| c.to_ascii_lowercase())
-        {
-            let counter = frequencies.entry(letter).or_insert(0);
-            *counter += 1;
+        for letter in string.chars().filter(|c| c.is_alphabetic()) {
+            if let Some(c) = letter.to_lowercase().next() {
+                let counter = frequencies.entry(c).or_insert(0);
+                *counter += 1;
+            }
         }
     }
     frequencies
