@@ -28,93 +28,70 @@ fn count_rectangles(tiles: Grid) -> u32 {
             row.iter()
                 .enumerate()
                 .filter(|(_, tile)| tile.is_corner())
-                .map(|(j, _)| count_rectangles_from_top_left(&tiles, i, j))
+                .map(|(j, _)| count_rectangles_from_top_left(&tiles, (i, j)))
                 .collect::<Vec<_>>()
         })
         .sum()
 }
 
-fn count_rectangles_from_top_left(
-    tiles: &Grid,
-    row_index: usize,
-    col_index: usize,
-) -> u32 {
-    let original_corner = (row_index, col_index);
+fn count_rectangles_from_top_left(tiles: &Grid, location: Location) -> u32 {
+    let (row_index, col_index) = location;
     (col_index + 1..tiles[0].len())
         .map(|j| (j, tiles[row_index][j]))
         .take_while(|(_, tile)| tile.connects_horizontally())
         .filter(|(_, tile)| tile.is_corner())
-        .map(|(j, _)| {
-            count_rectangles_from_top_right(
-                tiles,
-                row_index,
-                j,
-                original_corner,
-            )
-        })
+        .map(|(j, _)| count_rectangles_from_top_right(tiles, j, location))
         .sum()
 }
 
 fn count_rectangles_from_top_right(
     tiles: &Grid,
-    row_index: usize,
     col_index: usize,
     original_corner: Location,
 ) -> u32 {
+    let (row_index, _) = original_corner;
     (row_index + 1..tiles.len())
         .map(|i| (i, tiles[i][col_index]))
         .take_while(|(_, tile)| tile.connects_vertically())
-        .filter(|(_, tile)| tile.is_corner())
-        .map(|(i, _)| {
-            count_rectangles_from_bottom_right(
-                tiles,
-                i,
-                col_index,
-                original_corner,
-            )
+        .filter(|&(i, tile)| {
+            let location = (i, col_index);
+            tile.is_corner()
+                && does_connect_from_bottom_right(
+                    tiles,
+                    location,
+                    original_corner,
+                )
         })
-        .sum()
+        .count() as u32
 }
 
-fn count_rectangles_from_bottom_right(
+fn does_connect_from_bottom_right(
     tiles: &Grid,
-    row_index: usize,
-    col_index: usize,
+    location: Location,
     original_corner: Location,
-) -> u32 {
+) -> bool {
+    let (row_index, col_index) = location;
     let (_, original_col) = original_corner;
     let horizontal_until_corner = (original_col + 1..col_index)
         .map(|j| tiles[row_index][j])
         .all(|tile| tile.connects_horizontally());
     let corner_is_corner = tiles[row_index][original_col].is_corner();
-    let does_connect = horizontal_until_corner && corner_is_corner;
-    if does_connect {
-        count_rectangles_from_bottom_left(
-            tiles,
-            row_index,
-            original_col,
-            original_corner,
-        )
-    } else {
-        0
-    }
+    let does_connect_to_bottom_left =
+        horizontal_until_corner && corner_is_corner;
+
+    does_connect_to_bottom_left
+        && does_connect_from_bottom_left(tiles, row_index, original_corner)
 }
 
-fn count_rectangles_from_bottom_left(
+fn does_connect_from_bottom_left(
     tiles: &Grid,
     row_index: usize,
-    col_index: usize,
     original_corner: Location,
-) -> u32 {
-    let (original_row, _) = original_corner;
-    let does_connect = (original_row..row_index)
+) -> bool {
+    let (original_row, col_index) = original_corner;
+    (original_row..row_index)
         .map(|i| tiles[i][col_index])
-        .all(|tile| tile.connects_vertically());
-    if does_connect {
-        1
-    } else {
-        0
-    }
+        .all(|tile| tile.connects_vertically())
 }
 
 fn to_tiles(lines: &[&str]) -> Option<Grid> {
