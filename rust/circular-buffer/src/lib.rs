@@ -62,16 +62,23 @@ impl<T: Default> CircularBuffer<T> {
         self.reached_capacity_flag = self.write_index == self.read_index;
     }
 
+    pub fn capacity(&self) -> usize {
+        self.buffer.len()
+    }
+
+    pub fn len(&self) -> usize {
+        if self.is_full() {
+            return self.capacity();
+        }
+        (self.write_index + self.capacity() - self.read_index) % self.capacity()
+    }
+
     fn is_full(&self) -> bool {
         self.reached_capacity_flag
     }
 
     fn is_empty(&self) -> bool {
         !self.is_full() && self.write_index == self.read_index
-    }
-
-    fn capacity(&self) -> usize {
-        self.buffer.len()
     }
 
     fn increment_write_index(&mut self) {
@@ -86,3 +93,66 @@ impl<T: Default> CircularBuffer<T> {
         (index + 1) % self.capacity()
     }
 }
+
+/* IntoIterator (owned) */
+impl<T: Default> IntoIterator for CircularBuffer<T> {
+    type Item = T;
+    type IntoIter = IntoIter<T>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        IntoIter { circular_buffer: self }
+    }
+}
+
+pub struct IntoIter<T: Default> {
+    circular_buffer: CircularBuffer<T>,
+}
+
+impl<T: Default> Iterator for IntoIter<T> {
+    type Item = T;
+
+    fn next(&mut self) -> Option<T> {
+        self.circular_buffer.read().ok()
+    }
+}
+
+
+// /* Intoiterator (reference) */
+// impl<'a, T: Default> IntoIterator for &'a CircularBuffer<T> {
+//     type Item = &'a T;
+//     type IntoIter = IntoIterRef<'a, T>;
+
+//     fn into_iter(self) -> Self::IntoIter {
+//         IntoIterRef::new(self)
+//     }
+// }
+
+// pub struct IntoIterRef<'a, T: Default> {
+//     circular_buffer: &'a CircularBuffer<T>,
+//     index: usize,
+//     is_finished: bool,
+// }
+
+// impl<'a, T: Default> IntoIterRef<'a, T> {
+//     pub fn new(circular_buffer: &'a CircularBuffer<T>) -> Self {
+//         IntoIterRef {
+//             circular_buffer: circular_buffer,
+//             index: circular_buffer.read_index,
+//             is_finished: circular_buffer.is_full(),
+//         }
+//     }
+// }
+
+// impl<'a, T: Default> Iterator for IntoIterRef<'a, T> {
+//     type Item = &'a T;
+
+//     fn next(&mut self) -> Option<Self::Item> {
+//         if self.is_finished {
+//             return None;
+//         }
+//         let element = &self.circular_buffer.buffer[self.index];
+//         self.circular_buffer.increment_index(self.index);
+//         self.is_finished = self.index == self.circular_buffer.write_index;
+//         Some(element)
+//     }
+// }

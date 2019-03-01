@@ -137,3 +137,64 @@ fn string_buffer() {
     assert_eq!(0, buffer.read().unwrap().len());
     assert_eq!(Ok("Testing".to_string()), buffer.read());
 }
+
+#[test]
+fn capacity() {
+    let buffer3: CircularBuffer<i32> = CircularBuffer::new(3);
+    let buffer7: CircularBuffer<i32> = CircularBuffer::new(7);
+    assert_eq!(3, buffer3.capacity());
+    assert_eq!(7, buffer7.capacity());
+}
+
+#[test]
+fn len_starts_at_zero() {
+    let buffer: CircularBuffer<i32> = CircularBuffer::new(3);
+    assert_eq!(0, buffer.len());
+}
+
+#[test]
+fn len_increments() {
+    let mut buffer = CircularBuffer::new(3);
+    assert_eq!(0, buffer.len());
+    buffer.write('a').unwrap();
+    assert_eq!(1, buffer.len());
+    buffer.write('b').unwrap();
+    assert_eq!(2, buffer.len());
+}
+
+#[test]
+fn len_can_reach_capacity() {
+    let mut buffer = CircularBuffer::new(3);
+    assert_eq!(0, buffer.len());
+    buffer.write('a').unwrap();
+    assert_eq!(1, buffer.len());
+    buffer.write('b').unwrap();
+    assert_eq!(2, buffer.len());
+    buffer.write('c').unwrap();
+    assert_eq!(3, buffer.len());
+}
+
+#[test]
+fn use_into_iter_owned() {
+    let mut buffer = CircularBuffer::new(2);
+    buffer.write(1).unwrap();
+    buffer.write(2).unwrap();
+    let mut expected = 1;
+    for element in buffer {
+        assert_eq!(expected, element);
+        expected += 1;
+    }
+}
+
+// #[test]
+// fn use_into_iter_ref() {
+//     let mut buffer = CircularBuffer::new(2);
+//     buffer.write(0).unwrap();
+//     buffer.write(1).unwrap();
+//     let mut expected = 0;
+//     for element in &buffer {
+//         assert_eq!(&expected, element);
+//         assert_eq!(2, buffer.capacity());
+//         expected += 1;
+//     }
+// }
