@@ -63,7 +63,6 @@ where
         let dependants = HashSet::new();
         let input_cell = InputCell {
             value,
-            id,
             dependants,
         };
         self.input_cells.insert(id, input_cell);
@@ -105,8 +104,8 @@ where
         let compute_cell = ComputeCell {
             function,
             dependencies,
-            id,
             dependants,
+            cached_value: None,
         };
         self.compute_cells.insert(id, compute_cell);
         self.next_compute_cell_id.increment();
@@ -220,7 +219,6 @@ where
 
 struct InputCell<T> {
     value: T,
-    id: InputCellID,
     dependants: HashSet<ComputeCellID>,
 }
 
@@ -244,8 +242,8 @@ where
 struct ComputeCell<'a, T> {
     function: Box<'a + Fn(&[T]) -> T>,
     dependencies: Vec<CellID>,
-    id: ComputeCellID,
     dependants: HashSet<ComputeCellID>,
+    cached_value: Option<T>,
 }
 
 impl<'a, T> ComputeCell<'a, T>
