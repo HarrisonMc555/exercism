@@ -40,6 +40,8 @@ pub struct Reactor<'a, T> {
     next_input_cell_id: InputCellID,
     compute_cells: HashMap<ComputeCellID, ComputeCell<'a, T>>,
     next_compute_cell_id: ComputeCellID,
+    callbacks: HashMap<CallbackID, ComputeCellID>,
+    next_callback_id: CallbackID,
 }
 
 // You are guaranteed that Reactor will only be tested against types that are Copy + PartialEq.
@@ -53,6 +55,8 @@ where
             next_input_cell_id: InputCellID(0),
             compute_cells: HashMap::new(),
             next_compute_cell_id: ComputeCellID(0),
+            callbacks: HashMap::new(),
+            next_callback_id: CallbackID(0),
         }
     }
 
@@ -61,10 +65,7 @@ where
         let value = initial;
         let id = self.next_input_cell_id;
         let dependants = HashSet::new();
-        let input_cell = InputCell {
-            value,
-            dependants,
-        };
+        let input_cell = InputCell { value, dependants };
         self.input_cells.insert(id, input_cell);
         self.next_input_cell_id.increment();
         id
@@ -106,6 +107,7 @@ where
             dependencies,
             dependants,
             cached_value: None,
+            callbacks: Vec::new(),
         };
         self.compute_cells.insert(id, compute_cell);
         self.next_compute_cell_id.increment();
@@ -161,12 +163,23 @@ where
     // * Exactly once if the compute cell's value changed as a result of the set_value call.
     //   The value passed to the callback should be the final value of the compute cell after the
     //   set_value call.
-    pub fn add_callback<F: FnMut(T) -> ()>(
+    pub fn add_callback<F>(
         &mut self,
-        _id: ComputeCellID,
-        _callback: F,
-    ) -> Option<CallbackID> {
-        unimplemented!()
+        compute_cell_id: ComputeCellID,
+        callback: F,
+    ) -> Option<CallbackID>
+    where
+        F: 'a + FnMut(T) -> (),
+    {
+        let compute_cell = match self.compute_cells.get_mut(&compute_cell_id) {
+            Some(cell) => cell,
+            None => return None,
+        };
+        let callback_id = self.next_callback_id;
+        compute_cell.add_callback(callback);
+        self.callbacks.insert(callback_id, compute_cell_id);
+        self.next_callback_id.increment();
+        Some(callback_id)
     }
 
     // Removes the specified callback, using an ID returned from add_callback.
@@ -244,6 +257,7 @@ struct ComputeCell<'a, T> {
     dependencies: Vec<CellID>,
     dependants: HashSet<ComputeCellID>,
     cached_value: Option<T>,
+    callbacks: Vec<Box<'a + FnMut(T) -> ()>>,
 }
 
 impl<'a, T> ComputeCell<'a, T>
@@ -263,6 +277,13 @@ where
     pub fn add_dependant(&mut self, compute_id: ComputeCellID) {
         self.dependants.insert(compute_id);
     }
+
+    pub fn add_callback<F>(&mut self, callback: F)
+    where
+        F: 'a + FnMut(T) -> (),
+    {
+        self.callbacks.push(Box::new(callback));
+    }
 }
 
 impl InputCellID {
@@ -272,6 +293,12 @@ impl InputCellID {
 }
 
 impl ComputeCellID {
+    fn increment(&mut self) {
+        (*self).0 += 1;
+    }
+}
+
+impl CallbackID {
     fn increment(&mut self) {
         (*self).0 += 1;
     }
