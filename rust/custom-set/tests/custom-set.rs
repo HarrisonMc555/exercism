@@ -9,7 +9,6 @@ fn sets_with_no_elements_are_empty() {
 }
 
 #[test]
-#[ignore]
 fn sets_with_elements_are_not_empty() {
     let set = CustomSet::new(&[1]);
     assert!(!set.is_empty());
