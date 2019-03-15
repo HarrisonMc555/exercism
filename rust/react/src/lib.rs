@@ -121,15 +121,26 @@ where
     //
     // It turns out this introduces a significant amount of extra complexity to this exercise.
     // We chose not to cover this here, since this exercise is probably enough work as-is.
-    pub fn value(&self, id: CellID) -> Option<T> {
+    pub fn value(&mut self, id: CellID) -> Option<T> {
+        // let deps = self.get_all_dependancies(id);
+        // for dep in deps {
+        //     self.update(dep);
+        // }
         match id {
             CellID::Input(input_id) => {
                 self.input_cells.get(&input_id).map(InputCell::value)
             }
-            CellID::Compute(compute_id) => self
-                .compute_cells
-                .get(&compute_id)
-                .and_then(|compute_cell| compute_cell.compute(&self)),
+            CellID::Compute(compute_id) => {
+                if let Some(cell) = self.compute_cells.get_mut(&compute_id) {
+                    cell.compute(&mut self)
+                } else {
+                    None
+                }
+            },
+            // CellID::Compute(compute_id) => self
+            //     .compute_cells
+            //     .get_mut(&compute_id)
+            //     .and_then(|compute_cell| compute_cell.compute(&mut self)),
         }
     }
 
@@ -228,6 +239,21 @@ where
                 .add_dependant(dependant_id),
         }
     }
+
+    fn get_all_dependancies(&self, id: CellID) -> HashSet<CellID> {
+        let mut deps = HashSet::new();
+        deps.insert(id);
+        if let CellID::Compute(compute_id) = id {
+            let mut dep_ids = HashSet::new();
+            dep_ids.insert(id);
+            if let Some(cell) = self.compute_cells.get(&compute_id) {
+                for dep_id in cell.dependencies.iter() {
+                    deps.extend(self.get_all_dependancies(*dep_id));
+                }
+            }
+        };
+        deps
+    }
 }
 
 struct InputCell<T> {
@@ -264,14 +290,22 @@ impl<'a, T> ComputeCell<'a, T>
 where
     T: Copy + Eq,
 {
-    pub fn compute(&self, reactor: &Reactor<'a, T>) -> Option<T> {
+    pub fn compute(&mut self, reactor: &mut Reactor<'a, T>) -> Result<(), ()> {
+        if self.cached_value.is_some() {
+            return Ok(());
+        }
         let args: Vec<_> = self
             .dependencies
             .iter()
             .map(|dep| reactor.value(*dep))
-            .collect::<Option<_>>()?;
+            .collect::<Result<_, _>>()?;
         let value = (self.function)(&args);
-        Some(value)
+        self.cached_value = Some(value);
+    }
+
+    pub fn value(&mut self, reactor: &Reactor<'a, T>) -> Result<T, ()> {
+        self.compute()?;
+        self.cached_value.ok()
     }
 
     pub fn add_dependant(&mut self, compute_id: ComputeCellID) {
