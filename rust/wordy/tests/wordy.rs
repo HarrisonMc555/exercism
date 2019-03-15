@@ -79,70 +79,60 @@ fn multiple_multiplications() {
 }
 
 #[test]
-#[ignore]
 fn addition_and_multiplication() {
     let command = "What is -3 plus 7 multiplied by -2?";
     assert_eq!(Some(-8), answer(command));
 }
 
 #[test]
-#[ignore]
 fn multiple_divisions() {
     let command = "What is -12 divided by 2 divided by -3?";
     assert_eq!(Some(2), answer(command));
 }
 
 #[test]
-#[ignore]
 fn unknown_operation() {
     let command = "What is 52 cubed?";
     assert!(answer(command).is_none());
 }
 
 #[test]
-#[ignore]
 fn non_math_question() {
     let command = "Who is the President of the United States?";
     assert!(answer(command).is_none());
 }
 
 #[test]
-#[ignore]
 fn reject_problem_missing_an_operand() {
     let command = "What is 1 plus?";
     assert!(answer(command).is_none());
 }
 
 #[test]
-#[ignore]
 fn reject_problem_with_no_operands_or_operators() {
     let command = "What is?";
     assert!(answer(command).is_none());
 }
 
 #[test]
-#[ignore]
 fn reject_two_operations_in_a_row() {
     let command = "What is 1 plus plus 2?";
     assert!(answer(command).is_none());
 }
 
 #[test]
-#[ignore]
 fn reject_two_numbers_in_a_row() {
     let command = "What is 1 plus 2 1?";
     assert!(answer(command).is_none());
 }
 
 #[test]
-#[ignore]
 fn reject_postfix_notation() {
     let command = "What is 1 2 plus?";
     assert!(answer(command).is_none());
 }
 
 #[test]
-#[ignore]
 fn reject_prefix_notation() {
     let command = "What is plus 1 2?";
     assert!(answer(command).is_none());
