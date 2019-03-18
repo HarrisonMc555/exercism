@@ -61,6 +61,7 @@ where T: Debug + Hash + PartialEq + Ord + Clone
     }
 
     pub fn is_subset(&self, other: &Self) -> bool {
+        for element in self
         unimplemented!(
             "Determine if the CustomSet struct is a subset of the other '{:?}' struct.",
             other
@@ -102,5 +103,38 @@ where T: Debug + Hash + PartialEq + Ord + Clone
         let mut hasher = DefaultHasher::new();
         element.hash(&mut hasher);
         hasher.finish()
+    }
+}
+
+pub struct Iter<'a, T> {
+    set: &'a CustomSet<T>,
+    outer_index: usize,
+    inner_index: usize,
+    seen: usize,
+}
+
+impl<'a, T> for Iter<'a, T> {
+    pub fn new(set: &CustomSet<T>) -> Self {
+        Iter {
+            set,
+            
+        }
+    }
+}
+
+impl<'a, T> Iterator for Iter<'a, T> {
+    type Item = T;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if outer_index >= self.set.mapping.len() {
+            return None;
+        }
+        if let Some()
+        for maybe_list in self.set.mapping[outer_index..] {
+            
+        }
+        while let 
+        let list = self.get(outer_index)?;
+        
     }
 }
