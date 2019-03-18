@@ -208,7 +208,6 @@ fn intersection_of_two_sets_with_shared_elements_is_a_set_of_the_shared_elements
 }
 
 #[test]
-#[ignore]
 fn difference_of_two_empty_sets_is_empty_set() {
     let set1: CustomSet<()> = CustomSet::new(&[]);
     let set2: CustomSet<()> = CustomSet::new(&[]);
@@ -216,7 +215,6 @@ fn difference_of_two_empty_sets_is_empty_set() {
 }
 
 #[test]
-#[ignore]
 fn difference_of_an_empty_and_non_empty_set_is_an_empty_set() {
     let set1 = CustomSet::new(&[]);
     let set2 = CustomSet::new(&[3, 2, 5]);
@@ -224,7 +222,6 @@ fn difference_of_an_empty_and_non_empty_set_is_an_empty_set() {
 }
 
 #[test]
-#[ignore]
 fn difference_of_a_non_empty_set_and_empty_set_is_the_non_empty_set() {
     let set1 = CustomSet::new(&[1, 2, 3, 4]);
     let set2 = CustomSet::new(&[]);
@@ -232,7 +229,6 @@ fn difference_of_a_non_empty_set_and_empty_set_is_the_non_empty_set() {
 }
 
 #[test]
-#[ignore]
 fn difference_of_two_non_empty_sets_is_elements_only_in_first_set_one() {
     let set1 = CustomSet::new(&[3, 2, 1]);
     let set2 = CustomSet::new(&[2, 4]);

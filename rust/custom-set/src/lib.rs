@@ -96,9 +96,14 @@ where
         result
     }
 
-    pub fn difference(&self, _other: &Self) -> Self {
-        // unimplemented!("Construct a new CustomSet struct that is a difference between current struct and the other struct '{:?}'.", other);
-        unimplemented!("Construct a new CustomSet struct that is a difference between current struct and the other struct.");
+    pub fn difference(&self, other: &Self) -> Self {
+        let mut result = CustomSet::<T>::new(&[]);
+        for elem in self {
+            if !other.contains(elem) {
+                result.add(elem.clone());
+            }
+        }
+        result
     }
 
     pub fn union(&self, _other: &Self) -> Self {
