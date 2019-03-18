@@ -86,9 +86,14 @@ where
         true
     }
 
-    pub fn intersection(&self, _other: &Self) -> Self {
-        // unimplemented!("Construct a new CustomSet struct that is an intersection between current struct and the other struct '{:?}'.", other);
-        unimplemented!("Construct a new CustomSet struct that is an intersection between current struct and the other struct.");
+    pub fn intersection(&self, other: &Self) -> Self {
+        let mut result = CustomSet::<T>::new(&[]);
+        for elem in self {
+            if other.contains(elem) {
+                result.add(elem.clone());
+            }
+        }
+        result
     }
 
     pub fn difference(&self, _other: &Self) -> Self {

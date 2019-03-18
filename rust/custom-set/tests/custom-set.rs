@@ -171,7 +171,6 @@ fn add_existing_element() {
 }
 
 #[test]
-#[ignore]
 fn intersecting_empty_sets_return_empty_set() {
     let set1: CustomSet<()> = CustomSet::new(&[]);
     let set2: CustomSet<()> = CustomSet::new(&[]);
@@ -179,7 +178,6 @@ fn intersecting_empty_sets_return_empty_set() {
 }
 
 #[test]
-#[ignore]
 fn intersecting_empty_set_with_non_empty_returns_empty_set() {
     let set1 = CustomSet::new(&[]);
     let set2 = CustomSet::new(&[3, 2, 5]);
@@ -187,7 +185,6 @@ fn intersecting_empty_set_with_non_empty_returns_empty_set() {
 }
 
 #[test]
-#[ignore]
 fn intersecting_non_empty_set_with_empty_returns_empty_set() {
     let set1 = CustomSet::new(&[1, 2, 3, 4]);
     let set2 = CustomSet::new(&[]);
@@ -195,7 +192,6 @@ fn intersecting_non_empty_set_with_empty_returns_empty_set() {
 }
 
 #[test]
-#[ignore]
 fn intersection_of_two_sets_with_no_shared_elements_is_an_empty_set() {
     let set1 = CustomSet::new(&[1, 2, 3]);
     let set2 = CustomSet::new(&[4, 5, 6]);
@@ -204,7 +200,6 @@ fn intersection_of_two_sets_with_no_shared_elements_is_an_empty_set() {
 }
 
 #[test]
-#[ignore]
 fn intersection_of_two_sets_with_shared_elements_is_a_set_of_the_shared_elements() {
     let set1 = CustomSet::new(&[1, 2, 3, 4]);
     let set2 = CustomSet::new(&[3, 2, 5]);
