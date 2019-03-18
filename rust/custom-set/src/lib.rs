@@ -1,4 +1,5 @@
 use std::collections::hash_map::DefaultHasher;
+use std::fmt::Debug;
 use std::hash::{Hash, Hasher};
 
 #[derive(Debug, PartialEq)]
@@ -9,7 +10,7 @@ pub struct CustomSet<T> {
 
 impl<T> CustomSet<T>
 where
-    T: Hash + PartialEq + Ord + Clone,
+    T: Debug + Hash + PartialEq + Ord + Clone,
 {
     const DEFAULT_CAPACITY: usize = 64;
 
@@ -61,7 +62,7 @@ where
     }
 
     pub fn is_subset(&self, other: &Self) -> bool {
-        for elem in self.into_iter() {
+        for elem in self {
             if !other.contains(elem) {
                 return false;
             }
@@ -74,26 +75,25 @@ where
     }
 
     pub fn is_disjoint(&self, other: &Self) -> bool {
-        // unimplemented!(
-        //     "Determine if the CustomSet struct and the other struct '{:?}' are disjoint.",
-        //     other
-        // );
-        unimplemented!(
-            "Determine if the CustomSet struct and the other struct are disjoint."
-        );
+        for elem in self {
+            if other.contains(elem) {
+                return false;
+            }
+        }
+        true
     }
 
-    pub fn intersection(&self, other: &Self) -> Self {
+    pub fn intersection(&self, _other: &Self) -> Self {
         // unimplemented!("Construct a new CustomSet struct that is an intersection between current struct and the other struct '{:?}'.", other);
         unimplemented!("Construct a new CustomSet struct that is an intersection between current struct and the other struct.");
     }
 
-    pub fn difference(&self, other: &Self) -> Self {
+    pub fn difference(&self, _other: &Self) -> Self {
         // unimplemented!("Construct a new CustomSet struct that is a difference between current struct and the other struct '{:?}'.", other);
         unimplemented!("Construct a new CustomSet struct that is a difference between current struct and the other struct.");
     }
 
-    pub fn union(&self, other: &Self) -> Self {
+    pub fn union(&self, _other: &Self) -> Self {
         // unimplemented!("Construct a new CustomSet struct that is an union between current struct and the other struct '{:?}'.", other);
         unimplemented!("Construct a new CustomSet struct that is an union between current struct and the other struct.");
     }
@@ -115,7 +115,7 @@ where
 
 impl<'a, T> IntoIterator for &'a CustomSet<T>
 where
-    T: Hash + PartialEq + Ord + Clone,
+    T: Debug + Hash + PartialEq + Ord + Clone,
 {
     type Item = &'a T;
     type IntoIter = Iter<'a, T>;
@@ -145,12 +145,17 @@ impl<'a, T> Iter<'a, T> {
 
 impl<'a, T> Iterator for Iter<'a, T>
 where
-    T: Hash + PartialEq + Ord + Clone,
+    T: Debug + Hash + PartialEq + Ord + Clone,
 {
     type Item = &'a T;
 
     fn next(&mut self) -> Option<Self::Item> {
         if self.outer_index >= self.set.mapping.len() {
+            println!(
+                "Index ({}) is too large (>= {})",
+                self.outer_index,
+                self.set.mapping.len()
+            );
             return None;
         }
         for (i, maybe_list) in
@@ -158,7 +163,7 @@ where
         {
             if let Some(list) = maybe_list {
                 if let Some(elem) = list.get(self.inner_index) {
-                    self.outer_index = i;
+                    self.outer_index = self.outer_index + i;
                     self.inner_index += 1;
                     return Some(elem);
                 }
