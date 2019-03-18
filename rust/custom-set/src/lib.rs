@@ -2,8 +2,11 @@ use std::collections::hash_map::DefaultHasher;
 use std::fmt::Debug;
 use std::hash::{Hash, Hasher};
 
-#[derive(Debug, PartialEq)]
-pub struct CustomSet<T> {
+#[derive(Debug, Eq)]
+pub struct CustomSet<T>
+where
+    T: Debug + Hash + PartialEq + Ord + Clone,
+{
     mapping: Vec<Option<Vec<T>>>,
     count: usize,
 }
@@ -125,14 +128,29 @@ where
     }
 }
 
-pub struct Iter<'a, T> {
+pub struct Iter<'a, T>
+where
+    T: Debug + Hash + PartialEq + Ord + Clone,
+{
     set: &'a CustomSet<T>,
     outer_index: usize,
     inner_index: usize,
     seen: usize,
 }
 
-impl<'a, T> Iter<'a, T> {
+impl<T> PartialEq for CustomSet<T>
+where
+    T: Debug + Hash + PartialEq + Ord + Clone,
+{
+    fn eq(&self, other: &CustomSet<T>) -> bool {
+        self.is_subset(other) && self.len() == other.len()
+    }
+}
+
+impl<'a, T> Iter<'a, T>
+where
+    T: Debug + Hash + PartialEq + Ord + Clone,
+{
     pub fn new(set: &'a CustomSet<T>) -> Self {
         Iter {
             set,

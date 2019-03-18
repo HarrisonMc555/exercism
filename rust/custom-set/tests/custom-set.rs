@@ -115,7 +115,6 @@ fn sets_with_no_elements_in_common_are_disjoint() {
 }
 
 #[test]
-#[ignore]
 fn empty_sets_are_equal() {
     let set1: CustomSet<()> = CustomSet::new(&[]);
     let set2: CustomSet<()> = CustomSet::new(&[]);
@@ -123,7 +122,6 @@ fn empty_sets_are_equal() {
 }
 
 #[test]
-#[ignore]
 fn empty_set_is_not_equal_to_a_non_empty_set() {
     let set1 = CustomSet::new(&[]);
     let set2 = CustomSet::new(&[1, 2, 3]);
@@ -131,7 +129,6 @@ fn empty_set_is_not_equal_to_a_non_empty_set() {
 }
 
 #[test]
-#[ignore]
 fn non_empty_set_is_not_equal_to_an_empty_set() {
     let set1 = CustomSet::new(&[1, 2, 3]);
     let set2 = CustomSet::new(&[]);
@@ -139,7 +136,6 @@ fn non_empty_set_is_not_equal_to_an_empty_set() {
 }
 
 #[test]
-#[ignore]
 fn sets_with_the_same_elements_are_equal() {
     let set1 = CustomSet::new(&[1, 2]);
     let set2 = CustomSet::new(&[2, 1]);
@@ -147,7 +143,6 @@ fn sets_with_the_same_elements_are_equal() {
 }
 
 #[test]
-#[ignore]
 fn sets_with_different_elements_are_not_equal() {
     let set1 = CustomSet::new(&[1, 2, 3]);
     let set2 = CustomSet::new(&[2, 1, 4]);
@@ -155,7 +150,6 @@ fn sets_with_different_elements_are_not_equal() {
 }
 
 #[test]
-#[ignore]
 fn add_to_empty_set() {
     let mut set = CustomSet::new(&[]);
     set.add(3);
@@ -163,7 +157,6 @@ fn add_to_empty_set() {
 }
 
 #[test]
-#[ignore]
 fn add_to_non_empty_set() {
     let mut set = CustomSet::new(&[1, 2, 4]);
     set.add(3);
@@ -171,7 +164,6 @@ fn add_to_non_empty_set() {
 }
 
 #[test]
-#[ignore]
 fn add_existing_element() {
     let mut set = CustomSet::new(&[1, 2, 3]);
     set.add(3);
