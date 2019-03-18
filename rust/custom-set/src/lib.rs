@@ -1,11 +1,8 @@
 use std::collections::hash_map::DefaultHasher;
-use std::fmt::Debug;
 use std::hash::{Hash, Hasher};
 
-#[derive(Debug, Eq)]
+#[derive(Debug)]
 pub struct CustomSet<T>
-where
-    T: Debug + Hash + PartialEq + Ord + Clone,
 {
     mapping: Vec<Option<Vec<T>>>,
     count: usize,
@@ -13,7 +10,7 @@ where
 
 impl<T> CustomSet<T>
 where
-    T: Debug + Hash + PartialEq + Ord + Clone,
+    T: Hash + PartialEq + Ord + Clone,
 {
     const DEFAULT_CAPACITY: usize = 64;
 
@@ -131,7 +128,7 @@ where
 
 impl<'a, T> IntoIterator for &'a CustomSet<T>
 where
-    T: Debug + Hash + PartialEq + Ord + Clone,
+    T: Hash + PartialEq + Ord + Clone,
 {
     type Item = &'a T;
     type IntoIter = Iter<'a, T>;
@@ -143,7 +140,7 @@ where
 
 pub struct Iter<'a, T>
 where
-    T: Debug + Hash + PartialEq + Ord + Clone,
+    T: Hash + PartialEq + Ord + Clone,
 {
     set: &'a CustomSet<T>,
     outer_index: usize,
@@ -153,7 +150,7 @@ where
 
 impl<T> PartialEq for CustomSet<T>
 where
-    T: Debug + Hash + PartialEq + Ord + Clone,
+    T: Hash + PartialEq + Ord + Clone,
 {
     fn eq(&self, other: &CustomSet<T>) -> bool {
         self.is_subset(other) && self.len() == other.len()
@@ -162,7 +159,7 @@ where
 
 impl<T> Clone for CustomSet<T>
 where
-    T: Debug + Hash + PartialEq + Ord + Clone,
+    T: Hash + PartialEq + Ord + Clone,
 {
     fn clone(&self) -> Self {
         let mut result = CustomSet::<T>::new(&[]);
@@ -175,7 +172,7 @@ where
 
 impl<'a, T> Iter<'a, T>
 where
-    T: Debug + Hash + PartialEq + Ord + Clone,
+    T: Hash + PartialEq + Ord + Clone,
 {
     pub fn new(set: &'a CustomSet<T>) -> Self {
         Iter {
@@ -189,7 +186,8 @@ where
 
 impl<'a, T> Iterator for Iter<'a, T>
 where
-    T: Debug + Hash + PartialEq + Ord + Clone,
+    // T: Hash + PartialEq + Ord + Clone,
+    T: Hash + PartialEq + Ord + Clone,
 {
     type Item = &'a T;
 
