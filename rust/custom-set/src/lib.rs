@@ -106,9 +106,12 @@ where
         result
     }
 
-    pub fn union(&self, _other: &Self) -> Self {
-        // unimplemented!("Construct a new CustomSet struct that is an union between current struct and the other struct '{:?}'.", other);
-        unimplemented!("Construct a new CustomSet struct that is an union between current struct and the other struct.");
+    pub fn union(&self, other: &Self) -> Self {
+        let mut result: CustomSet<_> = self.clone();
+        for elem in other {
+            result.add(elem.clone());
+        }
+        result
     }
 
     pub fn len(&self) -> usize {
@@ -154,6 +157,19 @@ where
 {
     fn eq(&self, other: &CustomSet<T>) -> bool {
         self.is_subset(other) && self.len() == other.len()
+    }
+}
+
+impl<T> Clone for CustomSet<T>
+where
+    T: Debug + Hash + PartialEq + Ord + Clone,
+{
+    fn clone(&self) -> Self {
+        let mut result = CustomSet::<T>::new(&[]);
+        for elem in self {
+            result.add(elem.clone());
+        }
+        result
     }
 }
 
