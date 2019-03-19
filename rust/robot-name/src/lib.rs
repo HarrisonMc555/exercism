@@ -29,7 +29,7 @@ impl Robot {
     }
 
     pub fn reset_name(&mut self) {
-        unimplemented!("Assign a new unique name to the robot.");
+        self.name = Robot::create_random_name()
     }
 
     fn create_random_name() -> String {
