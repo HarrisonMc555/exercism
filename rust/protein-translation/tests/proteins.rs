@@ -7,35 +7,30 @@ fn test_methionine() {
 }
 
 #[test]
-#[ignore]
 fn test_cysteine_tgt() {
     let info = proteins::parse(make_pairs());
     assert_eq!(info.name_for("UGU"), Some("cysteine"));
 }
 
 #[test]
-#[ignore]
 fn test_stop() {
     let info = proteins::parse(make_pairs());
     assert_eq!(info.name_for("UAA"), Some("stop codon"));
 }
 
 #[test]
-#[ignore]
 fn test_valine() {
     let info = proteins::parse(make_pairs());
     assert_eq!(info.name_for("GUU"), Some("valine"));
 }
 
 #[test]
-#[ignore]
 fn test_isoleucine() {
     let info = proteins::parse(make_pairs());
     assert_eq!(info.name_for("AUU"), Some("isoleucine"));
 }
 
 #[test]
-#[ignore]
 fn test_arginine_name() {
     let info = proteins::parse(make_pairs());
     assert_eq!(info.name_for("CGA"), Some("arginine"));
@@ -44,28 +39,24 @@ fn test_arginine_name() {
 }
 
 #[test]
-#[ignore]
 fn empty_is_invalid() {
     let info = proteins::parse(make_pairs());
     assert!(info.name_for("").is_none());
 }
 
 #[test]
-#[ignore]
 fn x_is_not_shorthand_so_is_invalid() {
     let info = proteins::parse(make_pairs());
     assert!(info.name_for("VWX").is_none());
 }
 
 #[test]
-#[ignore]
 fn too_short_is_invalid() {
     let info = proteins::parse(make_pairs());
     assert!(info.name_for("AU").is_none());
 }
 
 #[test]
-#[ignore]
 fn too_long_is_invalid() {
     let info = proteins::parse(make_pairs());
     assert!(info.name_for("ATTA").is_none());
