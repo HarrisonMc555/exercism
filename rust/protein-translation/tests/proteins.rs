@@ -63,7 +63,6 @@ fn too_long_is_invalid() {
 }
 
 #[test]
-#[ignore]
 fn test_translates_rna_strand_into_correct_protein() {
     let info = proteins::parse(make_pairs());
     assert_eq!(
@@ -73,7 +72,6 @@ fn test_translates_rna_strand_into_correct_protein() {
 }
 
 #[test]
-#[ignore]
 fn test_stops_translation_if_stop_codon_present() {
     let info = proteins::parse(make_pairs());
     assert_eq!(
@@ -83,7 +81,6 @@ fn test_stops_translation_if_stop_codon_present() {
 }
 
 #[test]
-#[ignore]
 fn test_stops_translation_of_longer_strand() {
     let info = proteins::parse(make_pairs());
     assert_eq!(
@@ -93,7 +90,6 @@ fn test_stops_translation_of_longer_strand() {
 }
 
 #[test]
-#[ignore]
 fn test_invalid_codons() {
     let info = proteins::parse(make_pairs());
     assert!(info.of_rna("CARROT").is_none());
