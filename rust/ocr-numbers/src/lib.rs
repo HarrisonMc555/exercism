@@ -16,25 +16,29 @@ pub fn convert(input: &str) -> Result<String, Error> {
 }
 
 fn convert_digit(input: &DigitVec) -> Option<char> {
-    DIGIT_MAP.get(&LargeChar::new(input)).map(Clone::clone)
+    DIGIT_MAP
+        .get(&LargeChar::try_parse(input)?)
+        .map(Clone::clone)
 }
 
 lazy_static! {
     static ref ZERO: LargeChar = {
-        LargeChar::new(&vec![
+        LargeChar::try_parse(&vec![
             vec![' ', '_', ' '],
             vec!['|', ' ', '|'],
             vec!['|', '_', '|'],
             vec![' ', ' ', ' '],
         ])
+        .unwrap()
     };
     static ref ONE: LargeChar = {
-        LargeChar::new(&vec![
+        LargeChar::try_parse(&vec![
             vec![' ', ' ', '|'],
             vec![' ', ' ', '|'],
             vec![' ', ' ', '|'],
             vec![' ', ' ', ' '],
         ])
+        .unwrap()
     };
     static ref DIGIT_MAP: HashMap<LargeChar, char> = {
         let mut m = HashMap::new();
@@ -50,9 +54,25 @@ struct LargeChar {
 }
 
 impl LargeChar {
-    pub fn new(lines: &[Vec<char>]) -> Self {
-        LargeChar {
-            lines: lines.to_vec(),
+    pub fn try_parse(lines: &DigitVec) -> Option<Self> {
+        if !LargeChar::is_valid(lines) {
+            return None;
         }
+        let lc = LargeChar {
+            lines: lines.to_vec(),
+        };
+        Some(lc)
+    }
+
+    const NUM_ROWS: usize = 4;
+    const NUM_COLS: usize = 3;
+    fn is_valid(lines: &DigitVec) -> bool {
+        if lines.len() != LargeChar::NUM_ROWS {
+            return false;
+        }
+        if !lines.iter().all(|row| row.len() == LargeChar::NUM_COLS) {
+            return false;
+        }
+        true
     }
 }
