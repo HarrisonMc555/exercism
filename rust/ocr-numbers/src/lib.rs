@@ -3,8 +3,6 @@ use std::collections::HashMap;
 #[macro_use]
 extern crate lazy_static;
 
-type DigitVec = Vec<Vec<char>>;
-
 #[derive(Debug, PartialEq)]
 pub enum Error {
     InvalidRowCount(usize),
@@ -12,31 +10,45 @@ pub enum Error {
 }
 
 pub fn convert(input: &str) -> Result<String, Error> {
-    let lines: DigitVec =
+    let lines: Vec<Vec<char>> =
         input.lines().map(|line| line.chars().collect()).collect();
     let rem = lines.len() % LargeChar::NUM_ROWS;
     if rem != 0 {
         return Err(Error::InvalidRowCount(rem));
     }
-    let strings = lines
+    let strings: Result<Vec<String>, Error> = lines
         .chunks(LargeChar::NUM_ROWS)
-        // .map(|rows| convert_line(&rows.to_vec()));
-        .map(convert_line);
-
-    unimplemented!("Convert the input '{}' to a string", input);
+        .map(convert_line)
+        .collect();
+    strings.map(|ss| ss.join(""))
 }
 
-fn convert_line(rows: &DigitVec) -> Result<String, Error> {
+fn convert_line(rows: &[Vec<char>]) -> Result<String, Error> {
     let num_cols = rows[0].len();
     if let Some(invalid_length) =
         rows.iter().map(Vec::len).find(|len| *len != num_cols)
     {
         return Err(Error::InvalidColumnCount(invalid_length));
     }
-    Ok("".to_string())
+    let rem = num_cols % LargeChar::NUM_ROWS;
+    if rem != 0 {
+        return Err(Error::InvalidRowCount(rem));
+    }
+    let num_digits = num_cols / LargeChar::NUM_COLS;
+    let vec_of_digit_lines = (0..num_digits).map(|i| {
+        let first_index = i;
+        let last_index = i + LargeChar::NUM_COLS;
+        rows.iter()
+            .map(|row| row[first_index..last_index].to_vec())
+            .collect::<Vec<_>>()
+    });
+    let chars = vec_of_digit_lines
+        .map(|x| convert_digit(&x.to_vec()))
+        .collect::<Result<Vec<_>, Error>>()?;
+    Ok(chars.iter().collect())
 }
 
-fn convert_digit(rows: &DigitVec) -> Result<char, Error> {
+fn convert_digit(rows: &[Vec<char>]) -> Result<char, Error> {
     Ok(DIGIT_MAP
         .get(&LargeChar::try_parse(rows)?)
         .map(Clone::clone)
@@ -79,7 +91,7 @@ impl LargeChar {
     const NUM_ROWS: usize = 4;
     const NUM_COLS: usize = 3;
 
-    pub fn try_parse(rows: &DigitVec) -> Result<Self, Error> {
+    pub fn try_parse(rows: &[Vec<char>]) -> Result<Self, Error> {
         if rows.len() != LargeChar::NUM_ROWS {
             return Err(Error::InvalidRowCount(rows.len()));
         }
