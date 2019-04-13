@@ -20,7 +20,7 @@ pub fn convert(input: &str) -> Result<String, Error> {
         .chunks(LargeChar::NUM_ROWS)
         .map(convert_line)
         .collect();
-    strings.map(|ss| ss.join(""))
+    strings.map(|lines| lines.join(","))
 }
 
 fn convert_line(rows: &[Vec<char>]) -> Result<String, Error> {
@@ -30,14 +30,14 @@ fn convert_line(rows: &[Vec<char>]) -> Result<String, Error> {
     {
         return Err(Error::InvalidColumnCount(invalid_length));
     }
-    let rem = num_cols % LargeChar::NUM_ROWS;
+    let rem = num_cols % LargeChar::NUM_COLS;
     if rem != 0 {
-        return Err(Error::InvalidRowCount(rem));
+        return Err(Error::InvalidColumnCount(num_cols));
     }
     let num_digits = num_cols / LargeChar::NUM_COLS;
     let vec_of_digit_lines = (0..num_digits).map(|i| {
-        let first_index = i;
-        let last_index = i + LargeChar::NUM_COLS;
+        let first_index = i * LargeChar::NUM_COLS;
+        let last_index = first_index + LargeChar::NUM_COLS;
         rows.iter()
             .map(|row| row[first_index..last_index].to_vec())
             .collect::<Vec<_>>()
@@ -55,29 +55,45 @@ fn convert_digit(rows: &[Vec<char>]) -> Result<char, Error> {
         .unwrap_or('?'))
 }
 
+fn strs_to_large_char(strs: &[&str]) -> LargeChar {
+    let rows: Vec<Vec<char>> =
+        strs.iter().map(|s| s.chars().collect()).collect();
+    LargeChar::try_parse(&rows).unwrap()
+}
+
 lazy_static! {
-    static ref ZERO: LargeChar = {
-        LargeChar::try_parse(&vec![
-            vec![' ', '_', ' '],
-            vec!['|', ' ', '|'],
-            vec!['|', '_', '|'],
-            vec![' ', ' ', ' '],
-        ])
-        .unwrap()
-    };
-    static ref ONE: LargeChar = {
-        LargeChar::try_parse(&vec![
-            vec![' ', ' ', '|'],
-            vec![' ', ' ', '|'],
-            vec![' ', ' ', '|'],
-            vec![' ', ' ', ' '],
-        ])
-        .unwrap()
-    };
+    static ref ZERO: LargeChar =
+        strs_to_large_char(&[" _ ", "| |", "|_|", "   "],);
+    static ref ONE: LargeChar =
+        strs_to_large_char(&["   ", "  |", "  |", "   "],);
+    static ref TWO: LargeChar =
+        strs_to_large_char(&[" _ ", " _|", "|_ ", "   "],);
+    static ref THREE: LargeChar =
+        strs_to_large_char(&[" _ ", " _|", " _|", "   "],);
+    static ref FOUR: LargeChar =
+        strs_to_large_char(&["   ", "|_|", "  |", "   "],);
+    static ref FIVE: LargeChar =
+        strs_to_large_char(&[" _ ", "|_ ", " _|", "   "],);
+    static ref SIX: LargeChar =
+        strs_to_large_char(&[" _ ", "|_ ", "|_|", "   "],);
+    static ref SEVEN: LargeChar =
+        strs_to_large_char(&[" _ ", "  |", "  |", "   "],);
+    static ref EIGHT: LargeChar =
+        strs_to_large_char(&[" _ ", "|_|", "|_|", "   "],);
+    static ref NINE: LargeChar =
+        strs_to_large_char(&[" _ ", "|_|", " _|", "   "],);
     static ref DIGIT_MAP: HashMap<LargeChar, char> = {
         let mut m = HashMap::new();
         m.insert(ZERO.clone(), '0');
         m.insert(ONE.clone(), '1');
+        m.insert(TWO.clone(), '2');
+        m.insert(THREE.clone(), '3');
+        m.insert(FOUR.clone(), '4');
+        m.insert(FIVE.clone(), '5');
+        m.insert(SIX.clone(), '6');
+        m.insert(SEVEN.clone(), '7');
+        m.insert(EIGHT.clone(), '8');
+        m.insert(NINE.clone(), '9');
         m
     };
 }
