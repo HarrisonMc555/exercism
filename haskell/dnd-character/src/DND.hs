@@ -4,7 +4,8 @@ module DND ( Character(..)
            , character
            ) where
 
-import Test.QuickCheck (Gen)
+import Test.QuickCheck (Gen, choose)
+import Control.Monad (replicateM)
 
 data Character = Character
   { name         :: String
@@ -22,8 +23,10 @@ modifier :: Int -> Int
 modifier value = (value - 10) `div` 2
 
 ability :: Gen Int
-ability =
-  error "You need to implement this generator."
+ability = do
+  dice <- replicateM 4 $ choose (1, 6)
+  let smallestDie = minimum dice
+  return $ sum dice - smallestDie
 
 character :: Gen Character
 character =
