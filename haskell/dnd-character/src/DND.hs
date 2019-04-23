@@ -19,8 +19,7 @@ data Character = Character
   deriving (Show, Eq)
 
 modifier :: Int -> Int
-modifier =
-  error "You need to implement this function."
+modifier value = (value - 10) `div` 2
 
 ability :: Gen Int
 ability =
