@@ -42,20 +42,3 @@ tracePathBetween start end tree = reverse <$> maybeBackwardsPath
 
 findMaybe :: (a -> Maybe b) -> [a] -> Maybe b
 findMaybe f = listToMaybe . mapMaybe f
-
-fancyShow :: Show a => Tree a -> String
-fancyShow = unlines . fancyShowHelper 0
-  where fancyShowHelper level (Node label children) =
-          let thisLine = repeatN level " | " ++ show label
-          in thisLine : concatMap (fancyShowHelper (level + 1)) children
-        repeatN n x = concat . take n $ repeat x
-          
-
-leaf v = Node v []
-
-simple = Node "parent" [ leaf "x"
-                       , leaf "sibling"
-                       ]
-
-fancyPrint :: (Show a) => Tree a -> IO ()
-fancyPrint = putStrLn . fancyShow
