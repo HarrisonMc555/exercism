@@ -13,8 +13,7 @@ fromPovHelper stack searchValue tree@(Node root children)
       in Just $ addMaybeChild tree maybeNewChild
   | otherwise =
       let newStack = tree : stack
-          newRoot = findMaybe (fromPovHelper newStack searchValue) children
-      in flip addChild tree <$> newRoot
+      in findMaybe (fromPovHelper newStack searchValue) children
 
 addChild :: Tree a -> Tree a -> Tree a
 addChild (Node root children) child = Node root (child : children)
@@ -32,7 +31,24 @@ recreateFromStack toRemove (Node root children:rest) =
   in Just (Node root newChildren)
 
 tracePathBetween :: Eq a => a -> a -> Tree a -> Maybe [a]
-tracePathBetween from to tree = error "You need to implement this function."
+tracePathBetween _ _ _ = error "You need to implement this function."
 
 findMaybe :: (a -> Maybe b) -> [a] -> Maybe b
 findMaybe f = listToMaybe . mapMaybe f
+
+fancyShow :: Show a => Tree a -> String
+fancyShow = unlines . fancyShowHelper 0
+  where fancyShowHelper level (Node label children) =
+          let thisLine = repeatN level " | " ++ show label
+          in thisLine : concatMap (fancyShowHelper (level + 1)) children
+        repeatN n x = concat . take n $ repeat x
+          
+
+leaf v = Node v []
+
+simple = Node "parent" [ leaf "x"
+                       , leaf "sibling"
+                       ]
+
+fancyPrint :: (Show a) => Tree a -> IO ()
+fancyPrint = putStrLn . fancyShow
