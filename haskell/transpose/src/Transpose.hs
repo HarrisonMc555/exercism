@@ -28,4 +28,4 @@ padListsDescending _ [] = []
 padListsDescending x xss =
   let lengths = [length xs | xs <- xss]
       pad xs ls = padRight x (maximum ls) xs
-  in map (uncurry pad) $ zip xss (tails lengths)
+  in zipWith pad xss (tails lengths)
