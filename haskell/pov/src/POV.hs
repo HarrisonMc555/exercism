@@ -8,7 +8,7 @@ fromPOV = fromPovHelper []
 
 fromPovHelper :: Eq a => [Tree a] -> a -> Tree a -> Maybe (Tree a)
 fromPovHelper stack searchValue tree@(Node root children)
-  | searchValue == root =
+  | root == searchValue =
       let maybeNewChild = recreateFromStack root stack
       in Just $ addMaybeChild tree maybeNewChild
   | otherwise =
@@ -31,7 +31,14 @@ recreateFromStack toRemove (Node root children:rest) =
   in Just (Node root newChildren)
 
 tracePathBetween :: Eq a => a -> a -> Tree a -> Maybe [a]
-tracePathBetween _ _ _ = error "You need to implement this function."
+tracePathBetween start end tree = reverse <$> maybeBackwardsPath
+  where maybeBackwardsPath = newTree >>= tracePathBetweenHelper [] end
+        newTree = fromPOV start tree
+        tracePathBetweenHelper :: Eq a => [a] -> a -> Tree a -> Maybe [a]
+        tracePathBetweenHelper path searchValue (Node root children)
+          | root == searchValue = Just newPath
+          | otherwise = findMaybe (tracePathBetweenHelper newPath searchValue) children
+            where newPath = root : path
 
 findMaybe :: (a -> Maybe b) -> [a] -> Maybe b
 findMaybe f = listToMaybe . mapMaybe f
