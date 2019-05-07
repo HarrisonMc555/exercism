@@ -28,11 +28,30 @@ data Card = Card { suit :: Suit
                  }
           deriving (Show, Eq, Ord)
 
+type Hand = [Card]
+
+data Score = Score { partialScore :: PartialScore
+                   , remainingHand :: Hand
+                   }
+             deriving (Show, Eq)
+
+data PartialScore = None
+                  | HighCard Rank
+                  | Pair Rank
+                  | TwoPair Rank Rank -- High, low
+                  | ThreeOfAKind Rank
+                  | Straight Rank -- Highest card
+                  | Flush [Rank] -- Highest to lowest
+                  | FullHouse Rank Rank -- High, low
+                  | FourOfAKind Rank
+                  | StraightFlush Rank -- Highest card
+                  | RoyalFlush
+
 bestHands :: [String] -> Maybe [String]
 bestHands hands = do let _cards = map maybeReadHand hands
                      error "You need to implement this function!"
 
-maybeReadHand :: String -> Maybe [Card]
+maybeReadHand :: String -> Maybe Hand
 maybeReadHand = mapM maybeReadCard . words
 
 maybeReadCard :: String -> Maybe Card
