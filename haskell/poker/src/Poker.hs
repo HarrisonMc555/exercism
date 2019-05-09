@@ -46,10 +46,13 @@ data PartialScore = None
                   | FourOfAKind Rank
                   | StraightFlush Rank -- Highest card
                   | RoyalFlush
+                  deriving (Show, Eq)
 
 bestHands :: [String] -> Maybe [String]
 bestHands hands = do let _cards = map maybeReadHand hands
                      error "You need to implement this function!"
+
+-- scoreHand :: Hand -> Score
 
 maybeReadHand :: String -> Maybe Hand
 maybeReadHand = mapM maybeReadCard . words
