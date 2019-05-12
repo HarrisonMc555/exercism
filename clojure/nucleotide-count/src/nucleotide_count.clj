@@ -1,5 +1,4 @@
-(ns nucleotide-count
-  (:require [clojure.string :as string]))
+(ns nucleotide-count)
 
 (def ^:private empty-nucleotides {\A 0 \C 0 \T 0 \G 0})
 
