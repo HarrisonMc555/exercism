@@ -1,11 +1,11 @@
 module Poker (bestHands) where
 
-import Data.Char (toUpper)
-import Data.Foldable (foldr, find, null)
-import Data.Map.Strict as Map (empty, insertWith, toList)
-import Data.List (sort, sortOn)
-import Data.Maybe (fromMaybe, listToMaybe, catMaybes)
-import Data.Ord (Down(Down))
+import           Data.Char       (toUpper)
+import           Data.Foldable   (find, foldr, null)
+import           Data.List       (sort, sortOn)
+import           Data.Map.Strict as Map (empty, insertWith, toList)
+import           Data.Maybe      (catMaybes, fromMaybe, listToMaybe)
+import           Data.Ord        (Down (Down))
 
 data Suit = Diamond
           | Heart
@@ -38,7 +38,7 @@ data Card = Card { suit :: Suit
 
 type Hand = [Card]
 
-data Score = Score { partialScore :: PartialScore
+data Score = Score { partialScore  :: PartialScore
                    , remainingHand :: Hand
                    }
              deriving (Show)
@@ -50,7 +50,7 @@ instance Eq Score where
 instance Ord Score where
   compare (Score part1 rem1) (Score part2 rem2) =
     case compare part1 part2 of
-      EQ -> if rem1 == rem2 then EQ else compare (score rem1) (score rem2)
+      EQ    -> if rem1 == rem2 then EQ else compare (score rem1) (score rem2)
       other -> other
 
 data PartialScore = None
@@ -229,15 +229,15 @@ maximumMay xs
   | otherwise = Just $ maximum xs
 
 allEqual :: Eq a => [a] -> Bool
-allEqual [] = True
+allEqual []     = True
 allEqual (x:xs) = all (== x) xs
 
 
 isSucc :: (Enum a, Eq a) => [a] -> Bool
-isSucc [] = True
-isSucc [_] = True
+isSucc []       = True
+isSucc [_]      = True
 isSucc (x:y:zs) | y == succ x = isSucc $ y:zs
-isSucc _ = False
+isSucc _        = False
 
 orderPair :: (Ord a) => a -> a -> (a, a)
 orderPair x y = (big, small)
@@ -300,25 +300,25 @@ prettyCard (Card s r) = prettySuit s ++ prettyRank r
 prettySuit :: Suit -> String
 prettySuit s = case s of
                  Diamond -> "D"
-                 Heart -> "H"
-                 Spade -> "S"
-                 Club -> "C"
+                 Heart   -> "H"
+                 Spade   -> "S"
+                 Club    -> "C"
 
 prettyRank :: Rank -> String
 prettyRank r = case r of
-                 Two -> "2"
+                 Two   -> "2"
                  Three -> "3"
-                 Four -> "4"
-                 Five -> "5"
-                 Six -> "6"
+                 Four  -> "4"
+                 Five  -> "5"
+                 Six   -> "6"
                  Seven -> "7"
                  Eight -> "8"
-                 Nine -> "9"
-                 Ten -> "10"
-                 Jack -> "J"
+                 Nine  -> "9"
+                 Ten   -> "10"
+                 Jack  -> "J"
                  Queen -> "Q"
-                 King -> "K"
-                 Ace -> "A"
+                 King  -> "K"
+                 Ace   -> "A"
 
 instance Show Suit where
   show = prettySuit
