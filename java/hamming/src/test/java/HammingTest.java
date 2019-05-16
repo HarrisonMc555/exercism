@@ -77,7 +77,6 @@ public class HammingTest {
   public void testValidatesFirstStrandNotLonger() {
     expectedException.expect(IllegalArgumentException.class);
     expectedException.expectMessage("leftStrand and rightStrand must be of equal length.");
-
     new Hamming("AATG", "AAA");
   }
 
@@ -85,7 +84,6 @@ public class HammingTest {
   public void testValidatesSecondStrandNotLonger() {
     expectedException.expect(IllegalArgumentException.class);
     expectedException.expectMessage("leftStrand and rightStrand must be of equal length.");
-
     new Hamming("ATA", "AGTG");
   }
 }
