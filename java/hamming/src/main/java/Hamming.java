@@ -1,13 +1,22 @@
 class Hamming {
 
-  Hamming(String leftStrand, String rightStrand) {
+  private String leftStrand, rightStrand;
 
-    throw new UnsupportedOperationException(
-        "Delete this statement and write your own implementation.");
+  Hamming(String leftStrand, String rightStrand) {
+    if (leftStrand.length() != rightStrand.length()) {
+      throw new IllegalArgumentException("leftStrand and rightStrand must be of equal length.");
+    }
+    this.leftStrand = leftStrand;
+    this.rightStrand = rightStrand;
   }
 
   int getHammingDistance() {
-    throw new UnsupportedOperationException(
-        "Delete this statement and write your own implementation.");
+    int num_differences = 0;
+    for (int i = 0; i < leftStrand.length(); i++) {
+      if (leftStrand.charAt(i) != rightStrand.charAt(i)) {
+        num_differences++;
+      }
+    }
+    return num_differences;
   }
 }
