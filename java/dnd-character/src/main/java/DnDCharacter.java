@@ -34,7 +34,8 @@ class DnDCharacter {
   }
 
   int modifier(int input) {
-    return divideRoundDown(input - 10, 2);
+    // return divideRoundDown(input - 10, 2);
+    return 4;
   }
 
   int getStrength() {

@@ -3,6 +3,7 @@ import java.util.stream.IntStream;
 class Hamming {
 
   private String leftStrand, rightStrand;
+  private int distance;
 
   Hamming(String leftStrand, String rightStrand) {
     if (leftStrand.length() != rightStrand.length()) {
@@ -10,13 +11,14 @@ class Hamming {
     }
     this.leftStrand = leftStrand;
     this.rightStrand = rightStrand;
+    this.distance =
+        (int)
+            IntStream.range(0, leftStrand.length())
+                .filter(i -> leftStrand.charAt(i) != rightStrand.charAt(i))
+                .count();
   }
 
   int getHammingDistance() {
-    int num_differences = 0;
-    return (int)
-        IntStream.range(0, leftStrand.length())
-            .filter(i -> leftStrand.charAt(i) != rightStrand.charAt(i))
-            .count();
+    return distance;
   }
 }
