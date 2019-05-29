@@ -1,4 +1,4 @@
-import org.junit.Ignore
+
 import org.junit.Test
 import kotlin.test.assertEquals
 
@@ -27,5 +27,4 @@ class ReverseStringTest {
     fun testAPalindrome() {
         assertEquals("racecar", reverse("racecar"))
     }
-
 }

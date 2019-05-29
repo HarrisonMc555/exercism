@@ -1,5 +1,4 @@
 import org.junit.Test
-import org.junit.Ignore
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.Month
@@ -41,5 +40,4 @@ class GigasecondTest {
 
         assertEquals(LocalDateTime.of(2046, Month.OCTOBER, 3, 1, 46, 39), gigaSecond.date)
     }
-
 }

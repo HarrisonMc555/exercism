@@ -1,5 +1,4 @@
 import org.junit.Test
-import org.junit.Ignore
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
@@ -54,5 +53,4 @@ class PangramTest {
     fun mixedCaseDuplicatedCharacters() {
         assertFalse(Pangram.isPangram("the quick brown fox jumps over with lazy FX"))
     }
-
 }

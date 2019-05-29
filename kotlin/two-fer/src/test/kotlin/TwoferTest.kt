@@ -26,5 +26,4 @@ class TwoferTest {
     fun emptyStringGiven() {
         assertEquals("One for , one for me.", twofer(""))
     }
-
 }

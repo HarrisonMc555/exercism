@@ -15,7 +15,7 @@ class Anagram(source: String) {
 
   fun countLetters(word: String): Map<Char, Int> {
     return word.fold(mutableMapOf<Char, Int>()) {
-      acc: MutableMap<Char, Int>, letter: Char -> 
+      acc: MutableMap<Char, Int>, letter: Char ->
       acc.put(letter, acc.getOrDefault(letter, 0) + 1)
       acc
     }
