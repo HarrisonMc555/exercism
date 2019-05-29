@@ -2,12 +2,18 @@ use rand::distributions::{Distribution, Uniform};
 use rand::{thread_rng, Rng};
 use std::iter;
 
+#[derive(Debug, Copy, Clone)]
+enum CodingDirection {
+    Encode,
+    Decode,
+}
+
 pub fn encode(key: &str, message: &str) -> Option<String> {
-    process(key, message, encode_char)
+    process(key, message, CodingDirection::Encode)
 }
 
 pub fn decode(key: &str, message: &str) -> Option<String> {
-    process(key, message, decode_char)
+    process(key, message, CodingDirection::Decode)
 }
 
 pub fn encode_random(message: &str) -> (String, String) {
@@ -19,10 +25,11 @@ pub fn encode_random(message: &str) -> (String, String) {
     (key, encoded)
 }
 
-fn process<F>(key: &str, message: &str, process_fn: F) -> Option<String>
-where
-    F: Fn(char, char) -> Option<char>,
-{
+fn process(
+    key: &str,
+    message: &str,
+    direction: CodingDirection,
+) -> Option<String> {
     if message.is_empty() || key.is_empty() {
         return None;
     }
@@ -30,7 +37,7 @@ where
         message
             .chars()
             .zip(key.chars().cycle())
-            .map(|(mc, kc)| process_fn(kc, mc))
+            .map(|(mc, kc)| process_char(kc, mc, direction))
             .collect::<Option<Vec<_>>>()?
             .iter()
             .cloned()
@@ -40,21 +47,20 @@ where
 
 const NUM_LETTERS: u8 = 26;
 
-fn encode_char(key_char: char, message_char: char) -> Option<char> {
+fn process_char(
+    key_char: char,
+    message_char: char,
+    direction: CodingDirection,
+) -> Option<char> {
     let start_char = get_start_char(message_char)?;
     let message_index = message_char as u8 - start_char;
     let key_index = key_char as u8 - get_start_char(key_char)?;
-    let new_index = (message_index + key_index) % NUM_LETTERS;
-    let new_char = start_char + new_index;
-    Some(new_char as char)
-}
-
-fn decode_char(key_char: char, message_char: char) -> Option<char> {
-    let start_char = get_start_char(message_char)?;
-    let message_index = message_char as u8 - start_char;
-    let key_index = key_char as u8 - get_start_char(key_char)?;
-    dbg!((message_index, NUM_LETTERS, key_index));
-    let new_index = dbg!(message_index + NUM_LETTERS - key_index) % NUM_LETTERS;
+    let new_index = match direction {
+        CodingDirection::Encode => (message_index + key_index) % NUM_LETTERS,
+        CodingDirection::Decode => {
+            (message_index + NUM_LETTERS - key_index) % NUM_LETTERS
+        }
+    };
     let new_char = start_char + new_index;
     Some(new_char as char)
 }
