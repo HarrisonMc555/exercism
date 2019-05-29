@@ -1,29 +1,40 @@
+use rand::distributions::{Distribution, Uniform};
+use rand::{thread_rng, Rng};
+use std::iter;
+
 pub fn encode(key: &str, message: &str) -> Option<String> {
-    Some(message
-        .chars()
-        .zip(key.chars().cycle())
-        .map(|(mc, kc)| encode_char(kc, mc))
-        .collect::<Option<Vec<_>>>()?
-        .iter()
-        .cloned()
-        .collect())
+    process(key, message, encode_char)
 }
 
 pub fn decode(key: &str, message: &str) -> Option<String> {
-    Some(message
-        .chars()
-        .zip(key.chars().cycle())
-        .map(|(mc, kc)| decode_char(kc, mc))
-        .collect::<Option<Vec<_>>>()?
-        .iter()
-        .cloned()
-        .collect())
+    process(key, message, decode_char)
 }
 
-pub fn encode_random(s: &str) -> (String, String) {
-    unimplemented!(
-        "Generate random key with only a-z chars and encode {}. Return tuple (key, encoded s)",
-        s
+pub fn encode_random(message: &str) -> (String, String) {
+    let mut rng = thread_rng();
+    let key = random_key(&mut rng);
+    // This should never panic if we implement the random_key function
+    // correctly
+    let encoded = encode(&key, message).unwrap();
+    (key, encoded)
+}
+
+fn process<F>(key: &str, message: &str, process_fn: F) -> Option<String>
+where
+    F: Fn(char, char) -> Option<char>,
+{
+    if message.is_empty() || key.is_empty() {
+        return None;
+    }
+    Some(
+        message
+            .chars()
+            .zip(key.chars().cycle())
+            .map(|(mc, kc)| process_fn(kc, mc))
+            .collect::<Option<Vec<_>>>()?
+            .iter()
+            .cloned()
+            .collect(),
     )
 }
 
@@ -53,5 +64,31 @@ fn get_start_char(c: char) -> Option<u8> {
         Some(b'a')
     } else {
         None
+    }
+}
+
+fn random_key<R>(rng: &mut R) -> String
+where
+    R: Rng,
+{
+    const MIN_KEY_LEN: usize = 100;
+    const MAX_KEY_LEN: usize = 300;
+    let key_len = rng.gen_range(MIN_KEY_LEN, MAX_KEY_LEN + 1);
+    iter::repeat(())
+        .map(|()| rng.sample(LowerCaseAlphabetic))
+        .take(key_len)
+        .collect()
+}
+
+#[derive(Debug)]
+pub struct LowerCaseAlphabetic;
+
+// Stolen from Alphanumeric and Standard
+impl Distribution<char> for LowerCaseAlphabetic {
+    fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> char {
+        const GEN_ASCII_STR_CHARSET: &[u8] = b"abcdefghijklmnopqrstuvwxyz";
+        let range = Uniform::new(0, GEN_ASCII_STR_CHARSET.len());
+        let index = range.sample(rng);
+        GEN_ASCII_STR_CHARSET[index as usize] as char
     }
 }
