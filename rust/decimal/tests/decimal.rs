@@ -148,7 +148,6 @@ fn test_gt_positive_and_negative() {
 }
 
 #[test]
-#[ignore]
 fn test_gt_varying_negative_precisions() {
     assert!(decimal("-0.01") > decimal("-0.1"));
     assert!(decimal("-0.1") > decimal("-1.0"));
@@ -158,7 +157,6 @@ fn test_gt_varying_negative_precisions() {
 
 // test signed properties
 #[test]
-#[ignore]
 fn test_negatives() {
     assert!(Decimal::try_from("-1").is_some());
     assert_eq!(decimal("0") - decimal("1"), decimal("-1"));

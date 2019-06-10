@@ -289,7 +289,7 @@ impl Ord for Decimal {
             (Sign::Positive, Sign::Positive) => (),
             (Sign::Positive, Sign::Negative) => return Ordering::Greater,
             (Sign::Negative, Sign::Positive) => return Ordering::Less,
-            (Sign::Negative, Sign::Negative) => return other.cmp(self),
+            (Sign::Negative, Sign::Negative) => return other.negated().cmp(&self.negated()),
         }
         // Now we know that both are positive
         match (self.is_zero(), other.is_zero()) {
