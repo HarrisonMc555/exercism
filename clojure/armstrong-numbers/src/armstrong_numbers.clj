@@ -6,17 +6,16 @@
 ;; understand is why they're using `mapv` and `resq` instead of `map` and
 ;; `reverse`. I think it's because it will all have to be evaluated anyways, so
 ;; trying to be lazy doesn't help much.
-(defn- digits
-  ([num] (digits num 10))
+(defn- digits-backwards
+  ([num] (digits-backwards num 10))
   ([num base] (->> num
               (iterate #(quot % base))
               (take-while pos?)
-              (mapv #(mod % base))
-              (rseq))))
+              (mapv #(mod % base)))))
 
 (defn armstrong? [x]
-  (let [x-digits (vec (digits x))
-        num-of-digits (count x-digits)
-        powered-digits (map #(math/expt %1 num-of-digits) x-digits)
+  (let [x-digits-backwards (digits-backwards x)
+        num-of-digits (count x-digits-backwards)
+        powered-digits (map #(math/expt %1 num-of-digits) x-digits-backwards)
         sum (reduce + powered-digits)]
     (= x sum)))
