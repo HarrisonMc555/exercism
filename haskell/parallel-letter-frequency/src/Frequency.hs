@@ -37,4 +37,3 @@ mapReduce mapStrat mapFunc reduceStrat reduceFunc input =
 _frequency :: Int -> [Text] -> Map Char Int
 _frequency nWorkers = Prelude.foldr addText empty
   where addText t m = Data.Text.foldr increment m t
-

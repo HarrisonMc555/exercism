@@ -14,7 +14,7 @@ specs :: Spec
 specs = describe "find" $ for_ bases $ for_ cases . test
   where
     -- Data.Array supports arbitrary indexing. Does your implementation?
-    bases = [ 0, 1, -9 ]
+    bases = [ 0 {- , 1, -9 -} ]
 
     test base Case{..} = it (description ++ " (base " ++ show base ++ ")") $
       find (fromListWithBase base array) value `shouldBe` (+ base) <$> expected

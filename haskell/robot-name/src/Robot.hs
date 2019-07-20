@@ -1,8 +1,8 @@
 module Robot (Robot, mkRobot, resetName, robotName) where
 
-import Data.IORef (IORef, newIORef, readIORef, modifyIORef)
-import Control.Monad.Random (Rand, RandomGen, evalRandIO, getRandomR)
-import Control.Monad (replicateM, liftM2)
+import Data.IORef
+import System.Random
+import Control.Monad.Random
 
 newtype RobotImpl = RobotImpl { name :: String } deriving (Show, Eq)
 type Robot = IORef RobotImpl
@@ -10,7 +10,8 @@ type Robot = IORef RobotImpl
 mkRobot :: IO Robot
 mkRobot = do
   s <- createName
-  newIORef (RobotImpl s)
+  r <- newIORef (RobotImpl s)
+  return r
 
 resetName :: Robot -> IO ()
 resetName robot = do
@@ -41,4 +42,4 @@ digits :: RandomGen g => Int -> Rand g String
 digits = randomSequence digit
 
 randomSequence :: (RandomGen g) => Rand g a -> Int -> Rand g [a]
-randomSequence r n = replicateM n r
+randomSequence r n = sequence (replicate n r)

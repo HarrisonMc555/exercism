@@ -4,11 +4,9 @@ import Data.Maybe (isJust, fromJust)
 import Data.List (find, stripPrefix, isPrefixOf)
 import Data.Char (isAlpha)
 
--- Translate a phrase into Pig Latin.
 translate :: String -> String
 translate = mapWords translateWord
 
--- Translate a single word into Pig Latin.
 translateWord :: String -> String
 translateWord s
   | isJust vowelResult   = pigVowel (fromJust vowelResult)
@@ -18,25 +16,16 @@ translateWord s
         consantResult = splitConsonants s
         pigVowel (pre, rest)     = pre ++ rest ++ pigLatinSuffix
         pigConsonant (pre, rest) = rest ++ pre ++ pigLatinSuffix
-        pigLatinSuffix = "ay"
 
--- Splits word into beginning vowel portion and rest if it starts with vowels.
-splitVowels :: String -> Maybe (String, String)
-splitVowels = splitLetters vowelClusters isVowel
+pigLatinSuffix :: String
+pigLatinSuffix = "ay"
 
--- Splits word into beginning consonant portion and rest if it starts with
--- consonants.
-splitConsonants :: String -> Maybe (String, String)
-splitConsonants s
-  | charThenQu = if isConsonant (head prefix) then Just pair else Nothing
-  | otherwise  = splitLetters consonantClusters isConsonant s
-  where pair@(prefix, _) = splitAt 3 s
-        charThenQu = length prefix == 3 && drop 1 prefix == "qu"
+splitPrefix :: Eq a => [a] -> [a] -> Maybe ([a], [a])
+splitPrefix prefix list = let p = stripPrefix prefix list
+  in flip splitAt list . const (length prefix) <$> p
 
--- Splits word into beginning portion then rest as determined by list of
--- prefixes and function to apply to first character.
-splitLetters :: [String] -> (Char -> Bool) -> String -> Maybe (String, String)
-splitLetters ss f s
+splitLetters :: (Char -> Bool) -> [String] -> String -> Maybe (String, String)
+splitLetters f ss s
   | null s         = Nothing
   | isJust cluster = cluster
   | f c            = Just ([c], cs)
@@ -45,10 +34,18 @@ splitLetters ss f s
         cs      = drop 1 s
         cluster = find (`isPrefixOf` s) ss >>= flip splitPrefix s
 
--- Split list into prefix and rest.
-splitPrefix :: Eq a => [a] -> [a] -> Maybe ([a], [a])
-splitPrefix prefix list = let p = stripPrefix prefix list
-  in flip splitAt list . const (length prefix) <$> p
+splitVowels :: String -> Maybe (String, String)
+splitVowels = splitLetters isVowel vowelClusters
+
+splitConsonants :: String -> Maybe (String, String)
+splitConsonants s
+  | thenQu    = if isConsonant (head prefix) then Just pair else Nothing
+  | otherwise = splitLetters isConsonant consonantClusters s
+  where pair@(prefix, _) = splitAt 3 s
+        thenQu = length prefix == 3 && drop 1 prefix == "qu"
+
+mapWords :: (String -> String) -> String -> String
+mapWords f = unwords . map f . words
 
 isVowel :: Char -> Bool
 isVowel = (`elem` vowels)
@@ -71,6 +68,3 @@ consonantClusters = [ "ch"
                     , "th"
                     , "sch"
                     ]
-
-mapWords :: (String -> String) -> String -> String
-mapWords f = unwords . map f . words

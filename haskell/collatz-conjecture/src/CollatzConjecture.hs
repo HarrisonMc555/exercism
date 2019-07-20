@@ -23,4 +23,3 @@ collatzList = iterateAccumLength nextCollatz
 iterateAccumLength :: Integral n => (a -> a) -> a -> [(n, a)]
 iterateAccumLength = go
   where go f = zip [0..] . iterate f
-
