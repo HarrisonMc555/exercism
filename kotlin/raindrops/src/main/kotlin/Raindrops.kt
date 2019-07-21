@@ -1,13 +1,14 @@
 object Raindrops {
     fun convert(input: Int): String {
-        val factor_sounds = arrayOf(
-            Pair(3, "Pling"),
-            Pair(5, "Plang"),
-            Pair(7, "Plong")
+        val factorSounds = mapOf(
+            3 to "Pling",
+            5 to "Plang",
+            7 to "Plong"
         )
-        val to_keep = factor_sounds.filter { (x, _) -> input % x == 0 }
-        val sounds = to_keep.map { (_, s) -> s }
-        val combined = sounds.joinToString(separator = "")
+        val combined = factorSounds
+                .filter { (x, _) -> input % x == 0}
+                .map { (_, s) -> s }
+                .joinToString(separator = "")
         if (combined == "") {
             return input.toString()
         } else {
