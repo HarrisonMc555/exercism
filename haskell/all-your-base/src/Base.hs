@@ -1,22 +1,27 @@
-module Base (rebase) where
+module Base (rebase, Error(..)) where
 
 import Control.Monad ((>=>))
 
-rebase :: Integral a => a -> a -> [a] -> Maybe [a]
-rebase inputBase outputBase
-  | outputBase <= 1 = const Nothing
-  | inputBase  <= 1 = const Nothing
-  | otherwise = unDigits inputBase >=> digits outputBase
+data Error a = InvalidInputBase
+             | InvalidOutputBase
+             | InvalidDigit a
+             deriving (Show, Eq)
 
-unDigits :: Integral a => a -> [a] -> Maybe a
-unDigits base = foldl acc (Just 0)
+rebase :: Integral a => a -> a -> [a] -> Either (Error a) [a]
+rebase inputBase outputBase
+  | inputBase  <= 1 = const (Left InvalidInputBase)
+  | outputBase <= 1 = const (Left InvalidOutputBase)
+  | otherwise = unDigits inputBase >=> digits outputBase >=> Right
+
+unDigits :: Integral a => a -> [a] -> Either (Error a) a
+unDigits base = foldl acc (Right 0)
   where acc ds x
-          | x >= base = Nothing
-          | x < 0     = Nothing
+          | x >= base = Left (InvalidDigit x)
+          | x < 0     = Left (InvalidDigit x)
           | otherwise = (x +) . (base *) <$> ds
 
-digits :: Integral a => a -> a -> Maybe [a]
+digits :: Integral a => a -> a -> Either (Error a) [a]
 digits base = fmap reverse . digits'
-  where digits' 0 = Just []
+  where digits' 0 = Right []
         digits' n = let (q, r) = n `quotRem` base
                     in (r :) <$> digits' q
