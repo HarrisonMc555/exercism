@@ -61,17 +61,17 @@ solution = head $ do
 
 isValidHouse :: House -> Bool
 isValidHouse (House resident' color' drink' smoke' pet' location') =
-  all (uncurry iff) [ (resident' == Englishman, color' == Red)
-                    , (resident' == Spaniard, pet' == Dog)
-                    , (drink' == Coffee, color' == Green)
-                    , (resident' == Ukrainian, drink' == Tea)
-                    , (smoke' == OldGold, pet' == Snails)
-                    , (smoke' == Kools, color' == Yellow)
-                    , (drink' == Milk, location' == Third)
-                    , (resident' == Norwegian, location' == First)
-                    , (smoke' == LuckyStrike, drink' == OrangeJuice)
-                    , (resident' == Japanese, smoke' == Parliaments)
-                    ]
+  all (uncurry (==)) [ (resident' == Englishman, color' == Red)
+                     , (resident' == Spaniard, pet' == Dog)
+                     , (drink' == Coffee, color' == Green)
+                     , (resident' == Ukrainian, drink' == Tea)
+                     , (smoke' == OldGold, pet' == Snails)
+                     , (smoke' == Kools, color' == Yellow)
+                     , (drink' == Milk, location' == Third)
+                     , (resident' == Norwegian, location' == First)
+                     , (smoke' == LuckyStrike, drink' == OrangeJuice)
+                     , (resident' == Japanese, smoke' == Parliaments)
+                     ]
 
 isValidLocations :: [House] -> Bool
 isValidLocations houses =
@@ -94,14 +94,15 @@ uniqueHouses houses =
 validHouses :: [House]
 validHouses = filter isValidHouse allHouses
 
+{-# ANN allHouses "HLint: ignore Use <$>" #-}
 allHouses :: [House]
 allHouses = do
-  resident' <- enumAll
-  color'    <- enumAll
-  drink'    <- enumAll
-  smoke'    <- enumAll
-  pet'      <- enumAll
-  location' <- enumAll
+  resident' <- enumerate
+  color'    <- enumerate
+  drink'    <- enumerate
+  smoke'    <- enumerate
+  pet'      <- enumerate
+  location' <- enumerate
   return $ House resident' color' drink' smoke' pet' location'
 
 houseWith :: Eq a => (House -> a) -> a -> [House] -> House
@@ -109,8 +110,8 @@ houseWith what value = fromJust . find ((== value) . what)
 
 -- Helper Functions
 
-enumAll :: (Enum a, Bounded a) => [a]
-enumAll = [minBound..maxBound]
+enumerate :: (Enum a, Bounded a) => [a]
+enumerate = [minBound..maxBound]
 
 iff :: Bool -> Bool -> Bool
 iff True  True  = True

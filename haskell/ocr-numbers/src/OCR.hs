@@ -14,7 +14,7 @@ convertLine :: [String] -> String
 convertLine = splitDigits >>> map convertDigit
 
 convertDigit :: [String] -> Char
-convertDigit = (flip lookup) ocrDigits >>>
+convertDigit = flip lookup ocrDigits >>>
                fmap intToDigit >>>
                fromMaybe '?'
 

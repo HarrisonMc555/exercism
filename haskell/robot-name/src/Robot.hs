@@ -10,8 +10,7 @@ type Robot = IORef RobotImpl
 mkRobot :: IO Robot
 mkRobot = do
   s <- createName
-  r <- newIORef (RobotImpl s)
-  return r
+  newIORef (RobotImpl s)
 
 resetName :: Robot -> IO ()
 resetName robot = do
@@ -42,4 +41,4 @@ digits :: RandomGen g => Int -> Rand g String
 digits = randomSequence digit
 
 randomSequence :: (RandomGen g) => Rand g a -> Int -> Rand g [a]
-randomSequence r n = sequence (replicate n r)
+randomSequence r n = replicateM n r

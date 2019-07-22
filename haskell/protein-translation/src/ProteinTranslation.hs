@@ -3,11 +3,11 @@ module ProteinTranslation(proteins) where
 import Data.List (find)
 import Data.List.Split (chunksOf)
 import Control.Arrow ((>>>))
-import Control.Monad (sequence, liftM)
+import Control.Monad (sequence)
 
 proteins :: String -> Maybe [String]
 proteins = rnaToCodons >>> map codonToAminoAcid >>>
-           sequence >>> liftM (takeWhile notStop)
+           sequence >>> fmap (takeWhile notStop)
   where notStop = (/= stopCodon)
 
 rnaToCodons :: String -> [(Char, Char, Char)]
