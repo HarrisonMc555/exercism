@@ -7,7 +7,7 @@ object Raindrops {
         )
         val combined = factorSounds
                 .filter { (x, _) -> input % x == 0}
-                .map { (_, s) -> s }
+                .values
                 .joinToString(separator = "")
         if (combined == "") {
             return input.toString()
