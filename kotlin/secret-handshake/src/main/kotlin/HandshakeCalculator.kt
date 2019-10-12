@@ -8,7 +8,9 @@ class HandshakeCalculator {
                     result.add(signal)
                 }
             }
-            if (input and 16 != 0) {
+            val lastIndex = Signal.values().size
+            val bitFlag = 1 shl lastIndex
+            if (input and bitFlag != 0) {
                 result.reverse()
             }
             return result
