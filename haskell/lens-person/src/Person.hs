@@ -11,10 +11,8 @@ module Person
   , setCurrentStreet
   ) where
 
-import Control.Arrow ((>>>))
-import Control.Lens (makeLenses, (^.), (.~), over, mapped)
--- import Data.Time.Calendar (Day)
-import Data.Time.Calendar (Day, fromGregorian)
+import Control.Lens (makeLenses, (^.), (.~), over)
+import Data.Time.Calendar (Day)
 import Data.Time.Lens (months)
 
 data Person = Person { _name    :: Name
