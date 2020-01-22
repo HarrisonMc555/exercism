@@ -1,3 +1,7 @@
+#[macro_use]
+extern crate lazy_static;
+
+use regex::Regex;
 use std::cmp;
 use std::cmp::Ordering;
 use std::ops::{Add, AddAssign, Mul, Sub};
@@ -6,7 +10,6 @@ const BASE_U32: u32 = 10;
 const BASE_U8: u8 = 10;
 
 /// Type implementing arbitrary-precision decimal arithmetic
-// #[derive(Debug, Clone, Ord, PartialOrd, Eq, PartialEq)]
 #[derive(Debug, Clone, Eq, PartialEq)]
 pub struct Decimal {
     sign: Sign,
@@ -34,31 +37,25 @@ impl Decimal {
     }
 
     pub fn try_from(input: &str) -> Option<Self> {
-        let mut digits = Vec::new();
-        let mut maybe_exponent = None;
-        let mut sign = Sign::Positive;
-
-        // TODO Refactor this
-        let mut has_sign = false;
-        for (index, c) in input.chars().enumerate() {
-            match c {
-                '+' if index == 0 => {
-                    sign = Sign::Positive;
-                    has_sign = true;
-                }
-                '-' if index == 0 => {
-                    sign = Sign::Negative;
-                    has_sign = true;
-                }
-                '0'..='9' => digits.push(c.to_digit(BASE_U32)? as u8),
-                '.' if maybe_exponent.is_none() => {
-                    let index = if has_sign { index - 1 } else { index };
-                    maybe_exponent = Some(index as i32 - 1);
-                }
-                _ => return None,
-            }
+        lazy_static! {
+            static ref RE: Regex =
+                Regex::new(r"(\+|-)?(\d+)(?:\.(\d+))?").unwrap();
         }
-        let exponent = maybe_exponent.unwrap_or(digits.len() as i32 - 1);
+        let caps = RE.captures(input)?;
+        let sign = if let Some(mat) = caps.get(1) {
+            match mat.as_str() {
+                "+" => Sign::Positive,
+                "-" => Sign::Negative,
+                _ => unreachable!(),
+            }
+        } else {
+            Sign::Positive
+        };
+        let mut digits = to_digits(caps.get(2).unwrap().as_str()).unwrap();
+        let exponent = (digits.len() - 1) as i32;
+        if let Some(mat) = caps.get(3) {
+            digits.extend(to_digits(mat.as_str()).unwrap());
+        }
         Some(Decimal::cleaned(digits, exponent, sign))
     }
 
@@ -91,9 +88,7 @@ impl Decimal {
             exponent,
             sign,
         };
-        // println!("Before stripping: {:?}", d);
         d.clean();
-        // println!("After stripping: {:?}", d);
         d
     }
 
@@ -160,8 +155,6 @@ impl Decimal {
             (Sign::Negative, Sign::Negative) => (),
         }
 
-        println!("add: {:?} + {:?}", self, other);
-
         let min_exponent = cmp::min(self.min_exponent(), other.min_exponent());
         let max_exponent = cmp::max(self.max_exponent(), other.max_exponent());
         let num_digits = (max_exponent - min_exponent + 1) as usize;
@@ -213,8 +206,6 @@ impl Decimal {
             return other.sub(&self).negated();
         }
 
-        println!("sub: {:?} - {:?}", self, other);
-
         let min_exponent = cmp::min(self.min_exponent(), other.min_exponent());
         let max_exponent = cmp::max(self.max_exponent(), other.max_exponent());
         let num_digits = (max_exponent - min_exponent + 1) as usize;
@@ -223,23 +214,16 @@ impl Decimal {
         let mut borrow: u8 = 0;
 
         for exponent in min_exponent..=max_exponent {
-            dbg!(exponent);
             let to_subtract = other.get_digit(exponent) + borrow;
-            dbg!(to_subtract);
             let mut self_digit = self.get_digit(exponent);
-            dbg!(self_digit);
             borrow = if to_subtract > self_digit {
                 self_digit += BASE_U8;
                 1
             } else {
                 0
             };
-            dbg!(borrow);
-            dbg!(self_digit);
             let difference = self_digit - to_subtract;
-            dbg!(difference);
             let index = (max_exponent - exponent) as usize;
-            dbg!(index);
             digits[index] = difference;
         }
 
@@ -251,7 +235,7 @@ impl Decimal {
 
         Decimal::cleaned(digits, exponent, self.sign)
     }
-    
+
     fn mul(&self, other: &Decimal) -> Decimal {
         let positive_result = other.digits.iter().enumerate().fold(
             Decimal::zero(),
@@ -263,11 +247,10 @@ impl Decimal {
                 result + copy
             },
         );
-        let sign = match (self.sign, other.sign) {
-            (Sign::Positive, Sign::Positive) => Sign::Positive,
-            (Sign::Positive, Sign::Negative) => Sign::Negative,
-            (Sign::Negative, Sign::Positive) => Sign::Negative,
-            (Sign::Negative, Sign::Negative) => Sign::Positive,
+        let sign = if self.sign == other.sign {
+            Sign::Positive
+        } else {
+            Sign::Negative
         };
         Decimal {
             sign,
@@ -369,4 +352,11 @@ impl Sign {
             Sign::Negative => Sign::Positive,
         }
     }
+}
+
+fn to_digits(string: &str) -> Option<Vec<u8>> {
+    string
+        .chars()
+        .map(|c| c.to_digit(BASE_U32).map(|d| d as u8))
+        .collect::<Option<Vec<_>>>()
 }
