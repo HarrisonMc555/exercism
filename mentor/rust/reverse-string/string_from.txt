@@ -1,0 +1,1 @@
+You don't actually need to call `String::from` in this case. The `graphemes` method takes a reference, so you can provide it a `&str`. When you call `String::from`, it's allocating an entirely new string, which will increase the space and time required for the function.

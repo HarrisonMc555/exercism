@@ -2,7 +2,7 @@ Nice solution! I'll admit, this crate didn't exist when we created this exercise
 
 I think you probably learned some valuable lessons about using external libraries ("crates") in Rust. However, there are a few lessons we wanted students to learn about iterators, collections, etc. Would you be interested in trying to solve this exercise without the `unicode_reverse` crate? We typically recommend using the `unicode_segmentation` crate. It provides the tools to correctly handle Unicode graphemes without providing the answer whole-cloth.
 
-Good luck your next iteration! Let me know if you have any questions.
+Good luck on your next iteration! Let me know if you have any questions.
 
 P.S. You may want to look into the [`collect`] method--it will be quite helpful!
 
