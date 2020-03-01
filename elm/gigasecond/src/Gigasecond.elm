@@ -1,12 +1,12 @@
 module Gigasecond exposing (add)
 
-import Time
-import Time.Extra
+import Time exposing (Posix, utc)
+import Time.Extra exposing (Interval(..))
 
 
-add : Time.Posix -> Time.Posix
+add : Posix -> Posix
 add timestamp =
-    Time.Extra.add Time.Extra.Second billion Time.utc timestamp
+    Time.Extra.add Second billion utc timestamp
 
 
 billion : Int
