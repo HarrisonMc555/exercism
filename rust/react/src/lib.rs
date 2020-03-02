@@ -92,9 +92,9 @@ where
     where
         F: 'a + Fn(&[T]) -> T,
     {
-        for dep_id in dependencies {
-            if !self.cell_exists(*dep_id) {
-                return Err(*dep_id);
+        for &dep_id in dependencies {
+            if !self.cell_exists(dep_id) {
+                return Err(dep_id);
             }
         }
         let function = Box::new(compute_func);
@@ -106,7 +106,7 @@ where
             function,
             dependencies,
             dependants,
-            cached_value: None,
+            value: None,
             callbacks: Vec::new(),
         };
         self.compute_cells.insert(id, compute_cell);
@@ -156,6 +156,7 @@ where
         match self.input_cells.get_mut(&id) {
             Some(cell) => {
                 cell.set_value(new_value);
+                self.update_dependencies(id);
                 true
             }
             None => false,
@@ -240,19 +241,37 @@ where
         }
     }
 
-    fn get_all_dependancies(&self, id: CellID) -> HashSet<CellID> {
-        let mut deps = HashSet::new();
-        deps.insert(id);
-        if let CellID::Compute(compute_id) = id {
-            let mut dep_ids = HashSet::new();
-            dep_ids.insert(id);
-            if let Some(cell) = self.compute_cells.get(&compute_id) {
-                for dep_id in cell.dependencies.iter() {
-                    deps.extend(self.get_all_dependancies(*dep_id));
-                }
-            }
-        };
-        deps
+    // fn get_all_dependancies(&self, id: CellID) -> HashSet<CellID> {
+    //     let mut deps = HashSet::new();
+    //     deps.insert(id);
+    //     if let CellID::Compute(compute_id) = id {
+    //         let mut dep_ids = HashSet::new();
+    //         dep_ids.insert(id);
+    //         if let Some(cell) = self.compute_cells.get(&compute_id) {
+    //             for dep_id in cell.dependencies.iter() {
+    //                 deps.extend(self.get_all_dependancies(*dep_id));
+    //             }
+    //         }
+    //     };
+    //     deps
+    // }
+
+    fn update_dependencies(&mut self, id: InputCellID) {
+        let cell = self.input_cells[&id];
+        for dependant_id in cell.dependants {
+            let dependant_cell = self.compute_cells[&dependant_id];
+            dependant_cell.update(&mut self);
+        }
+    }
+
+    pub fn calculate<F>(&mut self, dependencies: &[CellID], func: F) -> T
+    where F: 'a + Fn(&[T]) -> T,
+    {
+        let args: Vec<_> = dependencies
+            .iter()
+            .map(|dep| self.value(*dep).unwrap())
+            .collect();
+        func(&args)
     }
 }
 
@@ -282,7 +301,7 @@ struct ComputeCell<'a, T> {
     function: Box<dyn 'a + Fn(&[T]) -> T>,
     dependencies: Vec<CellID>,
     dependants: HashSet<ComputeCellID>,
-    cached_value: Option<T>,
+    value: T,
     callbacks: Vec<Box<dyn 'a + FnMut(T) -> ()>>,
 }
 
@@ -290,23 +309,22 @@ impl<'a, T> ComputeCell<'a, T>
 where
     T: Copy + Eq,
 {
-    pub fn compute(&mut self, reactor: &mut Reactor<'a, T>) -> Result<T, ()> {
-        if let Some(value) = self.cached_value {
-            return Ok(value);
+    pub fn update(&mut self, reactor: &mut Reactor<'a, T>) {
+        // let args: Vec<_> = self
+        //     .dependencies
+        //     .iter()
+        //     .map(|dep| reactor.value(*dep).unwrap())
+        //     .collect();
+        // self.value = (self.function)(&args);
+        self.value = reactor.calculate(&self.dependencies, self.function);
+        for dependant_id in self.dependants {
+            let dependant_cell = reactor.compute_cells[&dependant_id];
+            dependant_cell.update(reactor);
         }
-        let args: Vec<_> = self
-            .dependencies
-            .iter()
-            .map(|dep| reactor.value(*dep).ok_or(()))
-            .collect::<Result<_, _>>()?;
-        let value = (self.function)(&args);
-        self.cached_value = Some(value);
-        Ok(value)
     }
 
-    pub fn value(&mut self, reactor: &mut Reactor<'a, T>) -> Result<T, ()> {
-        self.compute(reactor)?;
-        self.cached_value.ok_or(())
+    pub fn value(&mut self, reactor: &mut Reactor<'a, T>) -> T {
+        self.value
     }
 
     pub fn add_dependant(&mut self, compute_id: ComputeCellID) {
