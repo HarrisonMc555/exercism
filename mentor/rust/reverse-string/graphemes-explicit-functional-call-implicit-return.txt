@@ -11,14 +11,11 @@ my_string.graphemes(is_extended)
 This is typically preferred over the "fully-qualified" syntax:
 
 ```rust
-Graphemes::graphemes(my_string, is_extended)
+UnicodeSegmentation::graphemes(my_string, is_extended)
 ```
-
-In addition, I would recommend trying out [implicit return statements]! They're considered idiomatic Rust and help reduce redundancy.
 
 It's not a big deal, but I think you'll find that it helps make your code easier to read!
 
 Good luck with the next exercise! Let me know if you have any questions.
 
 [`graphemes`]: https://docs.rs/unicode-segmentation/1.6.0/unicode_segmentation/trait.UnicodeSegmentation.html#tymethod.graphemes
-[implicit return statements]: https://doc.rust-lang.org/book/ch03-03-how-functions-work.html#functions-with-return-values
