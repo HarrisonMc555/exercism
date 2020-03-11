@@ -1,6 +1,6 @@
 This is great! Nice use of the `chars` iterator.
 
-One thing to keep in mind is that every time you call `collect` you are allocating and creating an entirely new data structure. In this case, you are creating a `Vec<char>`. However, you don't actually need this `Vec`--in the end, you want a `String`.
+One thing to keep in mind is that every time you call `collect` you are allocating and creating an entirely new data structure. In this case, you are creating a `Vec<char>`. However, you don't actually need this `Vec`—in the end, you want a `String`.
 
 Sometimes, allocating temporary data structures is necessary for certain algorithms or optimizations. However, in many situations, you can avoid these intermediary structures.
 
