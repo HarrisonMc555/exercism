@@ -1,6 +1,6 @@
 This is great! Excellent use of iterators, implicit returns, `collect`, etc. Also, nice work using the `unicode_segmentation` crate.
 
-Before you move on, I just want to point out a couple of things.
+Before you move on, I just want to point out one thing.
 
 If you look at the definition of the [`graphemes`] method, you'll notice that the first argument is `&self` (we can ignore the `'a`, it's irrelevant to this discussion). This means that we can call this function with "method" syntax, like so:
 
