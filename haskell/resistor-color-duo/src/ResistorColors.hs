@@ -14,7 +14,7 @@ data Color =
   deriving (Eq, Show, Read)
 
 value :: [Color] -> Int
-value = digitsToInt . map colorNum . reverse
+value = digitsToInt . map colorNum
 
 colorNum :: Color -> Int
 colorNum c = case c of
@@ -30,5 +30,6 @@ colorNum c = case c of
                White -> 9
 
 digitsToInt :: [Int] -> Int
-digitsToInt [] = 0
-digitsToInt (x:xs) = x + 10*digitsToInt xs
+digitsToInt =
+  let addDigit acc x = 10*acc + x
+  in foldl addDigit 0
