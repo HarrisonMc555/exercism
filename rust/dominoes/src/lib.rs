@@ -19,7 +19,7 @@ fn find_solution<T>(
     mut remaining: HashMultiSet<Domino<T>>,
 ) -> Option<Solution<T>>
 where
-    T: Ord + Clone + Hash
+    T: Ord + Clone + Hash,
 {
     if remaining.is_empty() {
         return cur_chain.get_solution();
@@ -42,7 +42,10 @@ where
     None
 }
 
-fn oriented_match<T: Eq + Clone>(domino: &Domino<T>, pip: &T) -> Option<Domino<T>> {
+fn oriented_match<T: Eq + Clone>(
+    domino: &Domino<T>,
+    pip: &T,
+) -> Option<Domino<T>> {
     if &domino.0 == pip {
         Some(domino.clone())
     } else if &domino.1 == pip {
@@ -76,9 +79,10 @@ impl<T: Ord> Chain<T> {
     }
 
     pub fn get_solution(self) -> Option<Solution<T>> {
-        match self.is_valid_loop() {
-            true => Some(self.dominoes),
-            false => None,
+        if self.is_valid_loop() {
+            Some(self.dominoes)
+        } else {
+            None
         }
     }
 

@@ -127,35 +127,30 @@ fn disconnected_simple() {
 }
 
 #[test]
-#[ignore]
 fn disconnected_double_loop() {
     let input = &[(1, 2), (2, 1), (3, 4), (4, 3)];
     assert_eq!(dominoes::chain(input), None);
 }
 
 #[test]
-#[ignore]
 fn disconnected_single_isolated() {
     let input = &[(1, 2), (2, 3), (3, 1), (4, 4)];
     assert_eq!(dominoes::chain(input), None);
 }
 
 #[test]
-#[ignore]
 fn need_backtrack() {
     let input = &[(1, 2), (2, 3), (3, 1), (2, 4), (2, 4)];
     assert_correct(input);
 }
 
 #[test]
-#[ignore]
 fn separate_loops() {
     let input = &[(1, 2), (2, 3), (3, 1), (1, 1), (2, 2), (3, 3)];
     assert_correct(input);
 }
 
 #[test]
-#[ignore]
 fn nine_elements() {
     let input = &[
         (1, 2),
