@@ -16,9 +16,9 @@ fn create_line(c: char, index: usize, num_chars: usize) -> String {
     let num_leading_spaces = num_chars - num_trailing_spaces - 1;
     let forward_string = format!(
         "{leading}{c}{trailing}",
-        trailing = " ".repeat(num_trailing_spaces),
         leading = " ".repeat(num_leading_spaces),
-        c = c
+        trailing = " ".repeat(num_trailing_spaces),
+        c = c,
     );
     let backward_string: String =
         forward_string.chars().rev().skip(1).collect();
@@ -28,7 +28,7 @@ fn create_line(c: char, index: usize, num_chars: usize) -> String {
 fn to_alphabet_index(c: char) -> usize {
     let c = c.to_ascii_uppercase();
     assert!(c.is_ascii_uppercase());
-    (c as usize - ALPHABET_INITIAL_CHAR_UPPERCASE as usize)
+    c as usize - ALPHABET_INITIAL_CHAR_UPPERCASE as usize
 }
 
 fn from_alphabet_index(index: usize) -> char {
