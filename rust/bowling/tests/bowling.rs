@@ -12,7 +12,7 @@ fn roll_returns_a_result() {
 fn you_can_not_roll_more_than_ten_pins_in_a_single_roll() {
     let mut game = BowlingGame::new();
 
-    assert_eq!(game.roll(11), Err(Error::NotEnoughPinsLeft));;
+    assert_eq!(game.roll(11), Err(Error::NotEnoughPinsLeft));
 }
 
 #[test]
@@ -55,7 +55,7 @@ fn a_roll_is_err_if_the_game_is_done() {
         let _ = game.roll(0);
     }
 
-    assert_eq!(game.roll(0), Err(Error::GameComplete));;
+    assert_eq!(game.roll(0), Err(Error::GameComplete));
 }
 
 #[test]
@@ -263,7 +263,7 @@ fn you_can_not_roll_more_than_ten_pins_in_a_single_frame() {
     let mut game = BowlingGame::new();
 
     assert!(game.roll(5).is_ok());
-    assert_eq!(game.roll(6), Err(Error::NotEnoughPinsLeft));;
+    assert_eq!(game.roll(6), Err(Error::NotEnoughPinsLeft));
 }
 
 #[test]
@@ -276,7 +276,7 @@ fn first_bonus_ball_after_a_final_strike_can_not_score_an_invalid_number_of_pins
 
     let _ = game.roll(10);
 
-    assert_eq!(game.roll(11), Err(Error::NotEnoughPinsLeft));;
+    assert_eq!(game.roll(11), Err(Error::NotEnoughPinsLeft));
 }
 
 #[test]
@@ -290,7 +290,7 @@ fn the_two_balls_after_a_final_strike_can_not_score_an_invalid_number_of_pins() 
     let _ = game.roll(10);
 
     assert!(game.roll(5).is_ok());
-    assert_eq!(game.roll(6), Err(Error::NotEnoughPinsLeft));;
+    assert_eq!(game.roll(6), Err(Error::NotEnoughPinsLeft));
 }
 
 #[test]
@@ -318,7 +318,7 @@ fn the_two_balls_after_a_final_strike_can_not_be_a_non_strike_followed_by_a_stri
     let _ = game.roll(10);
 
     assert!(game.roll(6).is_ok());
-    assert_eq!(game.roll(10), Err(Error::NotEnoughPinsLeft));;
+    assert_eq!(game.roll(10), Err(Error::NotEnoughPinsLeft));
 }
 
 #[test]
@@ -333,7 +333,7 @@ fn second_bonus_ball_after_a_final_strike_can_not_score_an_invalid_number_of_pin
     let _ = game.roll(10);
 
     assert!(game.roll(10).is_ok());
-    assert_eq!(game.roll(11), Err(Error::NotEnoughPinsLeft));;
+    assert_eq!(game.roll(11), Err(Error::NotEnoughPinsLeft));
 }
 
 #[test]
