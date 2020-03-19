@@ -124,55 +124,31 @@ impl<T> LinkedList<T> {
         unimplemented!()
     }
 }
-// impl<T> LinkedList<T> {
-//     pub fn new() -> Self {
-//         LinkedList {
-//             head: None,
-//             tail: ptr::null_mut(),
-//         }
-//     }
 
-//     pub fn len(&self) -> usize {
-//         let mut length = 0;
-//         let mut link = self.head;
-//         while let Some(node) = link {
-//             link = node.next;
-//             length += 1;
-//         }
-//         length
-//     }
+impl<T> LinkedList<T> {
+    /// Return a cursor positioned on the front element
+    pub fn cursor_front(&mut self) -> Cursor<'_, T> {
+        let head: *mut Node<T> = if let Some(node) = &self.head {
+            let x: Box<Node<T>> = *node;
+            &mut *x
+        } else {
+            ptr::null_mut()
+        };
+        Cursor {
+            node: head,
+            list: self,
+        }
+    }
 
-//     pub fn is_empty(&self) -> bool {
-//         self.head.is_none()
-//     }
-
-//     /// Return a cursor positioned on the front element
-//     pub fn cursor_front(&mut self) -> Cursor<'_, T> {
-//         let head: *mut Node<T> = if let Some(node) = self.head {
-//             Box::into_raw(node)
-//         } else {
-//             ptr::null_mut()
-//         };
-//         Cursor {
-//             node: head,
-//             list: self,
-//         }
-//     }
-
-//     /// Return a cursor positioned on the back element
-//     pub fn cursor_back(&mut self) -> Cursor<'_, T> {
-//         // let tail = if self.tail
-//         Cursor {
-//             node: self.tail,
-//             list: self,
-//         }
-//     }
-
-//     /// Return an iterator that moves from front to back
-//     pub fn iter(&self) -> Iter<'_, T> {
-//         unimplemented!()
-//     }
-// }
+    /// Return a cursor positioned on the back element
+    pub fn cursor_back(&mut self) -> Cursor<'_, T> {
+        // let tail = if self.tail
+        Cursor {
+            node: self.tail,
+            list: self,
+        }
+    }
+}
 
 // the cursor is expected to act as if it is at the position of an element
 // and it also has to work with and be able to insert into an empty list.
