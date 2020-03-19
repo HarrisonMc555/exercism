@@ -94,22 +94,21 @@ fn basics_push_back_pop_front() {
     }
 }
 
-// // ———————————————————————————————————————————————————————————
-// // Tests for Step 2: iteration
-// // ———————————————————————————————————————————————————————————
+// ———————————————————————————————————————————————————————————
+// Tests for Step 2: iteration
+// ———————————————————————————————————————————————————————————
 
-// #[test]
-// #[ignore]
-// fn iter() {
-//     let mut list: LinkedList<i32> = LinkedList::new();
-//     for num in 0..10 {
-//         list.push_back(num);
-//     }
+#[test]
+fn iter() {
+    let mut list: LinkedList<i32> = LinkedList::new();
+    for num in 0..10 {
+        list.push_back(num);
+    }
 
-//     for (num, &entered_num) in (0..10).zip(list.iter()) {
-//         assert_eq!(num, entered_num);
-//     }
-// }
+    for (num, &entered_num) in (0..10).zip(list.iter()) {
+        assert_eq!(num, entered_num);
+    }
+}
 
 // ———————————————————————————————————————————————————————————
 // Tests for Step 3: full cursor functionality

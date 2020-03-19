@@ -10,7 +10,7 @@ pub struct LinkedList<T> {
     tail: *mut Node<T>,
 }
 
-struct Node<T> {
+pub struct Node<T> {
     prev: *mut Node<T>,
     data: T,
     next: Link<T>,
@@ -23,7 +23,13 @@ pub struct Cursor<'a, T> {
     list: &'a mut LinkedList<T>,
 }
 
-pub struct Iter<'a, T>(std::marker::PhantomData<&'a T>);
+pub enum Iter<'a, T> {
+    Finished,
+    Unfinished {
+        front: &'a Node<T>,
+        back: *const Node<T>,
+    },
+}
 
 impl<T> LinkedList<T> {
     pub fn new() -> Self {
@@ -73,7 +79,7 @@ impl<T> LinkedList<T> {
             data: element,
             next: self.head.take(),
         });
-        
+
         let raw_head: *mut _ = &mut *new_head;
         if let Some(old_head) = &mut new_head.next {
             old_head.prev = raw_head;
@@ -308,17 +314,49 @@ impl<T> LinkedList<T> {
 //     // }
 // }
 
+impl<T> LinkedList<T> {
+    /// Return an iterator that moves from front to back
+    pub fn iter(&self) -> Iter<'_, T> {
+        if let Some(node) = &self.head {
+            Iter::Unfinished {
+                front: &node,
+                back: self.tail,
+            }
+        } else {
+            Iter::Finished
+        }
+    }
+}
+
 impl<'a, T> Iterator for Iter<'a, T> {
     type Item = &'a T;
 
     fn next(&mut self) -> Option<&'a T> {
-        unimplemented!()
+        let (front, &mut back) = match self {
+            Iter::Unfinished { front, back } => (front, back),
+            Iter::Finished => return None,
+        };
+        let data = &front.data;
+        if let Some(next_node) = &front.next {
+            if next_node.as_ref() as *const Node<T> == back {
+                // Front reached back
+                *self = Iter::Finished;
+            } else {
+                *self = Iter::Unfinished {
+                    front: &next_node,
+                    back: back,
+                };
+            }
+        } else {
+            *self = Iter::Finished
+        }
+        Some(data)
     }
 }
 
 impl<T> Default for LinkedList<T> {
     fn default() -> Self {
-        unimplemented!()
+        LinkedList::new()
     }
 }
 
