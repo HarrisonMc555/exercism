@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Determines whether a string is an isogram or not
 class Isogram
   def self.isogram?(str)

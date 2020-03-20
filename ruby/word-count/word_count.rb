@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Count the number of occurences of each word in a phrase
 class Phrase
   def initialize(phrase)

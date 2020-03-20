@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 # Create responses from a lackadaisical teenager
 class Bob
-  YELLING_QUESTION_RESPONSE = "Calm down, I know what I'm doing!".freeze
-  YELLING_RESPONSE = 'Whoa, chill out!'.freeze
-  QUESTION_RESPONSE = 'Sure.'.freeze
-  NOTHING_RESPONSE = 'Fine. Be that way!'.freeze
-  OTHER_RESPONSE = 'Whatever.'.freeze
+  YELLING_QUESTION_RESPONSE = "Calm down, I know what I'm doing!"
+  YELLING_RESPONSE = 'Whoa, chill out!'
+  QUESTION_RESPONSE = 'Sure.'
+  NOTHING_RESPONSE = 'Fine. Be that way!'
+  OTHER_RESPONSE = 'Whatever.'
   def self.hey(remark)
     yelling = yelling? remark
     question = question? remark
@@ -13,6 +15,7 @@ class Bob
     return YELLING_RESPONSE if yelling
     return QUESTION_RESPONSE if question
     return NOTHING_RESPONSE if nothing
+
     OTHER_RESPONSE
   end
 

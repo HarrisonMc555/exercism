@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Create a clean phone number
 class PhoneNumber
   def self.clean(phone)
@@ -11,6 +13,7 @@ class PhoneNumber
 
   def self.valid_phone_number?(phone)
     return false unless phone.length == 10
+
     area_code = phone[0..2]
     local_number = phone[3..-1]
     !area_code.start_with?('0', '1') && !local_number.start_with?('0', '1')

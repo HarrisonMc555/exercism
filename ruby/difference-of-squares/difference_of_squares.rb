@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Calculate square of sum and sum of squares
 class Squares
   def initialize(num)
@@ -20,6 +22,7 @@ class Squares
   end
 
   private
+
   def calc_square_of_sum
     (Helper.sum @nums)**2
   end
@@ -33,6 +36,7 @@ class Squares
   end
 end
 
+# Common helper methods
 class Helper
   def self.sum(enumerable)
     enumerable.reduce(0, :+)

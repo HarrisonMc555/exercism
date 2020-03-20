@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Determine if all brackets are matched
 class Brackets
   def self.paired?(str)
@@ -15,12 +17,13 @@ class Brackets
 
   def self.paired_brackets?(opening, closing)
     return false if opening.nil? || closing.nil?
+
     BRACKET_MAP[opening] == closing
   end
 
   BRACKET_MAP = {
     '[' => ']',
     '{' => '}',
-    '(' => ')'
+    '(' => ')',
   }.freeze
 end

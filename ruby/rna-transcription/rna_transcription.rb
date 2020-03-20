@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Produce the RNA complement to a given DNA strand
 class Complement
   def self.of_dna(rna)
@@ -8,6 +10,7 @@ class Complement
     unless DNA_TO_RNA.key? dna_nucleotide
       raise ArgumentError, 'Invalid DNA nucleotide'
     end
+
     DNA_TO_RNA[dna_nucleotide]
   end
 
@@ -15,6 +18,6 @@ class Complement
     'G' => 'C',
     'C' => 'G',
     'T' => 'A',
-    'A' => 'U'
+    'A' => 'U',
   }.freeze
 end

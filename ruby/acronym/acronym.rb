@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Create an  acronym for a phrase
 class Acronym
   def self.abbreviate(phrase)

@@ -1,9 +1,12 @@
+# frozen_string_literal: true
+
 # Calculate total steps for Collatz sequences
 class CollatzConjecture
   def self.steps(num)
     if num <= 0
       raise ArgumentError, 'Starting collatz sequence with non-positive number'
     end
+
     num_steps = 0
     while num != 1
       num_steps += 1

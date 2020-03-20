@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Determine whether or not a year is a leap year
 class Year
   def self.leap?(year)
