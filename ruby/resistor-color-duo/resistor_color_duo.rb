@@ -4,11 +4,7 @@
 class ResistorColorDuo
   def self.value(colors)
     colors[0...2].reduce('') do |s, c|
-      return nil if s.nil?
-
       n = COLOR_VALUE[c]
-      return nil if n.nil?
-
       s + n.to_s
     end.to_i
   end
