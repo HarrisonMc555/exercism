@@ -24,21 +24,14 @@ class Squares
   private
 
   def calc_square_of_sum
-    (Helper.sum @nums)**2
+    @nums.sum**2
   end
 
   def calc_sum_of_squares
-    Helper.sum(@nums.map { |x| x**2 })
+    @nums.map { |x| x**2 }.sum
   end
 
   def calc_difference
     square_of_sum - sum_of_squares
-  end
-end
-
-# Common helper methods
-class Helper
-  def self.sum(enumerable)
-    enumerable.reduce(0, :+)
   end
 end

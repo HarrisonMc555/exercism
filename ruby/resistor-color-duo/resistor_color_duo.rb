@@ -9,7 +9,7 @@ class ResistorColorDuo
       n = COLOR_VALUE[c]
       return nil if n.nil?
 
-      s.concat n.to_s
+      s + n.to_s
     end.to_i
   end
 

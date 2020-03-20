@@ -26,10 +26,3 @@ class ArmstrongNumbers
   private_class_method :armstrong_sum
   private_class_method :get_digits
 end
-
-# Common helper methods
-class Helper
-  def self.sum(enumerable)
-    enumerable.reduce(0, :+)
-  end
-end
