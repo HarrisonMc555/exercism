@@ -4,7 +4,8 @@
 class ResistorColorDuo
   def self.value(colors)
     colors
-      .map { |color| COLOR_VALUE[color].to_s }
+      .map(&COLOR_VALUE)
+      .map(&:to_s)
       .take(2)
       .join
       .to_i
