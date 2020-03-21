@@ -3,10 +3,11 @@
 # Convert resistor string values into numeric values
 class ResistorColorDuo
   def self.value(colors)
-    colors[0...2].reduce('') do |s, c|
-      n = COLOR_VALUE[c]
-      s + n.to_s
-    end.to_i
+    colors
+      .map { |color| COLOR_VALUE[color].to_s }
+      .take(2)
+      .join
+      .to_i
   end
 
   COLOR_VALUE =
