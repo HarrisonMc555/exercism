@@ -1,6 +1,6 @@
 This is great! Excellent use of iterators, `collect`, etc.
 
-I just have one suggestion: for your next solution, try out [implicit return statements]! They're considered idiomatic Rust and help reduce redundancy.
+I just have one suggestion: on the next exercise, try out [implicit return statements]! They're considered idiomatic Rust and help reduce redundancy.
 
 Great job! Looking forward to your next solution!
 
