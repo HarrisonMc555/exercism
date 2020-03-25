@@ -8,9 +8,10 @@ library:
   exposed-modules: Dominoes
   source-dirs: src
   ghc-options: -Wall
-  # dependencies:
-  # - foo       # List here the packages you
-  # - bar       # want to use in your solution.
+  dependencies:
+  - multiset
+  - safe
+  - extra
 
 tests:
   test:
