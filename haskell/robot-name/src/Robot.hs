@@ -1,44 +1,43 @@
-module Robot (Robot, mkRobot, resetName, robotName) where
+module Robot (Robot, initialState, mkRobot, resetName, robotName) where
 
-import Data.IORef
-import System.Random
-import Control.Monad.Random
+import Control.Arrow ((>>>))
+import Control.Concurrent.MVar (MVar, newMVar, putMVar, readMVar, takeMVar)
+import Control.Monad.State (StateT, modify, get)
+import Control.Monad.Trans (lift)
+import Data.Set (Set)
+import qualified Data.Set as Set
+import System.Random (randomRIO)
 
-newtype RobotImpl = RobotImpl { name :: String } deriving (Show, Eq)
-type Robot = IORef RobotImpl
+newtype Robot = Robot { robotNameVar :: MVar String }
+type RunState = Set String
 
-mkRobot :: IO Robot
-mkRobot = do
-  s <- createName
-  newIORef (RobotImpl s)
+initialState :: RunState
+initialState = Set.empty
 
-resetName :: Robot -> IO ()
-resetName robot = do
-  s <- createName
-  modifyIORef robot (\_ -> RobotImpl s)
+randomUniqueName :: StateT RunState IO String
+randomUniqueName = do
+  name <- lift createName
+  takenNames <- get
+  if Set.member name takenNames
+    then randomUniqueName
+    else do
+    modify $ Set.insert name
+    return name
+
+mkRobot :: StateT RunState IO Robot
+mkRobot = fmap Robot $ randomUniqueName >>= lift . newMVar
+
+resetName :: Robot -> StateT RunState IO ()
+resetName (Robot name) = do
+  oldName <- lift $ takeMVar name
+  randomUniqueName >>= lift . putMVar name
+  modify $ Set.delete oldName
+  
 
 robotName :: Robot -> IO String
-robotName r = do
-  rval <- readIORef r
-  return $ name rval
+robotName = robotNameVar >>> readMVar
 
 createName :: IO String
-createName = evalRandIO randomName
-
-randomName :: RandomGen g => Rand g String
-randomName = liftM2 (++) (letters 2) (digits 3)
-
-letter :: RandomGen g => Rand g Char
-letter = getRandomR ('A','Z')
-
-letters :: RandomGen g => Int -> Rand g String
-letters = randomSequence letter
-
-digit :: RandomGen g => Rand g Char
-digit = getRandomR ('0','9')
-
-digits :: RandomGen g => Int -> Rand g String
-digits = randomSequence digit
-
-randomSequence :: (RandomGen g) => Rand g a -> Int -> Rand g [a]
-randomSequence r n = replicateM n r
+createName = mapM randomRIO [letter, letter, digit, digit, digit]
+  where letter = ('A', 'Z')
+        digit = ('0', '9')
