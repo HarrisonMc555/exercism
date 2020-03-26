@@ -31,9 +31,9 @@ fn parse_alphametic(input: &str) -> Option<Problem> {
         .chars()
         .rev()
         .collect();
-    for caps in SRN_RE.captures_iter(input) {
-        println!("{:?}", caps);
-    }
+    // for caps in SRN_RE.captures_iter(input) {
+    //     println!("{:?}", caps);
+    // }
     let srns = SRN_RE
         .captures_iter(input)
         .map(|caps| caps["srn"].chars().rev().collect::<Vec<_>>());
@@ -57,11 +57,11 @@ fn parse_alphametic(input: &str) -> Option<Problem> {
         })
         .collect();
     let num_digits = std::cmp::max(num_digits, result.len());
-    println!(
-        "{} -> {:?}",
-        &input,
-        Some((&sources_transposed, &result, num_digits))
-    );
+    // println!(
+    //     "{} -> {:?}",
+    //     &input,
+    //     Some((&sources_transposed, &result, num_digits))
+    // );
     Some((sources_transposed, result, num_digits))
 }
 
@@ -102,36 +102,36 @@ fn find_solution_helper<'a>(
     remaining_letters: &[char],
     mut remaining_numbers: &mut HashSet<u8>,
 ) -> bool {
-    // println!(
-    //     "rsh: solution({}), letters({}), numbers({})",
-    //     solution.len(),
-    //     remaining_letters.len(),
-    //     remaining_numbers.len()
-    // );
-    // if solution.len() > 4 {
-    //     println!("rsh: {:?} ({:?})", solution, remaining_letters);
-    // }
-    let real_solution: Solution = hashmap!('D' => 7, 'E' => 5, 'R' => 8, 'O' => 0, 'N' => 6, 'M' => 1, 'Y' => 2, 'S' => 9);
-    // let solution_is_real = solution.get(&'S') == Some(&2)
-    //     && solution.get(&'A') == Some(&9)
-    //     && solution.get(&'M') == Some(&1)
-    //     && solution.get(&'O') == Some(&0);
-    let solution_is_real = {
-        solution
-            .iter()
-            .all(|(key, value)| real_solution.get(key) == Some(value))
-    };
+    // // println!(
+    // //     "rsh: solution({}), letters({}), numbers({})",
+    // //     solution.len(),
+    // //     remaining_letters.len(),
+    // //     remaining_numbers.len()
+    // // );
+    // // if solution.len() > 4 {
+    // //     println!("rsh: {:?} ({:?})", solution, remaining_letters);
+    // // }
+    // let real_solution: Solution = hashmap!('D' => 7, 'E' => 5, 'R' => 8, 'O' => 0, 'N' => 6, 'M' => 1, 'Y' => 2, 'S' => 9);
+    // // let solution_is_real = solution.get(&'S') == Some(&2)
+    // //     && solution.get(&'A') == Some(&9)
+    // //     && solution.get(&'M') == Some(&1)
+    // //     && solution.get(&'O') == Some(&0);
+    // let solution_is_real = {
+    //     solution
+    //         .iter()
+    //         .all(|(key, value)| real_solution.get(key) == Some(value))
+    // };
 
-    if solution_is_real {
-        println!("find_solution_helper");
-        println!("\tsolution so far: {:?}", solution);
-        println!("\tremaining letters: {:?}", remaining_letters);
-        println!("\tremaining numbers: {:?}", remaining_numbers.iter());
-        println!(
-            "is_correct_solution: {:?}",
-            is_correct_solution(problem, &solution, true)
-        );
-    }
+    // if solution_is_real {
+    //     println!("find_solution_helper");
+    //     println!("\tsolution so far: {:?}", solution);
+    //     println!("\tremaining letters: {:?}", remaining_letters);
+    //     println!("\tremaining numbers: {:?}", remaining_numbers.iter());
+    //     println!(
+    //         "is_correct_solution: {:?}",
+    //         is_correct_solution(problem, &solution, true)
+    //     );
+    // }
     match is_correct_solution(problem, &solution, false) {
         Some(true) => return true,
         Some(false) => return false,
