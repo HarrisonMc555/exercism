@@ -1,6 +1,8 @@
+use std::collections::HashMap;
+
 /// `InputCellID` is a unique identifier for an input cell.
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub struct InputCellID();
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+pub struct InputCellID(usize);
 /// `ComputeCellID` is a unique identifier for a compute cell.
 /// Values of type `InputCellID` and `ComputeCellID` should not be mutually assignable,
 /// demonstrated by the following tests:
@@ -15,12 +17,12 @@ pub struct InputCellID();
 /// let input = r.create_input(111);
 /// let compute: react::InputCellID = r.create_compute(&[react::CellID::Input(input)], |_| 222).unwrap();
 /// ```
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub struct ComputeCellID();
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub struct CallbackID();
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+pub struct ComputeCellID(usize);
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+pub struct CallbackID(usize);
 
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub enum CellID {
     Input(InputCellID),
     Compute(ComputeCellID),
@@ -32,7 +34,14 @@ pub enum RemoveCallbackError {
     NonexistentCallback,
 }
 
-pub struct Reactor<T> {
+pub struct Reactor<T>
+where
+    T: Clone,
+{
+    cur_input_cell_id: InputCellID,
+    cur_compute_cell_id: ComputeCellID,
+    input_cells: HashMap<InputCellID, T>,
+    compute_cells: HashMap<ComputeCellID, ()>,
     // Just so that the compiler doesn't complain about an unused type parameter.
     // You probably want to delete this field.
     dummy: ::std::marker::PhantomData<T>,
@@ -41,12 +50,25 @@ pub struct Reactor<T> {
 // You are guaranteed that Reactor will only be tested against types that are Copy + PartialEq.
 impl<T: Copy + PartialEq> Reactor<T> {
     pub fn new() -> Self {
-        unimplemented!()
+        Reactor {
+            cur_input_cell_id: InputCellID(0),
+            cur_compute_cell_id: ComputeCellID(0),
+            input_cells: HashMap::new(),
+            compute_cells: HashMap::new(),
+            dummy: ::std::marker::PhantomData,
+        }
     }
 
     // Creates an input cell with the specified initial value, returning its ID.
-    pub fn create_input(&mut self, _initial: T) -> InputCellID {
-        unimplemented!()
+    pub fn create_input(&mut self, initial: T) -> InputCellID {
+        let input_cell_id = self.get_next_input_cell_id();
+        self.input_cells.insert(input_cell_id, initial);
+        input_cell_id
+    }
+
+    fn get_next_input_cell_id(&mut self) -> InputCellID {
+        self.cur_input_cell_id.0 += 1;
+        self.cur_input_cell_id
     }
 
     // Creates a compute cell with the specified dependencies and compute function.
@@ -78,7 +100,11 @@ impl<T: Copy + PartialEq> Reactor<T> {
     // It turns out this introduces a significant amount of extra complexity to this exercise.
     // We chose not to cover this here, since this exercise is probably enough work as-is.
     pub fn value(&self, id: CellID) -> Option<T> {
-        unimplemented!("Get the value of the cell whose id is {:?}", id)
+        match id {
+            CellID::Input(id) => self.input_cells.get(&id).cloned(),
+            // CellID::Compute(id) => self.compute_cells.get(&id).map(???)
+            _ => None,
+        }
     }
 
     // Sets the value of the specified input cell.
