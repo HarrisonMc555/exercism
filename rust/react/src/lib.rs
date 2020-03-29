@@ -34,27 +34,27 @@ pub enum RemoveCallbackError {
     NonexistentCallback,
 }
 
-struct ComputeCell<'a, T> {
-    dependencies: Vec<&'a Cell<'a, T>>,
+struct ComputeCell<T> {
+    dependencies: Vec<CellID>,
     compute_func: Box<dyn Fn(&[T]) -> T>,
 }
 
-enum Cell<'a, T> {
+enum Cell<T> {
     Input(T),
-    Compute(ComputeCell<'a, T>),
+    Compute(ComputeCell<T>),
 }
 
-pub struct Reactor<'a, T>
+pub struct Reactor<T>
 where
     T: Clone + PartialEq,
 {
     cur_input_cell_id: InputCellID,
     cur_compute_cell_id: ComputeCellID,
-    cells: HashMap<CellID, Cell<'a, T>>,
+    cells: HashMap<CellID, Cell<T>>,
 }
 
 // You are guaranteed that Reactor will only be tested against types that are Copy + PartialEq.
-impl<'a, T> Reactor<'a, T>
+impl<T> Reactor<T>
 where
     T: Clone + PartialEq,
 {
@@ -98,13 +98,13 @@ where
     // This means that you may assume, without checking, that if the dependencies exist at creation
     // time they will continue to exist as long as the Reactor exists.
     pub fn create_compute<F: 'static + Fn(&[T]) -> T>(
-        &'a mut self,
+        &mut self,
         dependencies: &[CellID],
         compute_func: F,
     ) -> Result<ComputeCellID, CellID> {
         let dependencies = dependencies
             .iter()
-            .map(|&id| self.get_cell(id).ok_or(id))
+            .map(|&id| self.get_cell(id).ok_or(id).map(|_| id))
             .collect::<Result<Vec<_>, _>>()?;
         let compute_cell_id = self.get_next_compute_cell_id();
         let compute_cell = ComputeCell {
@@ -130,19 +130,20 @@ where
     // It turns out this introduces a significant amount of extra complexity to this exercise.
     // We chose not to cover this here, since this exercise is probably enough work as-is.
     pub fn value(&self, id: CellID) -> Option<T> {
-        self.cells.get(&id).map(|&cell| self.value_of(cell))
+        self.cells.get(&id).map(|cell| self.value_of(cell))
     }
 
     fn compute(&self, compute_cell: &ComputeCell<T>) -> T {
         let dependencies = compute_cell
             .dependencies
             .iter()
-            .map(|&&cell| self.value_of(cell))
-            .collect::<Vec<_>>();
+            .map(|&id| self.value(id))
+            .collect::<Option<Vec<_>>>()
+            .expect("Dependency was deleted");
         (*compute_cell.compute_func)(&dependencies)
     }
 
-    fn value_of(&self, cell: Cell<'a, T>) -> T {
+    fn value_of(&self, cell: &Cell<T>) -> T {
         match cell {
             Cell::Input(value) => value.clone(),
             Cell::Compute(compute_cell) => self.compute(&compute_cell),
