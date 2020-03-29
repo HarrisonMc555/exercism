@@ -8,6 +8,7 @@ fn input_cells_have_a_value() {
 }
 
 #[test]
+#[ignore]
 fn an_input_cells_value_can_be_set() {
     let mut reactor = Reactor::new();
     let input = reactor.create_input(4);
@@ -16,6 +17,7 @@ fn an_input_cells_value_can_be_set() {
 }
 
 #[test]
+#[ignore]
 fn error_setting_a_nonexistent_input_cell() {
     let mut dummy_reactor = Reactor::new();
     let input = dummy_reactor.create_input(1);
@@ -23,6 +25,7 @@ fn error_setting_a_nonexistent_input_cell() {
 }
 
 #[test]
+#[ignore]
 fn compute_cells_calculate_initial_value() {
     let mut reactor = Reactor::new();
     let input = reactor.create_input(1);
@@ -33,6 +36,7 @@ fn compute_cells_calculate_initial_value() {
 }
 
 #[test]
+#[ignore]
 fn compute_cells_take_inputs_in_the_right_order() {
     let mut reactor = Reactor::new();
     let one = reactor.create_input(1);
@@ -46,6 +50,7 @@ fn compute_cells_take_inputs_in_the_right_order() {
 }
 
 #[test]
+#[ignore]
 fn error_creating_compute_cell_if_input_doesnt_exist() {
     let mut dummy_reactor = Reactor::new();
     let input = dummy_reactor.create_input(1);
@@ -56,6 +61,7 @@ fn error_creating_compute_cell_if_input_doesnt_exist() {
 }
 
 #[test]
+#[ignore]
 fn do_not_break_cell_if_creating_compute_cell_with_valid_and_invalid_input() {
     let mut dummy_reactor = Reactor::new();
     let _ = dummy_reactor.create_input(1);
@@ -71,6 +77,7 @@ fn do_not_break_cell_if_creating_compute_cell_with_valid_and_invalid_input() {
 }
 
 #[test]
+#[ignore]
 fn compute_cells_update_value_when_dependencies_are_changed() {
     let mut reactor = Reactor::new();
     let input = reactor.create_input(1);
@@ -83,6 +90,7 @@ fn compute_cells_update_value_when_dependencies_are_changed() {
 }
 
 #[test]
+#[ignore]
 fn compute_cells_can_depend_on_other_compute_cells() {
     let mut reactor = Reactor::new();
     let input = reactor.create_input(1);
@@ -154,6 +162,7 @@ impl CallbackRecorder {
 }
 
 #[test]
+#[ignore]
 fn compute_cells_fire_callbacks() {
     let cb = CallbackRecorder::new();
     let mut reactor = Reactor::new();
