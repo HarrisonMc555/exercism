@@ -34,41 +34,54 @@ pub enum RemoveCallbackError {
     NonexistentCallback,
 }
 
-pub struct Reactor<T>
+struct ComputeCell<'a, T> {
+    dependencies: Vec<&'a Cell<'a, T>>,
+    compute_func: Box<dyn Fn(&[T]) -> T>,
+}
+
+enum Cell<'a, T> {
+    Input(T),
+    Compute(ComputeCell<'a, T>),
+}
+
+pub struct Reactor<'a, T>
 where
-    T: Clone,
+    T: Clone + PartialEq,
 {
     cur_input_cell_id: InputCellID,
     cur_compute_cell_id: ComputeCellID,
-    input_cells: HashMap<InputCellID, T>,
-    compute_cells: HashMap<ComputeCellID, ()>,
-    // Just so that the compiler doesn't complain about an unused type parameter.
-    // You probably want to delete this field.
-    dummy: ::std::marker::PhantomData<T>,
+    cells: HashMap<CellID, Cell<'a, T>>,
 }
 
 // You are guaranteed that Reactor will only be tested against types that are Copy + PartialEq.
-impl<T: Copy + PartialEq> Reactor<T> {
+impl<'a, T> Reactor<'a, T>
+where
+    T: Clone + PartialEq,
+{
     pub fn new() -> Self {
         Reactor {
             cur_input_cell_id: InputCellID(0),
             cur_compute_cell_id: ComputeCellID(0),
-            input_cells: HashMap::new(),
-            compute_cells: HashMap::new(),
-            dummy: ::std::marker::PhantomData,
+            cells: HashMap::new(),
         }
     }
 
     // Creates an input cell with the specified initial value, returning its ID.
     pub fn create_input(&mut self, initial: T) -> InputCellID {
         let input_cell_id = self.get_next_input_cell_id();
-        self.input_cells.insert(input_cell_id, initial);
+        self.cells
+            .insert(CellID::Input(input_cell_id), Cell::Input(initial));
         input_cell_id
     }
 
     fn get_next_input_cell_id(&mut self) -> InputCellID {
         self.cur_input_cell_id.0 += 1;
         self.cur_input_cell_id
+    }
+
+    fn get_next_compute_cell_id(&mut self) -> ComputeCellID {
+        self.cur_compute_cell_id.0 += 1;
+        self.cur_compute_cell_id
     }
 
     // Creates a compute cell with the specified dependencies and compute function.
@@ -84,12 +97,29 @@ impl<T: Copy + PartialEq> Reactor<T> {
     // Notice that there is no way to *remove* a cell.
     // This means that you may assume, without checking, that if the dependencies exist at creation
     // time they will continue to exist as long as the Reactor exists.
-    pub fn create_compute<F: Fn(&[T]) -> T>(
-        &mut self,
-        _dependencies: &[CellID],
-        _compute_func: F,
+    pub fn create_compute<F: 'static + Fn(&[T]) -> T>(
+        &'a mut self,
+        dependencies: &[CellID],
+        compute_func: F,
     ) -> Result<ComputeCellID, CellID> {
-        unimplemented!()
+        let dependencies = dependencies
+            .iter()
+            .map(|&id| self.get_cell(id).ok_or(id))
+            .collect::<Result<Vec<_>, _>>()?;
+        let compute_cell_id = self.get_next_compute_cell_id();
+        let compute_cell = ComputeCell {
+            dependencies: dependencies,
+            compute_func: Box::new(compute_func),
+        };
+        self.cells.insert(
+            CellID::Compute(compute_cell_id),
+            Cell::Compute(compute_cell),
+        );
+        Ok(compute_cell_id)
+    }
+
+    fn get_cell(&self, id: CellID) -> Option<&Cell<T>> {
+        self.cells.get(&id)
     }
 
     // Retrieves the current value of the cell, or None if the cell does not exist.
@@ -100,10 +130,22 @@ impl<T: Copy + PartialEq> Reactor<T> {
     // It turns out this introduces a significant amount of extra complexity to this exercise.
     // We chose not to cover this here, since this exercise is probably enough work as-is.
     pub fn value(&self, id: CellID) -> Option<T> {
-        match id {
-            CellID::Input(id) => self.input_cells.get(&id).cloned(),
-            // CellID::Compute(id) => self.compute_cells.get(&id).map(???)
-            _ => None,
+        self.cells.get(&id).map(|&cell| self.value_of(cell))
+    }
+
+    fn compute(&self, compute_cell: &ComputeCell<T>) -> T {
+        let dependencies = compute_cell
+            .dependencies
+            .iter()
+            .map(|&&cell| self.value_of(cell))
+            .collect::<Vec<_>>();
+        (*compute_cell.compute_func)(&dependencies)
+    }
+
+    fn value_of(&self, cell: Cell<'a, T>) -> T {
+        match cell {
+            Cell::Input(value) => value.clone(),
+            Cell::Compute(compute_cell) => self.compute(&compute_cell),
         }
     }
 
@@ -115,8 +157,13 @@ impl<T: Copy + PartialEq> Reactor<T> {
     // a `set_value(&mut self, new_value: T)` method on `Cell`.
     //
     // As before, that turned out to add too much extra complexity.
-    pub fn set_value(&mut self, _id: InputCellID, _new_value: T) -> bool {
-        unimplemented!()
+    pub fn set_value(&mut self, id: InputCellID, new_value: T) -> bool {
+        if let Some(Cell::Input(value)) = self.cells.get_mut(&CellID::Input(id)) {
+            *value = new_value;
+            true
+        } else {
+            false
+        }
     }
 
     // Adds a callback to the specified compute cell.

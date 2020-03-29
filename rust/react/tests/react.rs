@@ -8,7 +8,6 @@ fn input_cells_have_a_value() {
 }
 
 #[test]
-#[ignore]
 fn an_input_cells_value_can_be_set() {
     let mut reactor = Reactor::new();
     let input = reactor.create_input(4);
@@ -17,7 +16,6 @@ fn an_input_cells_value_can_be_set() {
 }
 
 #[test]
-#[ignore]
 fn error_setting_a_nonexistent_input_cell() {
     let mut dummy_reactor = Reactor::new();
     let input = dummy_reactor.create_input(1);
@@ -25,7 +23,6 @@ fn error_setting_a_nonexistent_input_cell() {
 }
 
 #[test]
-#[ignore]
 fn compute_cells_calculate_initial_value() {
     let mut reactor = Reactor::new();
     let input = reactor.create_input(1);
