@@ -34,27 +34,30 @@ pub enum RemoveCallbackError {
     NonexistentCallback,
 }
 
-struct ComputeCell<T> {
+struct ComputeCell<'a, T> {
     dependencies: Vec<CellID>,
-    compute_func: Box<dyn Fn(&[T]) -> T>,
+    compute_func: Box<dyn Fn(&[T]) -> T + 'a>,
+    cached_value: Option<T>,
 }
 
-enum Cell<T> {
+enum Cell<'a, T> {
     Input(T),
-    Compute(ComputeCell<T>),
+    Compute(ComputeCell<'a, T>),
 }
 
-pub struct Reactor<T>
+pub struct Reactor<'a, T>
 where
     T: Clone + PartialEq,
 {
     cur_input_cell_id: InputCellID,
     cur_compute_cell_id: ComputeCellID,
-    cells: HashMap<CellID, Cell<T>>,
+    cells: HashMap<CellID, Cell<'a, T>>,
+    dependants: HashMap<CellID, Vec<ComputeCellID>>,
+    callbacks: HashMap<ComputeCellID, Vec<Box<dyn FnMut(T) -> () + 'a>>>,
 }
 
 // You are guaranteed that Reactor will only be tested against types that are Copy + PartialEq.
-impl<T> Reactor<T>
+impl<'a, T> Reactor<'a, T>
 where
     T: Clone + PartialEq,
 {
@@ -63,6 +66,8 @@ where
             cur_input_cell_id: InputCellID(0),
             cur_compute_cell_id: ComputeCellID(0),
             cells: HashMap::new(),
+            dependants: HashMap::new(),
+            callbacks: HashMap::new(),
         }
     }
 
@@ -97,29 +102,50 @@ where
     // Notice that there is no way to *remove* a cell.
     // This means that you may assume, without checking, that if the dependencies exist at creation
     // time they will continue to exist as long as the Reactor exists.
-    pub fn create_compute<F: 'static + Fn(&[T]) -> T>(
+    pub fn create_compute<F: 'a + Fn(&[T]) -> T>(
         &mut self,
         dependencies: &[CellID],
         compute_func: F,
     ) -> Result<ComputeCellID, CellID> {
-        let dependencies = dependencies
+        if let Some(id) = dependencies
             .iter()
-            .map(|&id| self.get_cell(id).ok_or(id).map(|_| id))
-            .collect::<Result<Vec<_>, _>>()?;
+            .filter(|&id| !self.cells.contains_key(id))
+            .next()
+        {
+            return Err(*id);
+        }
         let compute_cell_id = self.get_next_compute_cell_id();
         let compute_cell = ComputeCell {
-            dependencies: dependencies,
+            dependencies: dependencies.to_vec(),
             compute_func: Box::new(compute_func),
+            cached_value: None,
         };
         self.cells.insert(
             CellID::Compute(compute_cell_id),
             Cell::Compute(compute_cell),
         );
+        self.add_dependants(dependencies, compute_cell_id);
+        self.cache_value(compute_cell_id);
         Ok(compute_cell_id)
     }
 
-    fn get_cell(&self, id: CellID) -> Option<&Cell<T>> {
-        self.cells.get(&id)
+    fn cache_value(&mut self, id: ComputeCellID) {
+        let value = self.value(CellID::Compute(id));
+        let cell = self.cells.get_mut(&CellID::Compute(id)).unwrap();
+        let mut compute_cell = match cell {
+            Cell::Compute(c) => c,
+            _ => panic!(),
+        };
+        compute_cell.cached_value = value;
+    }
+
+    fn add_dependants(&mut self, dependencies: &[CellID], compute_cell_id: ComputeCellID) {
+        for cell_id in dependencies {
+            self.dependants
+                .entry(*cell_id)
+                .or_insert_with(Vec::new)
+                .push(compute_cell_id);
+        }
     }
 
     // Retrieves the current value of the cell, or None if the cell does not exist.
@@ -160,10 +186,43 @@ where
     // As before, that turned out to add too much extra complexity.
     pub fn set_value(&mut self, id: InputCellID, new_value: T) -> bool {
         if let Some(Cell::Input(value)) = self.cells.get_mut(&CellID::Input(id)) {
-            *value = new_value;
+            if *value != new_value {
+                *value = new_value;
+                if let Some(dependants) =
+                    self.dependants.get(&CellID::Input(id)).map(|ds| ds.clone())
+                {
+                    for compute_cell_id in dependants {
+                        self.run_callbacks(compute_cell_id);
+                    }
+                }
+            }
             true
         } else {
             false
+        }
+    }
+
+    fn run_callbacks(&mut self, id: ComputeCellID) {
+        let cell_id = CellID::Compute(id);
+        let cell = self.cells.get(&cell_id).unwrap();
+        let compute_cell = match cell {
+            Cell::Compute(c) => c,
+            _ => panic!(),
+        };
+        let value = self.value(cell_id).unwrap();
+        if compute_cell.cached_value != Some(value.clone()) {
+            self.cache_value(id);
+            if let Some(callbacks) = self.callbacks.get_mut(&id) {
+                for callback in callbacks {
+                    callback(value.clone());
+                }
+            }
+
+            if let Some(dependants) = self.dependants.get(&cell_id).map(|ds| ds.clone()) {
+                for compute_cell_id in dependants {
+                    self.run_callbacks(compute_cell_id);
+                }
+            }
         }
     }
 
@@ -179,12 +238,19 @@ where
     // * Exactly once if the compute cell's value changed as a result of the set_value call.
     //   The value passed to the callback should be the final value of the compute cell after the
     //   set_value call.
-    pub fn add_callback<F: FnMut(T) -> ()>(
+    pub fn add_callback<F: FnMut(T) -> () + 'a>(
         &mut self,
-        _id: ComputeCellID,
-        _callback: F,
+        id: ComputeCellID,
+        callback: F,
     ) -> Option<CallbackID> {
-        unimplemented!()
+        if !self.cells.contains_key(&CellID::Compute(id)) {
+            return None;
+        }
+        self.callbacks
+            .entry(id)
+            .or_insert_with(Vec::new)
+            .push(Box::new(callback));
+        Some(CallbackID(0))
     }
 
     // Removes the specified callback, using an ID returned from add_callback.
