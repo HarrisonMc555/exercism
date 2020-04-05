@@ -3,27 +3,104 @@ module TwelveDays exposing (recite)
 
 recite : Int -> Int -> List String
 recite start stop =
-    listRange (start - 1) (stop - 1) verses
+    listSlice (start - 1) (stop - 1) verses
+
+
+type alias VerseInfo =
+    { ordinalNum : String
+    , allItems : String
+    }
+
+
+type alias DayInfo =
+    { ordinalNum : String
+    , item : String
+    }
 
 
 verses : List String
 verses =
-    [ "On the first day of Christmas my true love gave to me: a Partridge in a Pear Tree."
-    , "On the second day of Christmas my true love gave to me: two Turtle Doves, and a Partridge in a Pear Tree."
-    , "On the third day of Christmas my true love gave to me: three French Hens, two Turtle Doves, and a Partridge in a Pear Tree."
-    , "On the fourth day of Christmas my true love gave to me: four Calling Birds, three French Hens, two Turtle Doves, and a Partridge in a Pear Tree."
-    , "On the fifth day of Christmas my true love gave to me: five Gold Rings, four Calling Birds, three French Hens, two Turtle Doves, and a Partridge in a Pear Tree."
-    , "On the sixth day of Christmas my true love gave to me: six Geese-a-Laying, five Gold Rings, four Calling Birds, three French Hens, two Turtle Doves, and a Partridge in a Pear Tree."
-    , "On the seventh day of Christmas my true love gave to me: seven Swans-a-Swimming, six Geese-a-Laying, five Gold Rings, four Calling Birds, three French Hens, two Turtle Doves, and a Partridge in a Pear Tree."
-    , "On the eighth day of Christmas my true love gave to me: eight Maids-a-Milking, seven Swans-a-Swimming, six Geese-a-Laying, five Gold Rings, four Calling Birds, three French Hens, two Turtle Doves, and a Partridge in a Pear Tree."
-    , "On the ninth day of Christmas my true love gave to me: nine Ladies Dancing, eight Maids-a-Milking, seven Swans-a-Swimming, six Geese-a-Laying, five Gold Rings, four Calling Birds, three French Hens, two Turtle Doves, and a Partridge in a Pear Tree."
-    , "On the tenth day of Christmas my true love gave to me: ten Lords-a-Leaping, nine Ladies Dancing, eight Maids-a-Milking, seven Swans-a-Swimming, six Geese-a-Laying, five Gold Rings, four Calling Birds, three French Hens, two Turtle Doves, and a Partridge in a Pear Tree."
-    , "On the eleventh day of Christmas my true love gave to me: eleven Pipers Piping, ten Lords-a-Leaping, nine Ladies Dancing, eight Maids-a-Milking, seven Swans-a-Swimming, six Geese-a-Laying, five Gold Rings, four Calling Birds, three French Hens, two Turtle Doves, and a Partridge in a Pear Tree."
-    , "On the twelfth day of Christmas my true love gave to me: twelve Drummers Drumming, eleven Pipers Piping, ten Lords-a-Leaping, nine Ladies Dancing, eight Maids-a-Milking, seven Swans-a-Swimming, six Geese-a-Laying, five Gold Rings, four Calling Birds, three French Hens, two Turtle Doves, and a Partridge in a Pear Tree."
+    List.map verseToString verseInfos
+
+
+verseToString : VerseInfo -> String
+verseToString verseInfo =
+    "On the "
+        ++ verseInfo.ordinalNum
+        ++ " day of Christmas my true love gave to me: "
+        ++ verseInfo.allItems
+
+
+verseInfos : List VerseInfo
+verseInfos =
+    let
+        createVerseInfo ( day, rest ) =
+            let
+                items =
+                    day.item
+                        :: List.map .item rest
+                        |> List.reverse
+            in
+            VerseInfo day.ordinalNum (joinItems items)
+    in
+    dayInfos
+        |> List.reverse
+        |> tailsNonEmpty
+        |> List.map createVerseInfo
+        |> List.reverse
+
+
+dayInfos : List DayInfo
+dayInfos =
+    [ DayInfo "first" "a Partridge in a Pear Tree."
+    , DayInfo "second" "two Turtle Doves"
+    , DayInfo "third" "three French Hens"
+    , DayInfo "fourth" "four Calling Birds"
+    , DayInfo "fifth" "five Gold Rings"
+    , DayInfo "sixth" "six Geese-a-Laying"
+    , DayInfo "seventh" "seven Swans-a-Swimming"
+    , DayInfo "eighth" "eight Maids-a-Milking"
+    , DayInfo "ninth" "nine Ladies Dancing"
+    , DayInfo "tenth" "ten Lords-a-Leaping"
+    , DayInfo "eleventh" "eleven Pipers Piping"
+    , DayInfo "twelfth" "twelve Drummers Drumming"
     ]
+
+
+joinItems : List String -> String
+joinItems items =
+    case items of
+        first :: second :: thirdOnward ->
+            let
+                rest =
+                    second :: thirdOnward
+
+                restString =
+                    rest
+                        |> List.reverse
+                        |> List.map (\s -> s ++ ", ")
+                        |> String.concat
+            in
+            restString ++ "and " ++ first
+
+        _ ->
+            String.concat items
+
+
 
 -- Helpers
 
-listRange : Int -> Int -> List a -> List a
-listRange start stop =
+
+listSlice : Int -> Int -> List a -> List a
+listSlice start stop =
     List.drop start >> List.take (stop - start + 1)
+
+
+tailsNonEmpty : List a -> List ( a, List a )
+tailsNonEmpty list =
+    case list of
+        first :: rest ->
+            ( first, rest ) :: tailsNonEmpty rest
+
+        [] ->
+            []
