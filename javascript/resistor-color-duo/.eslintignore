@@ -1,3 +1,4 @@
+*.config.js
 *.spec.js
 big-integer.js
 tmp.*
