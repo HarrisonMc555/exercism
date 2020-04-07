@@ -1,11 +1,23 @@
 class Squares {
-  squareOfSum: number;
-  sumOfSquares: number;
-  difference: number;
+  private _squareOfSum: number;
+  private _sumOfSquares: number;
+  private _difference: number;
   constructor(num: number) {
-    this.squareOfSum = Squares.calcSquareOfSum(num);
-    this.sumOfSquares = Squares.calcSumOfSquares(num);
-    this.difference = this.squareOfSum - this.sumOfSquares;
+    this._squareOfSum = Squares.calcSquareOfSum(num);
+    this._sumOfSquares = Squares.calcSumOfSquares(num);
+    this._difference = this._squareOfSum - this._sumOfSquares;
+  }
+
+  get squareOfSum(): number {
+    return this._squareOfSum;
+  }
+
+  get sumOfSquares(): number {
+    return this._sumOfSquares;
+  }
+
+  get difference(): number {
+    return this._difference;
   }
 
   static calcSquareOfSum(num: number): number {
