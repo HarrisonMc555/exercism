@@ -1,0 +1,1 @@
+P.S. I would also recommend using[implicit return statements]! They're considered idiomatic Rust and help reduce redundancy.
