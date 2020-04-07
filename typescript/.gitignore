@@ -1,6 +1,9 @@
 # Exercism-specific
 */*.js
 
+# Build
+build/
+
 # Logs
 logs
 *.log
