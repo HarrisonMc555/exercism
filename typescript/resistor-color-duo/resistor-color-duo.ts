@@ -1,37 +1,36 @@
-enum Color {
-  Black,
-  Brown,
-  Red,
-  Orange,
-  Yellow,
-  Green,
-  Blue,
-  Violet,
-  Grey,
-  White,
-}
+type Color =
+  | "black"
+  | "brown"
+  | "red"
+  | "orange"
+  | "yellow"
+  | "green"
+  | "blue"
+  | "violet"
+  | "grey"
+  | "white";
 
-const STRING_TO_COLOR: { [key: string]: Color } = {
-  black: Color.Black,
-  brown: Color.Brown,
-  red: Color.Red,
-  orange: Color.Orange,
-  yellow: Color.Yellow,
-  green: Color.Green,
-  blue: Color.Blue,
-  violet: Color.Violet,
-  grey: Color.Grey,
-  white: Color.White,
+const COLOR_TO_DIGIT: { [key in Color]: number } = {
+  black: 0,
+  brown: 1,
+  red: 2,
+  orange: 3,
+  yellow: 4,
+  green: 5,
+  blue: 6,
+  violet: 7,
+  grey: 8,
+  white: 9,
 };
 
 export class ResistorColor {
   private colors: Color[];
 
-  constructor(colors: string[]) {
+  constructor(colors: Color[]) {
     if (colors.length < 2) {
       throw "At least two colors need to be present";
     }
-    this.colors = colors.slice(0, 2).map(ResistorColor.stringToColor);
+    this.colors = colors.slice(0, 2);
   }
 
   value = (): number => {
@@ -46,36 +45,7 @@ export class ResistorColor {
     return num;
   };
 
-  private static stringToColor(s: string): Color {
-    const color: Color | null = STRING_TO_COLOR[s];
-    if (color === null) {
-      throw `Invalid color string ${s}`;
-    }
-    return color;
-  }
-
   private static colorToDigit(color: Color): number {
-    switch (color) {
-      case Color.Black:
-        return 0;
-      case Color.Brown:
-        return 1;
-      case Color.Red:
-        return 2;
-      case Color.Orange:
-        return 3;
-      case Color.Yellow:
-        return 4;
-      case Color.Green:
-        return 5;
-      case Color.Blue:
-        return 6;
-      case Color.Violet:
-        return 7;
-      case Color.Grey:
-        return 8;
-      case Color.White:
-        return 9;
-    }
+    return COLOR_TO_DIGIT[color];
   }
 }
