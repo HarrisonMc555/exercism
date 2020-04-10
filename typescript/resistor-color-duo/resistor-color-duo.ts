@@ -1,16 +1,4 @@
-type Color =
-  | "black"
-  | "brown"
-  | "red"
-  | "orange"
-  | "yellow"
-  | "green"
-  | "blue"
-  | "violet"
-  | "grey"
-  | "white";
-
-const COLOR_TO_DIGIT: { [key in Color]: number } = {
+const COLOR_TO_DIGIT: Record<string, number> = {
   black: 0,
   brown: 1,
   red: 2,
@@ -22,6 +10,8 @@ const COLOR_TO_DIGIT: { [key in Color]: number } = {
   grey: 8,
   white: 9,
 };
+
+type Color = keyof typeof COLOR_TO_DIGIT;
 
 export class ResistorColor {
   private colors: Color[];
@@ -37,10 +27,7 @@ export class ResistorColor {
     let num = 0;
     for (const color of this.colors) {
       num *= 10;
-      const digit = ResistorColor.colorToDigit(color);
-      if (digit !== null) {
-        num += digit;
-      }
+      num += ResistorColor.colorToDigit(color);
     }
     return num;
   };
