@@ -1,15 +1,21 @@
-enum EncodeDecode {
+/* eslint no-throw-literal: "off" */
+
+enum EncodeDirection {
   Encode,
   Decode,
 }
 
-const LOWER_A_CHAR_CODE: number = "a".charCodeAt(0);
-const LOWER_Z_CHAR_CODE: number = "z".charCodeAt(0);
+const LOWER_A_CHAR_CODE = "a".charCodeAt(0);
+const LOWER_Z_CHAR_CODE = "z".charCodeAt(0);
+
+type CombineNumber = (x1: number, x2: number) => number;
 
 class SimpleCipher {
   public key: string;
-  static LETTERS: string = "abcdefghijklmnopqrstuvwxyz";
-  static KEY_LEN: number = 100;
+
+  static LETTERS = "abcdefghijklmnopqrstuvwxyz";
+
+  static KEY_LEN = 100;
 
   constructor(key?: string) {
     if (key !== undefined) {
@@ -20,30 +26,46 @@ class SimpleCipher {
   }
 
   encode(message: string): string {
-    return this.encodeDecode(message, EncodeDecode.Encode);
+    return this.transform(message, EncodeDirection.Encode);
   }
 
   decode(encoded: string): string {
-    return this.encodeDecode(encoded, EncodeDecode.Decode);
+    return this.transform(encoded, EncodeDirection.Decode);
   }
 
-  encodeDecode(input: string, direction: EncodeDecode): string {
-    const combineOffsets: (x: number, y: number) => number =
-      direction == EncodeDecode.Encode ? (x, y) => x + y : (x, y) => x - y;
-    let altered = [];
-    for (let i = 0; i < input.length; i++) {
-      const inputLetter = input[i];
-      const inputOffset = SimpleCipher.letterToOffset(inputLetter);
-      const keyLetter = this.key[i % this.key.length];
-      const keyOffset = SimpleCipher.letterToOffset(keyLetter);
-      const offset = euclidMod(
-        combineOffsets(inputOffset, keyOffset),
-        SimpleCipher.LETTERS.length
-      );
-      const decodedLetter = SimpleCipher.offsetToLetter(offset);
-      altered.push(decodedLetter);
+  transform(input: string, direction: EncodeDirection): string {
+    const inputLetters = input.split("");
+    const keyLetters = this.key.split("");
+    const transformHelper = (c1: string, c2: string) =>
+      this.transformLetter(direction, c1, c2);
+    const outputLetters = cycleZip(inputLetters, keyLetters, transformHelper);
+    return outputLetters.join("");
+  }
+
+  transformLetter(
+    direction: EncodeDirection,
+    inputLetter: string,
+    keyLetter: string
+  ): string {
+    let combineOffsets: CombineNumber;
+    switch (direction) {
+      case EncodeDirection.Encode:
+        combineOffsets = (x, y) => x + y;
+        break;
+      case EncodeDirection.Decode:
+        combineOffsets = (x, y) => x - y;
+        break;
+      default:
+        combineOffsets = assertUnreachable(direction);
+        break;
     }
-    return altered.join("");
+    const inputOffset = SimpleCipher.letterToOffset(inputLetter);
+    const keyOffset = SimpleCipher.letterToOffset(keyLetter);
+    const offset = euclidMod(
+      combineOffsets(inputOffset, keyOffset),
+      SimpleCipher.LETTERS.length
+    );
+    return SimpleCipher.offsetToLetter(offset);
   }
 
   static validateKey(key: string): string {
@@ -58,9 +80,9 @@ class SimpleCipher {
   }
 
   static generateRandomKey(): string {
-    let letters: string[] = [];
-    for (let i = 0; i < SimpleCipher.KEY_LEN; i++) {
-      const letterIndex: number = getRandomInt(SimpleCipher.LETTERS.length);
+    const letters: string[] = [];
+    for (let i = 0; i < SimpleCipher.KEY_LEN; i += 1) {
+      const letterIndex = getRandomInt(SimpleCipher.LETTERS.length);
       letters.push(SimpleCipher.LETTERS[letterIndex]);
     }
     return letters.join("");
@@ -86,6 +108,25 @@ function euclidMod(num: number, divisor: number): number {
 function isLowerCaseLetter(char: string): boolean {
   const charCode = char.charCodeAt(0);
   return LOWER_A_CHAR_CODE <= charCode && charCode <= LOWER_Z_CHAR_CODE;
+}
+
+/**
+ * Zip two arrays, cycling through the second array if it is shorter than the
+ * first.
+ */
+function cycleZip<T, U>(
+  array1: T[],
+  array2: T[],
+  combine: (t1: T, t2: T) => U
+): U[] {
+  return array1.map((t1, index) => {
+    const t2 = array2[index % array2.length];
+    return combine(t1, t2);
+  });
+}
+
+function assertUnreachable(_x: never): never {
+  throw "Expected not to get here";
 }
 
 export default SimpleCipher;
