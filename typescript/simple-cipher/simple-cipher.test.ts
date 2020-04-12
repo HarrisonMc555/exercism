@@ -39,25 +39,25 @@ describe('Random key cipher', () => {
 })
 
 describe('Incorrect key cipher', () => {
-    xit('throws an error with an all caps key', () => {
+    it('throws an error with an all caps key', () => {
         expect(() => {
             new SimpleCipher('ABCDEF')
         }).toThrowError('Bad key')
     })
 
-    xit('throws an error with a mixed case key', () => {
+    it('throws an error with a mixed case key', () => {
         expect(() => {
             new SimpleCipher('AbcdEF')
         }).toThrowError('Bad key')
     })
 
-    xit('throws an error with a numeric key', () => {
+    it('throws an error with a numeric key', () => {
         expect(() => {
             new SimpleCipher('12345')
         }).toThrow('Bad key')
     })
 
-    xit('throws an error with an empty key', () => {
+    it('throws an error with an empty key', () => {
         expect(() => {
             new SimpleCipher('')
         }).toThrow('Bad key')
@@ -68,41 +68,41 @@ describe('Substitution cipher', () => {
     const key = 'abcdefghij'
     const simpleCipher = new SimpleCipher(key)
 
-    xit('keeps the submitted key', () => {
+    it('keeps the submitted key', () => {
         expect(simpleCipher.key).toEqual(key)
     })
 
-    xit('can encode', () => {
+    it('can encode', () => {
         expect(simpleCipher.encode('aaaaaaaaaa')).toEqual('abcdefghij')
     })
 
-    xit('can decode', () => {
+    it('can decode', () => {
         expect(simpleCipher.decode('abcdefghij')).toEqual('aaaaaaaaaa')
     })
 
-    xit('is reversible', () => {
+    it('is reversible', () => {
         expect(simpleCipher.decode(simpleCipher.encode('abcdefghij'))).toEqual('abcdefghij')
     })
 
-    xit(': double shift encode', () => {
+    it(': double shift encode', () => {
         expect(new SimpleCipher('iamapandabear').encode('iamapandabear'))
             .toEqual('qayaeaagaciai')
     })
 
-    xit('can wrap on encode', () => {
+    it('can wrap on encode', () => {
         expect(simpleCipher.encode('zzzzzzzzzz')).toEqual('zabcdefghi')
     })
 
-    xit('can wrap on decode', () => {
+    it('can wrap on decode', () => {
         expect(simpleCipher.decode('zabcdefghi')).toEqual('zzzzzzzzzz')
     })
 
-    xit('can handle messages longer than the key (encode)', () => {
+    it('can handle messages longer than the key (encode)', () => {
         expect(new SimpleCipher('abc').encode('iamapandabear'))
             .toEqual('iboaqcnecbfcr')
     })
 
-    xit('can handle messages longer than the key (decode)', () => {
+    it('can handle messages longer than the key (decode)', () => {
         expect(new SimpleCipher('abc').decode('iboaqcnecbfcr'))
             .toEqual('iamapandabear')
     })
