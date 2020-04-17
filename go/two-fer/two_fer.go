@@ -1,12 +1,11 @@
-/*
-Reply in a way that shares between another person.
-*/
+// Package twofer provides a reply that shares between another person.
 package twofer
 
 import (
 	"fmt"
 )
 
+// ShareWith returns a reply that shares something with another person.
 func ShareWith(name string) string {
 	if name == "" {
 		name = "you"
