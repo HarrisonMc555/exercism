@@ -36,7 +36,7 @@ class Scrabble
   end
 
   def score
-    @word.split('').map { |letter| LETTER_TO_SCORE[letter] || 0 }.sum
+    @word.chars.map { |letter| LETTER_TO_SCORE[letter] || 0 }.sum
   end
 
   def self.score(word)
