@@ -10,7 +10,7 @@ pub fn anagrams_for<'a>(
     possible_anagrams
         .into_iter()
         .filter(|possibility| is_anagram(possibility, &word, &word_counter))
-        .cloned() // Just cloning the reference
+        .copied() // Just copying the reference
         .collect()
 }
 
