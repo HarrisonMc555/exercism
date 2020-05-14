@@ -10,7 +10,7 @@ Even if this doesn't end up making the code more efficient it's still considered
 
 Also, the idiomatic way to get characters out of a string is the [`chars`] method, although `.split("")` works, too.
 
-Try using those and see how that affects your solution! Looking forward to your next iteration :-)
+Try using those and see how that affects your solution! Looking forward to your next iteration 😊
 
 [`rev`]: https://doc.rust-lang.org/std/iter/trait.Iterator.html#method.rev
 [`chars`]: https://doc.rust-lang.org/std/primitive.str.html#method.chars
