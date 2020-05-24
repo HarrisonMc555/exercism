@@ -3,3 +3,5 @@ Hello! It looks you accidentally submitted the test file (in the `tests` directo
 ```bash
 $ exercism submit src/lib.rs
 ```
+
+Looking forward to seeing your solution!

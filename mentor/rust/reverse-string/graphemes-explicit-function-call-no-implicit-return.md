@@ -1,4 +1,4 @@
-This is great! Excellent use of iterators, implicit returns, `collect`, etc. Also, nice work using the `unicode_segmentation` crate.
+This is great! Excellent use of iterators, `collect`, etc. Also, nice work using the `unicode_segmentation` crate.
 
 Before you move on, I just want to point out a couple of things.
 
