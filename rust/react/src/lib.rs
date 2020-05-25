@@ -3,6 +3,7 @@ use std::collections::HashMap;
 /// `InputCellID` is a unique identifier for an input cell.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub struct InputCellID(usize);
+
 /// `ComputeCellID` is a unique identifier for a compute cell.
 /// Values of type `InputCellID` and `ComputeCellID` should not be mutually assignable,
 /// demonstrated by the following tests:
@@ -19,6 +20,7 @@ pub struct InputCellID(usize);
 /// ```
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub struct ComputeCellID(usize);
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub struct CallbackID(usize);
 
@@ -45,26 +47,30 @@ enum Cell<'a, T> {
     Compute(ComputeCell<'a, T>),
 }
 
+type Callback<'a, T> = Box<dyn FnMut(T) -> () + 'a>;
+
 pub struct Reactor<'a, T>
-where
-    T: Clone + PartialEq,
+    where
+        T: Clone + PartialEq,
 {
     cur_input_cell_id: InputCellID,
     cur_compute_cell_id: ComputeCellID,
+    cur_callback_id: CallbackID,
     cells: HashMap<CellID, Cell<'a, T>>,
     dependants: HashMap<CellID, Vec<ComputeCellID>>,
-    callbacks: HashMap<ComputeCellID, Vec<Box<dyn FnMut(T) -> () + 'a>>>,
+    callbacks: HashMap<ComputeCellID, HashMap<CallbackID, Callback<'a, T>>>,
 }
 
 // You are guaranteed that Reactor will only be tested against types that are Copy + PartialEq.
 impl<'a, T> Reactor<'a, T>
-where
-    T: Clone + PartialEq,
+    where
+        T: Clone + PartialEq,
 {
     pub fn new() -> Self {
         Reactor {
             cur_input_cell_id: InputCellID(0),
             cur_compute_cell_id: ComputeCellID(0),
+            cur_callback_id: CallbackID(0),
             cells: HashMap::new(),
             dependants: HashMap::new(),
             callbacks: HashMap::new(),
@@ -89,6 +95,11 @@ where
         self.cur_compute_cell_id
     }
 
+    fn get_next_callback_id(&mut self) -> CallbackID {
+        self.cur_callback_id.0 += 1;
+        self.cur_callback_id
+    }
+
     // Creates a compute cell with the specified dependencies and compute function.
     // The compute function is expected to take in its arguments in the same order as specified in
     // `dependencies`.
@@ -109,8 +120,7 @@ where
     ) -> Result<ComputeCellID, CellID> {
         if let Some(id) = dependencies
             .iter()
-            .filter(|&id| !self.cells.contains_key(id))
-            .next()
+            .find(|&id| !self.cells.contains_key(id))
         {
             return Err(*id);
         }
@@ -189,7 +199,7 @@ where
             if *value != new_value {
                 *value = new_value;
                 if let Some(dependants) =
-                    self.dependants.get(&CellID::Input(id)).map(|ds| ds.clone())
+                self.dependants.get(&CellID::Input(id)).cloned()
                 {
                     for compute_cell_id in dependants {
                         self.run_callbacks(compute_cell_id);
@@ -213,12 +223,12 @@ where
         if compute_cell.cached_value != Some(value.clone()) {
             self.cache_value(id);
             if let Some(callbacks) = self.callbacks.get_mut(&id) {
-                for callback in callbacks {
+                for (_, callback) in callbacks.iter_mut() {
                     callback(value.clone());
                 }
             }
 
-            if let Some(dependants) = self.dependants.get(&cell_id).map(|ds| ds.clone()) {
+            if let Some(dependants) = self.dependants.get(&cell_id).cloned() {
                 for compute_cell_id in dependants {
                     self.run_callbacks(compute_cell_id);
                 }
@@ -246,11 +256,12 @@ where
         if !self.cells.contains_key(&CellID::Compute(id)) {
             return None;
         }
+        let callback_id = self.get_next_callback_id();
         self.callbacks
             .entry(id)
-            .or_insert_with(Vec::new)
-            .push(Box::new(callback));
-        Some(CallbackID(0))
+            .or_insert_with(HashMap::new)
+            .insert(callback_id.clone(), Box::new(callback));
+        Some(callback_id)
     }
 
     // Removes the specified callback, using an ID returned from add_callback.
@@ -260,13 +271,23 @@ where
     // A removed callback should no longer be called.
     pub fn remove_callback(
         &mut self,
-        cell: ComputeCellID,
-        callback: CallbackID,
+        cell_id: ComputeCellID,
+        callback_id: CallbackID,
     ) -> Result<(), RemoveCallbackError> {
-        unimplemented!(
-            "Remove the callback identified by the CallbackID {:?} from the cell {:?}",
-            callback,
-            cell,
-        )
+        let callbacks = self
+            .callbacks
+            .get_mut(&cell_id)
+            .ok_or(RemoveCallbackError::NonexistentCell)?;
+        callbacks
+            .remove(&callback_id)
+            .ok_or(RemoveCallbackError::NonexistentCallback)
+            .map(|_| ())
+    }
+}
+
+impl<'a, T> Default for Reactor<'a, T>
+    where T: Clone + Eq {
+    fn default() -> Self {
+        Self::new()
     }
 }
