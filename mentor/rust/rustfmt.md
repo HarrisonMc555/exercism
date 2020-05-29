@@ -1,0 +1,1 @@
+P.S. In the future, try using the `rustfmt` tool! It automatically formats your rust code in a way that is consistent across all Rust projects. You can easily format all your code using the `cargo fmt` command.

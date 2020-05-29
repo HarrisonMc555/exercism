@@ -8,6 +8,6 @@ In this case, the only thing you use the `Vec` for is to reverse it. However, th
 
 Even if this doesn't end up making the code more efficient it's still considered idiomatic Rust code (and makes it much easier to read).
 
-Try using that and see how that affects your solution! Looking forward to your next iteration 😊
+Try using that and see how it affects your solution! Looking forward to your next iteration 😊
 
 [`rev`]: https://doc.rust-lang.org/std/iter/trait.Iterator.html#method.rev
