@@ -30,7 +30,6 @@ pub trait Planet {
     }
 }
 
-
 pub struct Mercury;
 pub struct Venus;
 pub struct Earth;

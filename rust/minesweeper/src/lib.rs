@@ -8,9 +8,7 @@ type Location = (usize, usize);
 pub fn annotate(minefield: &[&str]) -> Vec<String> {
     let minefield = to_grid_of_chars(minefield);
     let row_indices = 0..minefield.len();
-    row_indices
-        .map(|i| annotate_row(&minefield, i))
-        .collect()
+    row_indices.map(|i| annotate_row(&minefield, i)).collect()
 }
 
 fn annotate_row(minefield: Grid, row_i: usize) -> String {

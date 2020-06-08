@@ -17,7 +17,11 @@ pub fn verse(n: i32) -> String {
 }
 
 pub fn sing(start: i32, end: i32) -> String {
-    (end..=start).rev().map(|n| verse(n)).collect::<Vec<_>>().join("\n")
+    (end..=start)
+        .rev()
+        .map(|n| verse(n))
+        .collect::<Vec<_>>()
+        .join("\n")
 }
 
 fn bottles_of_beer(n: i32) -> String {

@@ -45,7 +45,8 @@ where
             let mut v = chunk.to_vec();
             v.extend(arr_between);
             v
-        }).collect()
+        })
+        .collect()
 }
 
 fn switch_letter(c: char) -> char {

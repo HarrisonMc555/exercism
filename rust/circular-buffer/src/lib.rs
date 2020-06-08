@@ -100,7 +100,9 @@ impl<T: Default> IntoIterator for CircularBuffer<T> {
     type IntoIter = IntoIter<T>;
 
     fn into_iter(self) -> Self::IntoIter {
-        IntoIter { circular_buffer: self }
+        IntoIter {
+            circular_buffer: self,
+        }
     }
 }
 
@@ -115,7 +117,6 @@ impl<T: Default> Iterator for IntoIter<T> {
         self.circular_buffer.read().ok()
     }
 }
-
 
 // /* Intoiterator (reference) */
 // impl<'a, T: Default> IntoIterator for &'a CircularBuffer<T> {

@@ -1,5 +1,3 @@
-
-
 use rectangles::count;
 
 #[test]
@@ -22,75 +20,43 @@ fn test_empty_area() {
 
 #[test]
 fn test_one_rectangle() {
-    let lines = &[
-        "+-+",
-        "| |",
-        "+-+",
-        ];
+    let lines = &["+-+", "| |", "+-+"];
     assert_eq!(1, count(lines))
 }
 
 #[test]
 fn test_two_rectangles_no_shared_parts() {
-    let lines = &[
-        "  +-+",
-        "  | |",
-        "+-+-+",
-        "| |  ",
-        "+-+  "
-        ];
+    let lines = &["  +-+", "  | |", "+-+-+", "| |  ", "+-+  "];
     assert_eq!(2, count(lines))
 }
 
 #[test]
 fn test_five_rectangles_three_regions() {
-    let lines = &[
-        "  +-+",
-        "  | |",
-        "+-+-+",
-        "| | |",
-        "+-+-+"
-        ];
+    let lines = &["  +-+", "  | |", "+-+-+", "| | |", "+-+-+"];
     assert_eq!(5, count(lines))
 }
 
 #[test]
 fn rectangle_of_height_1() {
-    let lines = &[
-        "+--+",
-        "+--+"
-        ];
+    let lines = &["+--+", "+--+"];
     assert_eq!(1, count(lines))
 }
 
 #[test]
 fn rectangle_of_width_1() {
-    let lines = &[
-        "++",
-        "||",
-        "++"
-        ];
+    let lines = &["++", "||", "++"];
     assert_eq!(1, count(lines))
 }
 
 #[test]
 fn unit_square() {
-    let lines = &[
-        "++",
-        "++"
-        ];
+    let lines = &["++", "++"];
     assert_eq!(1, count(lines))
 }
 
 #[test]
 fn test_incomplete_rectangles() {
-    let lines = &[
-        "  +-+",
-        "    |",
-        "+-+-+",
-        "| | -",
-        "+-+-+"
-        ];
+    let lines = &["  +-+", "    |", "+-+-+", "| | -", "+-+-+"];
     assert_eq!(1, count(lines))
 }
 
@@ -101,8 +67,8 @@ fn test_complicated() {
         "|      |    |",
         "+---+--+    |",
         "|   |       |",
-        "+---+-------+"
-        ];
+        "+---+-------+",
+    ];
     assert_eq!(3, count(lines))
 }
 
@@ -113,8 +79,8 @@ fn test_not_so_complicated() {
         "|      |    |",
         "+------+    |",
         "|   |       |",
-        "+---+-------+"
-        ];
+        "+---+-------+",
+    ];
     assert_eq!(2, count(lines))
 }
 
@@ -128,7 +94,7 @@ fn test_large_input_with_many_rectangles() {
         "+---+--+--+-+",
         "+---+--+--+-+",
         "+------+  | |",
-        "          +-+"
-        ];
+        "          +-+",
+    ];
     assert_eq!(60, count(lines))
 }

@@ -9,7 +9,10 @@ fn assert_alphametic_solution_eq(puzzle: &str, solution: &[(char, u8)]) {
 
 #[test]
 fn test_with_three_letters() {
-    assert_alphametic_solution_eq("I + BB == ILL", &[('I', 1), ('B', 9), ('L', 0)]);
+    assert_alphametic_solution_eq(
+        "I + BB == ILL",
+        &[('I', 1), ('B', 9), ('L', 0)],
+    );
 }
 
 #[test]
@@ -34,7 +37,10 @@ fn puzzle_with_two_digits_final_carry() {
 
 #[test]
 fn test_puzzle_with_four_letters() {
-    assert_alphametic_solution_eq("AS + A == MOM", &[('A', 9), ('S', 2), ('M', 1), ('O', 0)]);
+    assert_alphametic_solution_eq(
+        "AS + A == MOM",
+        &[('A', 9), ('S', 2), ('M', 1), ('O', 0)],
+    );
 }
 
 #[test]
@@ -79,6 +85,7 @@ fn test_puzzle_with_eight_letters() {
 }
 
 #[test]
+#[ignore]
 fn test_puzzle_with_ten_letters() {
     assert_alphametic_solution_eq(
         "AND + A + STRONG + OFFENSE + AS + A + GOOD == DEFENSE",

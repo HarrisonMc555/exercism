@@ -41,20 +41,6 @@ fn bench_large_sequential(b: &mut Bencher) {
     b.iter(|| frequency(&texts));
 }
 
-#[bench]
-#[ignore]
-fn bench_huge_parallel(b: &mut Bencher) {
-    let texts = all_texts(300);
-    b.iter(|| parallel_letter_frequency::frequency(&texts, 3));
-}
-
-#[bench]
-#[ignore]
-fn bench_huge_sequential(b: &mut Bencher) {
-    let texts = all_texts(300);
-    b.iter(|| frequency(&texts));
-}
-
 /// Simple sequential char frequency. Can it be beat?
 pub fn frequency(texts: &[&str]) -> HashMap<char, usize> {
     let mut map = HashMap::new();

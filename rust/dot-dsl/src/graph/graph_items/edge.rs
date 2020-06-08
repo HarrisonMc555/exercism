@@ -17,8 +17,10 @@ impl Edge {
     }
 
     pub fn with_attrs(mut self, attrs: &[(&str, &str)]) -> Self {
-        self.attrs = attrs.iter().map(
-            |&(s1, s2)| (s1.to_owned(), s2.to_owned())).collect();
+        self.attrs = attrs
+            .iter()
+            .map(|&(s1, s2)| (s1.to_owned(), s2.to_owned()))
+            .collect();
         self
     }
 

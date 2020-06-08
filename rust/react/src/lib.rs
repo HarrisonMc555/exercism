@@ -50,8 +50,8 @@ enum Cell<'a, T> {
 type Callback<'a, T> = Box<dyn FnMut(T) -> () + 'a>;
 
 pub struct Reactor<'a, T>
-    where
-        T: Clone + PartialEq,
+where
+    T: Clone + PartialEq,
 {
     cur_input_cell_id: InputCellID,
     cur_compute_cell_id: ComputeCellID,
@@ -63,8 +63,8 @@ pub struct Reactor<'a, T>
 
 // You are guaranteed that Reactor will only be tested against types that are Copy + PartialEq.
 impl<'a, T> Reactor<'a, T>
-    where
-        T: Clone + PartialEq,
+where
+    T: Clone + PartialEq,
 {
     pub fn new() -> Self {
         Reactor {
@@ -118,10 +118,7 @@ impl<'a, T> Reactor<'a, T>
         dependencies: &[CellID],
         compute_func: F,
     ) -> Result<ComputeCellID, CellID> {
-        if let Some(id) = dependencies
-            .iter()
-            .find(|&id| !self.cells.contains_key(id))
-        {
+        if let Some(id) = dependencies.iter().find(|&id| !self.cells.contains_key(id)) {
             return Err(*id);
         }
         let compute_cell_id = self.get_next_compute_cell_id();
@@ -198,9 +195,7 @@ impl<'a, T> Reactor<'a, T>
         if let Some(Cell::Input(value)) = self.cells.get_mut(&CellID::Input(id)) {
             if *value != new_value {
                 *value = new_value;
-                if let Some(dependants) =
-                self.dependants.get(&CellID::Input(id)).cloned()
-                {
+                if let Some(dependants) = self.dependants.get(&CellID::Input(id)).cloned() {
                     for compute_cell_id in dependants {
                         self.run_callbacks(compute_cell_id);
                     }
@@ -286,7 +281,9 @@ impl<'a, T> Reactor<'a, T>
 }
 
 impl<'a, T> Default for Reactor<'a, T>
-    where T: Clone + Eq {
+where
+    T: Clone + Eq,
+{
     fn default() -> Self {
         Self::new()
     }

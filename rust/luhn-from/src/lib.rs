@@ -1,7 +1,7 @@
 use std::fmt;
 
 pub struct Luhn {
-    string: String
+    string: String,
 }
 
 impl Luhn {
@@ -14,7 +14,7 @@ impl Luhn {
 impl<T: fmt::Display> From<T> for Luhn {
     fn from(input: T) -> Self {
         Luhn {
-            string: input.to_string()
+            string: input.to_string(),
         }
     }
 }

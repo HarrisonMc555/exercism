@@ -2,8 +2,7 @@ use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
 
 #[derive(Debug)]
-pub struct CustomSet<T>
-{
+pub struct CustomSet<T> {
     mapping: Vec<Option<Vec<T>>>,
     count: usize,
 }

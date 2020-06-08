@@ -200,7 +200,8 @@ fn intersection_of_two_sets_with_no_shared_elements_is_an_empty_set() {
 }
 
 #[test]
-fn intersection_of_two_sets_with_shared_elements_is_a_set_of_the_shared_elements() {
+fn intersection_of_two_sets_with_shared_elements_is_a_set_of_the_shared_elements(
+) {
     let set1 = CustomSet::new(&[1, 2, 3, 4]);
     let set2 = CustomSet::new(&[3, 2, 5]);
     assert_eq!(set1.intersection(&set2), CustomSet::new(&[2, 3]));

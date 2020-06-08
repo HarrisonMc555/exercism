@@ -10,10 +10,7 @@ pub fn sum_of_multiples(limit: u32, factors: &[u32]) -> u32 {
     multiples.iter().sum()
 }
 
-fn get_multiples(
-    limit: u32,
-    factor: u32,
-) -> Vec<u32> {
+fn get_multiples(limit: u32, factor: u32) -> Vec<u32> {
     if factor == 0 {
         vec![0]
     } else {

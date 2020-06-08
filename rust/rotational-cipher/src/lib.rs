@@ -5,12 +5,8 @@ pub fn rotate(input: &str, key: i8) -> String {
 }
 
 lazy_static! {
-    static ref UPPERCASE_LETTERS: Vec<char> = {
-        (b'A'..=b'Z').map(char::from).collect()
-    };
-    static ref LOWERCASE_LETTERS: Vec<char> = {
-        (b'a'..=b'z').map(char::from).collect()
-    };
+    static ref UPPERCASE_LETTERS: Vec<char> = { (b'A'..=b'Z').map(char::from).collect() };
+    static ref LOWERCASE_LETTERS: Vec<char> = { (b'a'..=b'z').map(char::from).collect() };
 }
 
 const NUM_LETTERS: u16 = 26;

@@ -160,7 +160,6 @@ fn test_gt_varying_negative_precisions() {
 fn test_negatives() {
     assert!(Decimal::try_from("-1").is_some());
     assert_eq!(decimal("0") - decimal("1"), decimal("-1"));
-    eprintln!("{:?}", decimal("-6.5"));
     assert_eq!(decimal("5.5") + decimal("-6.5"), decimal("-1"));
 }
 
@@ -179,7 +178,10 @@ fn test_multiply_by_negative() {
 #[test]
 fn test_simple_partial_cmp() {
     assert!(decimal("1.0") < decimal("1.1"));
-    assert!(decimal("0.00000000000000000000001") > decimal("-20000000000000000000000000000"));
+    assert!(
+        decimal("0.00000000000000000000001")
+            > decimal("-20000000000000000000000000000")
+    );
 }
 
 // test carrying rules

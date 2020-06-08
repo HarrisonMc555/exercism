@@ -15,8 +15,8 @@ impl<'a> CodonsInfo<'a> {
         if rna.len() % 3 != 0 {
             return None;
         }
-        for i in (0..rna.len() / 3).map(|i| i*3) {
-            let codon = &rna[i..i+3];
+        for i in (0..rna.len() / 3).map(|i| i * 3) {
+            let codon = &rna[i..i + 3];
             if let Some(name) = self.codon_to_name.get(&codon) {
                 if name == &"stop codon" {
                     return Some(result);

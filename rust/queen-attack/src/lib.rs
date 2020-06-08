@@ -8,7 +8,7 @@ pub struct ChessPosition {
 pub struct Queen(ChessPosition);
 
 impl ChessPosition {
-    #![allow(clippy::new_ret_no_self)]    
+    #![allow(clippy::new_ret_no_self)]
     pub fn new(rank: i32, file: i32) -> Option<Self> {
         if ChessPosition::rank_in_range(rank)
             && ChessPosition::file_in_range(file)

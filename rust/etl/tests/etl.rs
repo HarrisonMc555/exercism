@@ -15,7 +15,8 @@ fn test_transform_one_value() {
 fn test_transform_more_values() {
     let input = input_from(&[(1, vec!['A', 'E', 'I', 'O', 'U'])]);
 
-    let expected = expected_from(&[('a', 1), ('e', 1), ('i', 1), ('o', 1), ('u', 1)]);
+    let expected =
+        expected_from(&[('a', 1), ('e', 1), ('i', 1), ('o', 1), ('u', 1)]);
 
     assert_eq!(expected, etl::transform(&input));
 }

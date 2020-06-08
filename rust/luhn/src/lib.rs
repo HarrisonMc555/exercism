@@ -29,7 +29,8 @@ fn double_every_second_num_from_right(code: &[u32]) -> Vec<u32> {
             } else {
                 *d
             }
-        }).collect()
+        })
+        .collect()
 }
 
 fn luhn_double(num: u32) -> u32 {

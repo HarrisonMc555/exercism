@@ -25,8 +25,7 @@ fn encode_portion(source: &[char]) -> Option<(String, &[char])> {
         return None;
     }
     let first_char = source[0];
-    let num_matching_chars = source.iter().take_while(|&&c| c ==
-                                                      first_char).count();
+    let num_matching_chars = source.iter().take_while(|&&c| c == first_char).count();
     let rest = &source[num_matching_chars..];
     let encoded = if num_matching_chars == 1 {
         first_char.to_string()
@@ -40,10 +39,7 @@ fn decode_portion(source: &[char]) -> Option<(String, &[char])> {
     if source.is_empty() {
         return None;
     }
-    let digit_chars: String = source
-        .iter()
-        .take_while(|&&c| c.is_ascii_digit())
-        .collect();
+    let digit_chars: String = source.iter().take_while(|&&c| c.is_ascii_digit()).collect();
     if digit_chars.is_empty() {
         let decoded = source[0].to_string();
         let rest = &source[1..];
@@ -53,6 +49,8 @@ fn decode_portion(source: &[char]) -> Option<(String, &[char])> {
     let letter = source[num_digits];
     let rest = &source[num_digits + 1..];
     let num_letters: usize = digit_chars.parse().unwrap();
-    let decoded = std::iter::repeat(letter).take(num_letters as usize).collect();
+    let decoded = std::iter::repeat(letter)
+        .take(num_letters as usize)
+        .collect();
     Some((decoded, rest))
 }

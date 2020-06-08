@@ -61,7 +61,7 @@ fn get_discounted_price(
     if book_counts.len() < num {
         return None;
     }
-    
+
     let books_to_discount = &book_counts[..num];
     // You need to have at least one of each book
     // The current implementation removes zeros, so this should never happen
@@ -71,8 +71,7 @@ fn get_discounted_price(
 
     // We've applied a discount to some of these books, but there may be others
     // remaining that didn't get discounted
-    let remaining_discounted_books =
-        books_to_discount.iter().map(|c| c - 1);
+    let remaining_discounted_books = books_to_discount.iter().map(|c| c - 1);
     let other_books = book_counts[num..].iter().cloned();
 
     // We return the books that did not get discounted. The books that we

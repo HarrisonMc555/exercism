@@ -42,7 +42,7 @@ macro_rules! test_read {
                     chunks_read += 1;
                 }
 
-                assert_eq!(size / CHUNK_SIZE, chunks_read);
+                assert_eq!(size / CHUNK_SIZE + std::cmp::min(1, size % CHUNK_SIZE), chunks_read);
                 // we read once more than the number of chunks, because the final
                 // read returns 0 new bytes
                 assert_eq!(1+chunks_read, reader.reads());
@@ -62,7 +62,7 @@ macro_rules! test_read {
                     chunks_read += 1;
                 }
 
-                assert_eq!(size / CHUNK_SIZE, chunks_read);
+                assert_eq!(size / CHUNK_SIZE + std::cmp::min(1, size % CHUNK_SIZE), chunks_read);
                 // the BufReader should smooth out the reads, collecting into
                 // a buffer and performing only two read operations:
                 // the first collects everything into the buffer,
@@ -169,21 +169,26 @@ test_write!(write_string (
     |d: &[u8]| d.len()
 ));
 
-test_read!(
-read_byte_literal(
+test_read!(read_byte_literal(
     &[1_u8, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144][..],
     |d: &[u8]| d.len()
 ));
-test_write!(
-write_byte_literal(
-    &[
-        2_u8, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61,
-    ][..],
+test_write!(write_byte_literal(
+    &[2_u8, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61,][..],
     |d: &[u8]| d.len()
 ));
 
-test_read!(
-read_file(
+test_read!(read_file(
     ::std::fs::File::open("README.md").expect("readme must be present"),
     |f: &::std::fs::File| f.metadata().expect("metadata must be present").len() as usize
 ));
+
+#[test]
+fn read_stats_by_ref_returns_wrapped_reader() {
+    use paasio::ReadStats;
+
+    let input =
+        "Why, sometimes I've believed as many as six impossible things before breakfast".as_bytes();
+    let reader = ReadStats::new(input);
+    assert_eq!(reader.get_ref(), &input);
+}

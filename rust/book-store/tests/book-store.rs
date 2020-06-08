@@ -135,7 +135,8 @@ fn test_three_each_of_first_2_books_and_2_each_of_remaining_books() {
 
 #[test]
 /// Four groups of four are cheaper than two groups each of five and three
-fn test_four_groups_of_four_are_cheaper_than_two_groups_each_of_five_and_three() {
+fn test_four_groups_of_four_are_cheaper_than_two_groups_each_of_five_and_three()
+{
     process_total_case(
         (
             vec![1, 1, 2, 2, 3, 3, 4, 5, 1, 1, 2, 2, 3, 3, 4, 5],

@@ -77,7 +77,9 @@ impl Hand {
             .iter()
             .flat_map(|fun| fun(self)) // Apply functions, skipping None
             .next() // Get first one or default
-            .unwrap_or_else(|| HandScore::new(PartialHandScore::None, self.clone()))
+            .unwrap_or_else(|| {
+                HandScore::new(PartialHandScore::None, self.clone())
+            })
     }
 
     fn suits(&self) -> Vec<Suit> {

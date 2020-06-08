@@ -36,7 +36,11 @@ pub enum Error {
 ///  * Never output leading 0 digits. However, your function must be able to
 ///     process input with leading 0 digits.
 ///
-pub fn convert(number: &[u32], from_base: u32, to_base: u32) -> Result<Vec<u32>, Error> {
+pub fn convert(
+    number: &[u32],
+    from_base: u32,
+    to_base: u32,
+) -> Result<Vec<u32>, Error> {
     let native_number = from_digits(number, from_base)?;
     to_digits(native_number, to_base)
 }

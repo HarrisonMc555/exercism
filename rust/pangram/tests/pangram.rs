@@ -14,7 +14,8 @@ fn classic_pangram_is_a_pangram() {
 
 #[test]
 fn pangrams_must_have_all_letters() {
-    let sentence = "a quick movement of the enemy will jeopardize five gunboats";
+    let sentence =
+        "a quick movement of the enemy will jeopardize five gunboats";
     assert!(!is_pangram(&sentence));
 }
 
@@ -56,6 +57,7 @@ fn capitals_and_punctuation_can_be_in_pangrams() {
 
 #[test]
 fn non_ascii_characters_can_be_in_pangrams() {
-    let sentence = "Victor jagt zwölf Boxkämpfer quer über den großen Sylter Deich.";
+    let sentence =
+        "Victor jagt zwölf Boxkämpfer quer über den großen Sylter Deich.";
     assert!(is_pangram(&sentence));
 }

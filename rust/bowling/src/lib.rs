@@ -91,7 +91,7 @@ impl BowlingGame {
         } else if first_is_strike {
             second_roll + pins <= NUM_PINS
         } else {
-            first_is_spare            
+            first_is_spare
         }
     }
 

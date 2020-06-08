@@ -1,16 +1,12 @@
-use rand::thread_rng;
 use rand::seq::SliceRandom;
+use rand::thread_rng;
 
 #[macro_use]
 extern crate lazy_static;
 
 lazy_static! {
-    static ref LETTERS: Vec<char> = {
-        (b'A'..=b'Z').map(char::from).collect()
-    };
-    static ref DIGITS: Vec<char> = {
-        (b'0'..=b'9').map(char::from).collect()
-    };
+    static ref LETTERS: Vec<char> = { (b'A'..=b'Z').map(char::from).collect() };
+    static ref DIGITS: Vec<char> = { (b'0'..=b'9').map(char::from).collect() };
 }
 
 pub struct Robot {

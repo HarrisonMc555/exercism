@@ -64,7 +64,11 @@ fn all_next_moves(
     limit: Limit,
     prev_states: &HashSet<State>,
 ) -> HashSet<State> {
-    states.iter().cloned().flat_map(|st| next_moves(st, limit, prev_states)).collect()
+    states
+        .iter()
+        .cloned()
+        .flat_map(|st| next_moves(st, limit, prev_states))
+        .collect()
 }
 
 fn next_moves(

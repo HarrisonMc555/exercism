@@ -5,7 +5,8 @@ use regex::{Captures, Regex};
 use std::collections::HashMap;
 
 lazy_static! {
-    static ref WORD_RE: Regex = Regex::new(r"\b((?P<word2>\w+'\w+)|'(?P<word3>\w+)'|(?P<word1>\w+))\b").unwrap();
+    static ref WORD_RE: Regex =
+        Regex::new(r"\b((?P<word2>\w+'\w+)|'(?P<word3>\w+)'|(?P<word1>\w+))\b").unwrap();
 }
 
 /// Count occurrences of words.

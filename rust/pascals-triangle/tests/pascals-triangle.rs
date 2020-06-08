@@ -1,5 +1,3 @@
-extern crate pascals_triangle;
-
 use pascals_triangle::*;
 
 #[test]
@@ -24,7 +22,6 @@ fn two_rows() {
 }
 
 #[test]
-
 fn three_rows() {
     let pt = PascalsTriangle::new(3);
     let expected: Vec<Vec<u32>> = vec![vec![1], vec![1, 1], vec![1, 2, 1]];
@@ -32,7 +29,6 @@ fn three_rows() {
 }
 
 #[test]
-
 fn last_of_four_rows() {
     let pt = PascalsTriangle::new(4);
     let expected: Vec<u32> = vec![1, 3, 3, 1];
