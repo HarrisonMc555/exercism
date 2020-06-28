@@ -1,4 +1,4 @@
-This is great! It looks like you've learned a lot about how Rust works
+This is great! It looks like you've learned a lot about how Rust works.
 
 One thing to keep in mind is that constructing new data structures costs time and memory. In this case, you are creating a `Vec<&str>`. However, you don't actually need this `Vec`—in the end, you want a `String`.
 
