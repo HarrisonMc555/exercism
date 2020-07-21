@@ -2,9 +2,7 @@ This is great! Excellent use of iterators, `collect`, etc.
 
 I just have a few things I think you should look into before you move on.
 
-First, using `rsplit` works but is a bit overkill. I would try looking into the [`rev`] and [`chars`] methods!
-
-In addition, you're using the `collect` method to turn an iterator of strings into a `Vec` of strings. You then use this `Vec` of strings to join them together into one final string. However, this temporary `Vec` is actually unnecessary! You could actually just `collect` into a `String` directly.
+First, using `rsplit` works but is a bit much for this exercise. It's usually used for splitting on patterns. A simpler solution to understand (and probably more performant, though I'm not sure) would be to use the [`rev`] and [`chars`] methods!
 
 Great job! Looking forward to your next iteration 😊
 
