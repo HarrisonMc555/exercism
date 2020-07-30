@@ -36,8 +36,7 @@ impl<T: Default> CircularBuffer<T> {
         if self.is_empty() {
             return Err(Error::EmptyBuffer);
         }
-        let element =
-            mem::replace(&mut self.buffer[self.read_index], T::default());
+        let element = mem::take(&mut self.buffer[self.read_index]);
         self.increment_read_index();
         self.reached_capacity_flag = false;
         Ok(element)
@@ -46,7 +45,7 @@ impl<T: Default> CircularBuffer<T> {
     pub fn clear(&mut self) {
         for element in self.buffer.iter_mut() {
             // Drop all elements
-            mem::replace(element, T::default());
+            mem::take(element);
         }
         self.write_index = 0;
         self.read_index = 0;
@@ -73,11 +72,11 @@ impl<T: Default> CircularBuffer<T> {
         (self.write_index + self.capacity() - self.read_index) % self.capacity()
     }
 
-    fn is_full(&self) -> bool {
+    pub fn is_full(&self) -> bool {
         self.reached_capacity_flag
     }
 
-    fn is_empty(&self) -> bool {
+    pub fn is_empty(&self) -> bool {
         !self.is_full() && self.write_index == self.read_index
     }
 

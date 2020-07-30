@@ -319,6 +319,6 @@ impl Ord for HandScore {
 
 impl PartialEq for HandScore {
     fn eq(&self, other: &HandScore) -> bool {
-        return self.cmp(&other) == Ordering::Equal;
+        self.cmp(&other) == Ordering::Equal
     }
 }

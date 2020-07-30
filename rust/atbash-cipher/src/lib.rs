@@ -1,5 +1,5 @@
 const ATBASH_LENGTH: u8 = 26;
-const ATBASH_START: u8 = 'a' as u8;
+const ATBASH_START: u8 = b'a';
 const ATBASH_WORD_LENGTH: usize = 5;
 
 /// "Encipher" with the Atbash cipher.

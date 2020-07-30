@@ -5,7 +5,7 @@ extern crate lazy_static;
 
 lazy_static! {
     static ref LOWERCASE_LETTERS: Vec<char> =
-        { (b'a'..=b'z').map(|b| b as char).collect() };
+        (b'a'..=b'z').map(|b| b as char).collect();
 }
 
 /// Determine whether a sentence is a pangram.

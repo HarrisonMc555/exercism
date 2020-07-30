@@ -28,7 +28,7 @@ pub fn winning_hands<'a>(hands: &[&'a str]) -> Option<Vec<&'a str>> {
 
 fn parse_hand_refs<'a>(hand_strings: &[&'a str]) -> Option<Vec<HandRef<'a>>> {
     hand_strings
-        .into_iter()
+        .iter()
         .map(|&s| HandRef::from_string(s))
         .collect()
 }

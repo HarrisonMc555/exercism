@@ -1,6 +1,7 @@
 use std::collections::BTreeMap;
 use std::collections::BTreeSet;
 
+#[derive(Default)]
 pub struct School {
     roster: BTreeMap<u32, BTreeSet<String>>,
 }
@@ -15,7 +16,7 @@ impl School {
     pub fn add(&mut self, grade: u32, student: &str) {
         self.roster
             .entry(grade)
-            .or_insert_with(|| BTreeSet::new())
+            .or_insert_with(BTreeSet::new)
             .insert(student.to_string());
     }
 

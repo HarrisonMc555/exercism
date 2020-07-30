@@ -8,7 +8,7 @@ pub fn anagrams_for<'a>(
     let word = word.to_lowercase();
     let word_counter = letter_counter(&word);
     possible_anagrams
-        .into_iter()
+        .iter()
         .filter(|possibility| is_anagram(possibility, &word, &word_counter))
         .copied() // Just copying the reference
         .collect()

@@ -13,7 +13,7 @@ lazy_static! {
         bracket_hash
     };
     static ref CLOSE_BRACKETS: HashSet<char> =
-        { BRACKET_MATCH_HASH.values().cloned().collect() };
+        BRACKET_MATCH_HASH.values().cloned().collect();
 }
 
 pub fn brackets_are_balanced(string: &str) -> bool {

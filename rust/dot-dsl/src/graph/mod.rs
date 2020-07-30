@@ -4,6 +4,7 @@ use crate::graph::graph_items::edge::Edge;
 use crate::graph::graph_items::node::Node;
 use std::collections::HashMap;
 
+#[derive(Default)]
 pub struct Graph {
     pub nodes: Vec<Node>,
     pub edges: Vec<Edge>,

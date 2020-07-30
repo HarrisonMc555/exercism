@@ -204,7 +204,7 @@ where
         {
             if let Some(list) = maybe_list {
                 if let Some(elem) = list.get(self.inner_index) {
-                    self.outer_index = self.outer_index + i;
+                    self.outer_index += i;
                     self.inner_index += 1;
                     return Some(elem);
                 }

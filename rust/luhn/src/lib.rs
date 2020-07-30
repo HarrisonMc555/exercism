@@ -43,7 +43,7 @@ fn luhn_double(num: u32) -> u32 {
 }
 
 fn clean(code: &str) -> String {
-    code.chars().into_iter().filter(|c| *c != ' ').collect()
+    code.chars().filter(|c| *c != ' ').collect()
 }
 
 fn valid_format(code: &str) -> bool {

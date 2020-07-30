@@ -117,30 +117,6 @@ impl Note {
         value < Note::NUM_NOTES
     }
 
-    fn to_string(&self) -> String {
-        match (self.note, self.modifier) {
-            (0, _) => "A",
-            (1, NoteModifier::Sharp) => "A#",
-            (1, NoteModifier::Flat) => "Bb",
-            (2, _) => "B",
-            (3, _) => "C",
-            (4, NoteModifier::Sharp) => "C#",
-            (4, NoteModifier::Flat) => "Db",
-            (5, _) => "D",
-            (6, NoteModifier::Sharp) => "D#",
-            (6, NoteModifier::Flat) => "Eb",
-            (7, _) => "E",
-            (8, _) => "F",
-            (9, NoteModifier::Sharp) => "F#",
-            (9, NoteModifier::Flat) => "Gb",
-            (10, _) => "G",
-            (11, NoteModifier::Sharp) => "G#",
-            (11, NoteModifier::Flat) => "Ab",
-            (_, _) => panic!("Invalid note value {:?}", self),
-        }
-        .to_string()
-    }
-
     fn try_from_string(s: &str) -> Option<Self> {
         let note = match s {
             "A" => Note::new(0, NoteModifier::Sharp),
@@ -202,4 +178,30 @@ enum NoteModifier {
     Natural,
     Sharp,
     Flat,
+}
+
+impl std::fmt::Display for Note {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        let s = match (self.note, self.modifier) {
+            (0, _) => "A",
+            (1, NoteModifier::Sharp) => "A#",
+            (1, NoteModifier::Flat) => "Bb",
+            (2, _) => "B",
+            (3, _) => "C",
+            (4, NoteModifier::Sharp) => "C#",
+            (4, NoteModifier::Flat) => "Db",
+            (5, _) => "D",
+            (6, NoteModifier::Sharp) => "D#",
+            (6, NoteModifier::Flat) => "Eb",
+            (7, _) => "E",
+            (8, _) => "F",
+            (9, NoteModifier::Sharp) => "F#",
+            (9, NoteModifier::Flat) => "Gb",
+            (10, _) => "G",
+            (11, NoteModifier::Sharp) => "G#",
+            (11, NoteModifier::Flat) => "Ab",
+            (_, _) => panic!("Invalid note value {:?}", self),
+        };
+        write!(f, "{}", s)
+    }
 }

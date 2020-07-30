@@ -59,7 +59,7 @@ pub fn lsp(string_digits: &str, span: usize) -> Result<u64, Error> {
     let digits = to_digits(string_digits, RADIX)?;
     Ok(digits
         .windows(span)
-        .map(|window| window.into_iter().product())
+        .map(|window| window.iter().product())
         .max()
         .unwrap_or(1))
 }
@@ -72,7 +72,7 @@ fn to_digits(string_digits: &str, radix: u32) -> Result<Vec<u64>, Error> {
         .map(|c| {
             c.to_digit(radix)
                 .ok_or(Error::InvalidDigit(c))
-                .map(|d| u64::from(d))
+                .map(u64::from)
         })
         .collect()
 }

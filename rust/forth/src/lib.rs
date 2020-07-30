@@ -115,7 +115,7 @@ impl Forth {
         for word in iter {
             let word = word.to_ascii_lowercase();
             if word == CUSTOM_END {
-                return Ok(Command::Definition(custom_command.to_string(), commands));
+                return Ok(Command::Definition(custom_command, commands));
             } else {
                 commands.push(self.parse_single_command(word)?);
             }

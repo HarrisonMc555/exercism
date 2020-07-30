@@ -23,5 +23,5 @@ where
 }
 
 fn join(vec: &[char]) -> String {
-    vec.into_iter().collect()
+    vec.iter().collect()
 }

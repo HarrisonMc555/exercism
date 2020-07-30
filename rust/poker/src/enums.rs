@@ -34,16 +34,6 @@ impl Suit {
             _ => return None,
         })
     }
-
-    pub fn to_string(&self) -> String {
-        match self {
-            Suit::Heart => "H",
-            Suit::Spade => "S",
-            Suit::Diamond => "D",
-            Suit::Club => "C",
-        }
-        .to_string()
-    }
 }
 
 impl Rank {
@@ -106,8 +96,26 @@ impl Rank {
         }
     }
 
-    pub fn to_string(&self) -> String {
-        match self {
+    pub fn is_ace(&self) -> bool {
+        self == &Rank::Ace
+    }
+}
+
+impl std::fmt::Display for Suit {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        let s = match self {
+            Suit::Heart => "H",
+            Suit::Spade => "S",
+            Suit::Diamond => "D",
+            Suit::Club => "C",
+        };
+        write!(f, "{}", s)
+    }
+}
+
+impl std::fmt::Display for Rank {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        let s = match self {
             Rank::Two => "2",
             Rank::Three => "3",
             Rank::Four => "4",
@@ -121,23 +129,7 @@ impl Rank {
             Rank::Queen => "Q",
             Rank::King => "K",
             Rank::Ace => "A",
-        }
-        .to_string()
-    }
-
-    pub fn is_ace(&self) -> bool {
-        self == &Rank::Ace
-    }
-}
-
-impl std::fmt::Display for Suit {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{}", self.to_string())
-    }
-}
-
-impl std::fmt::Display for Rank {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{}", self.to_string())
+        };
+        write!(f, "{}", s)
     }
 }

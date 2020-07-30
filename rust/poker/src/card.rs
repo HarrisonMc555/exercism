@@ -26,7 +26,7 @@ impl Card {
         let rank_str: String =
             letters.get(..letters.len() - 1)?.iter().collect();
         let rank = Rank::from_string(&rank_str)?;
-        let suit_char = letters.get(letters.len() - 1)?;
+        let suit_char = letters.last()?;
         let suit = Suit::from_char(*suit_char)?;
         Some(Card::new(rank, suit))
     }

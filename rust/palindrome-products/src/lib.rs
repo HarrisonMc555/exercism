@@ -1,3 +1,5 @@
+#![allow(clippy::redundant_closure)]
+
 pub fn get_palindrome_products(min: u64, max: u64) -> (u64, u64) {
     (min, max)
 }
@@ -10,9 +12,8 @@ pub fn min(palindromes: &(u64, u64)) -> Option<u64> {
         let pairs = xs.zip(ys).take_while(|(x, y)| x <= y);
         let products = pairs.map(|(x, y)| x * y);
         let palindromes = products.filter(|product| is_palindrome(product));
-        match palindromes.min() {
-            Some(product) => return Some(product),
-            None => (),
+        if let Some(product) = palindromes.min() {
+            return Some(product);
         }
     }
     None
@@ -26,9 +27,8 @@ pub fn max(palindromes: &(u64, u64)) -> Option<u64> {
         let pairs = xs.zip(ys).take_while(|(x, y)| x <= y);
         let products = pairs.map(|(x, y)| x * y);
         let palindromes = products.filter(|product| is_palindrome(product));
-        match palindromes.max() {
-            Some(product) => return Some(product),
-            None => (),
+        if let Some(product) = palindromes.max() {
+            return Some(product);
         }
     }
     None
