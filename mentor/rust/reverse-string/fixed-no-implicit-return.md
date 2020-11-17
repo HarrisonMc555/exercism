@@ -1,4 +1,4 @@
-This is great! Very nicely done.
+This is great! Very nice improvement.
 
 I just have one suggestion: on the next exercise, try out [implicit return statements]! They're considered idiomatic Rust and help reduce redundancy.
 
