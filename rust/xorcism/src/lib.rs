@@ -15,18 +15,6 @@ pub struct Xorcism<'a> {
 pub trait MungeOutput: Iterator<Item = u8> + ExactSizeIterator {}
 impl<T> MungeOutput for T where T: Iterator<Item = u8> + ExactSizeIterator {}
 
-// struct Munger<'a> {
-//     xorcism: Xorcism<'a>,
-//     data: &'a [u8],
-//     index: usize,
-// }
-
-// impl MungeOutput for Munger {
-//     fn next(&mut self) -> Option<Self::Item> {
-
-//     }
-// }
-
 impl<'a> Xorcism<'a> {
     /// Create a new Xorcism munger from a key
     ///
@@ -36,7 +24,7 @@ impl<'a> Xorcism<'a> {
         Key: AsRef<[u8]> + ?Sized,
     {
         let key = key.as_ref();
-        if key.len() <= 0 {
+        if key.is_empty() {
             panic!("Cannot use empty key");
         }
         Xorcism { key, index: 0 }
@@ -49,7 +37,7 @@ impl<'a> Xorcism<'a> {
     pub fn munge_in_place(&mut self, data: &mut [u8]) {
         for byte in data.iter_mut() {
             *byte ^= self.key[self.index];
-            self.index = (self.index + 1) % self.key.len();
+            self.increment_index();
         }
     }
 
@@ -68,67 +56,30 @@ impl<'a> Xorcism<'a> {
         'a: 'b,
     {
         let data_iter = data.into_iter();
-        let key_iter = self
-            .key
-            .iter()
-            .cycle()
-            .skip(self.index)
-            .take((&data_iter).len())
-            // .copied()
-            // .cloned()
-            .collect::<Vec<_>>();
-        self.index = (self.index + data_iter.len()) % self.key.len();
-        // let key_iter = self
-        //     .key
-        //     .iter()
-        //     .cycle()
-        //     .skip(self.index)
-        //     .take(data_iter.len());
-        // data.into_iter()
-        data_iter
-            .zip(key_iter)
-            .map(move |(data_byte, key_byte)| key_byte ^ data_byte.borrow())
-
-        // data.into_iter().map(move |byte| {
-        //     let output = byte.borrow() ^ self.key[self.index];
-        //     self.index = (self.index + 1) % self.key.len();
-        //     output
-        // })
-        // Munger {
-        //     xorcism: self,
-        //     iter: data.into_iter(),
-        // }
+        let mut index = self.index;
+        self.add_to_index(data_iter.len());
+        let key = self.key;
+        data_iter.map(move |byte| {
+            let output = byte.borrow() ^ key[index];
+            index = increment_index(key, index);
+            output
+        })
     }
+
+    fn increment_index(&mut self) {
+        self.add_to_index(1);
+    }
+
+    fn add_to_index(&mut self, len: usize) {
+        self.index = add_to_index(self.key, self.index, len);
+    }
+
 }
 
-// struct Munger<'a, T>
-// where
-//     T: Iterator + ExactSizeIterator,
-//     T::Item: Borrow<u8>,
-// {
-//     xorcism: &'a mut Xorcism<'a>,
-//     iter: T,
-// }
+fn increment_index(key: &[u8], index: usize) -> usize {
+    add_to_index(key, index, 1)
+}
 
-// impl<'a, T> Iterator for Munger<'a, T>
-// where
-//     T: Iterator + ExactSizeIterator,
-//     T::Item: Borrow<u8>,
-// {
-//     type Item = u8;
-
-//     fn next(&mut self) -> Option<Self::Item> {
-//         self.iter.next().map(|byte| {
-//             let output = byte.borrow() ^ self.xorcism.key[self.xorcism.index];
-//             self.xorcism.index = (self.xorcism.index + 1) % self.xorcism.key.len();
-//             output
-//         })
-//     }
-// }
-
-// impl<'a, T> ExactSizeIterator for Munger<'a, T>
-// where
-//     T: Iterator + ExactSizeIterator,
-//     T::Item: Borrow<u8>,
-// {
-// }
+fn add_to_index(key: &[u8], index: usize, len: usize) -> usize {
+    (index + len) % key.len()
+}
