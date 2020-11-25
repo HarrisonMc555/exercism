@@ -5,22 +5,22 @@ class DnDCharacter {
   static Random rand = new Random();
   static final int numRollsForValue = 4;
 
-  private int _strength;
-  private int _dexterity;
-  private int _constitution;
-  private int _intelligence;
-  private int _wisdom;
-  private int _charisma;
-  private int _hitpoints;
+  private int strength;
+  private int dexterity;
+  private int constitution;
+  private int intelligence;
+  private int wisdom;
+  private int charisma;
+  private int hitpoints;
 
   public DnDCharacter() {
-    _strength = ability();
-    _dexterity = ability();
-    _constitution = ability();
-    _intelligence = ability();
-    _wisdom = ability();
-    _charisma = ability();
-    _hitpoints = 10 + modifier(_constitution);
+    strength = ability();
+    dexterity = ability();
+    constitution = ability();
+    intelligence = ability();
+    wisdom = ability();
+    charisma = ability();
+    hitpoints = 10 + modifier(constitution);
   }
 
   int ability() {
@@ -34,51 +34,47 @@ class DnDCharacter {
   }
 
   int modifier(int input) {
-    // return divideRoundDown(input - 10, 2);
-    return 4;
+    return divideRoundDown(input - 10, 2);
+    // return (input - 10) / 2;
   }
 
   int getStrength() {
-    return _strength;
+    return strength;
   }
 
   int getDexterity() {
-    return _dexterity;
+    return dexterity;
   }
 
   int getConstitution() {
-    return _constitution;
+    return constitution;
   }
 
   int getIntelligence() {
-    return _intelligence;
+    return intelligence;
   }
 
   int getWisdom() {
-    return _wisdom;
+    return wisdom;
   }
 
   int getCharisma() {
-    return _charisma;
+    return charisma;
   }
 
   int getHitpoints() {
-    return _hitpoints;
+    return hitpoints;
   }
 
-  static int divideRoundDown(int numerator, int denominator) {
-    if (denominator >= 0) {
-      if (numerator >= 0) {
-        return numerator / denominator;
-      } else {
-        return (numerator + 1) / denominator - 1;
-      }
+  static final int divideRoundDown(int dividend, int divisor) {
+    int quotient = dividend / divisor;
+    boolean dividendIsNegative = dividend < 0;
+    boolean divisorIsNegative = divisor < 0;
+    boolean quotientIsNegative = dividendIsNegative ^ divisorIsNegative;
+    if (quotientIsNegative && quotient * divisor != dividend) {
+      return quotient - 1;
     } else {
-      if (numerator > 0) {
-        return -1 - (1 - numerator) / denominator;
-      } else {
-        return numerator / denominator;
-      }
+      return quotient;
     }
   }
 
@@ -87,10 +83,10 @@ class DnDCharacter {
   }
 
   static int sum(int[] array) {
-    int _sum = 0;
+    int sum = 0;
     for (int x : array) {
-      _sum += x;
+      sum += x;
     }
-    return _sum;
+    return sum;
   }
 }
