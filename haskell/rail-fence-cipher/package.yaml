@@ -3,6 +3,8 @@ version: 1.1.0.3
 
 dependencies:
   - base
+  - vector
+  - ListZipper
 
 library:
   exposed-modules: RailFenceCipher
