@@ -1,5 +1,5 @@
 pub fn abbreviate(phrase: &str) -> String {
-    let words = phrase.split(|c: char| !c.is_ascii_alphanumeric());
+    let words = phrase.split(|c: char| !c.is_alphanumeric());
     let capitalized_first_letters =
         words.filter_map(get_capitalized_first_letters);
     let capitalized_strings =

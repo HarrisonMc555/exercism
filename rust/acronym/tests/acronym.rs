@@ -45,3 +45,11 @@ fn hyphenated() {
         "CMOS"
     );
 }
+
+#[test]
+fn spanish() {
+    assert_eq!(
+        acronym::abbreviate("una ciudad pequeña"),
+        "UCP"
+    )
+}
