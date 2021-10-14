@@ -10,9 +10,9 @@ library:
   exposed-modules: Counting
   source-dirs: src
   ghc-options: -Wall
-  # dependencies:
-  # - foo       # List here the packages you
-  # - bar       # want to use in your solution.
+  dependencies:
+    - containers
+    - array
 
 tests:
   test:
