@@ -21,10 +21,12 @@ impl<T> LinkedList<T> {
         self.cursor_front().take()
     }
 
+    #[must_use]
     pub fn front(&self) -> Option<&T> {
         self.iter().next()
     }
 
+    #[must_use]
     pub fn back(&self) -> Option<&T> {
         self.iter().last()
     }
@@ -32,8 +34,8 @@ impl<T> LinkedList<T> {
 
 impl<T> std::iter::FromIterator<T> for LinkedList<T> {
     fn from_iter<I>(iter: I) -> Self
-        where
-            I: IntoIterator<Item = T>,
+    where
+        I: IntoIterator<Item = T>,
     {
         let mut list = Self::new();
         for elem in iter {
