@@ -1,4 +1,4 @@
-use doubly_linked_list::*;
+use doubly_linked_list::LinkedList;
 
 // counter of allocated bytes
 // used by the allocator defined below the test

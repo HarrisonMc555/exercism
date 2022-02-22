@@ -1,9 +1,9 @@
-use doubly_linked_list::*;
+use doubly_linked_list::LinkedList;
 
 #[test]
 fn is_generic() {
     struct Foo;
-    LinkedList::<Foo>::new();
+    let _check = LinkedList::<Foo>::new();
 }
 
 // ———————————————————————————————————————————————————————————
@@ -34,7 +34,7 @@ fn basics_single_element_back() {
 
 #[test]
 fn basics_push_pop_at_back() {
-    let mut list: LinkedList<i32> = LinkedList::new();
+    let mut list: LinkedList<usize> = LinkedList::new();
     for i in 0..10 {
         list.push_back(i);
         assert_eq!(list.len(), i as usize + 1);
@@ -52,7 +52,7 @@ fn basics_push_pop_at_back() {
 // push / pop at front ———————————————————————————————————————
 #[test]
 fn basics_single_element_front() {
-    let mut list: LinkedList<i32> = LinkedList::new();
+    let mut list: LinkedList<usize> = LinkedList::new();
     list.push_front(5);
 
     assert_eq!(list.len(), 1);
@@ -66,7 +66,7 @@ fn basics_single_element_front() {
 
 #[test]
 fn basics_push_pop_at_front() {
-    let mut list: LinkedList<i32> = LinkedList::new();
+    let mut list: LinkedList<usize> = LinkedList::new();
     for i in 0..10 {
         list.push_front(i);
         assert_eq!(list.len(), i as usize + 1);
@@ -84,7 +84,7 @@ fn basics_push_pop_at_front() {
 // push / pop at mixed sides —————————————————————————————————
 #[test]
 fn basics_push_front_pop_back() {
-    let mut list: LinkedList<i32> = LinkedList::new();
+    let mut list: LinkedList<usize> = LinkedList::new();
     for i in 0..10 {
         list.push_front(i);
         assert_eq!(list.len(), i as usize + 1);
@@ -101,7 +101,7 @@ fn basics_push_front_pop_back() {
 
 #[test]
 fn basics_push_back_pop_front() {
-    let mut list: LinkedList<i32> = LinkedList::new();
+    let mut list: LinkedList<usize> = LinkedList::new();
     for i in 0..10 {
         list.push_back(i);
         assert_eq!(list.len(), i as usize + 1);
@@ -122,7 +122,7 @@ fn basics_push_back_pop_front() {
 
 #[test]
 fn iter() {
-    let mut list: LinkedList<i32> = LinkedList::new();
+    let mut list: LinkedList<usize> = LinkedList::new();
     for num in 0..10 {
         list.push_back(num);
     }
@@ -162,7 +162,7 @@ fn cursor_insert_after_in_middle() {
 
     let expected = (0..5).chain(0..10).chain(5..10);
 
-    assert!(expected.eq(list.iter().cloned()));
+    assert!(expected.eq(list.iter().copied()));
 }
 
 #[test]
@@ -183,7 +183,7 @@ fn cursor_insert_before_in_middle() {
 
     let expected = (0..5).chain(0..10).chain(5..10);
 
-    assert!(expected.eq(list.iter().cloned()));
+    assert!(expected.eq(list.iter().copied()));
 }
 
 // "iterates" via next() and checks that it visits the right elements
@@ -195,9 +195,9 @@ fn cursor_next_and_peek() {
     assert_eq!(cursor.peek_mut(), Some(&mut 0));
 
     for n in 1..10 {
-        let next = cursor.next().cloned();
+        let next = cursor.next().copied();
         assert_eq!(next, Some(n));
-        assert_eq!(next, cursor.peek_mut().cloned());
+        assert_eq!(next, cursor.peek_mut().copied());
     }
 }
 
@@ -210,9 +210,9 @@ fn cursor_prev_and_peek() {
     assert_eq!(cursor.peek_mut(), Some(&mut 9));
 
     for n in (0..9).rev() {
-        let prev = cursor.prev().cloned();
+        let prev = cursor.prev().copied();
         assert_eq!(prev, Some(n));
-        assert_eq!(prev, cursor.peek_mut().cloned());
+        assert_eq!(prev, cursor.peek_mut().copied());
     }
 }
 
@@ -297,6 +297,7 @@ fn advanced_is_covariant() {
         x
     }
 
+    use doubly_linked_list::Iter;
     fn a_iter<'a>(i: Iter<'static, &'static str>) -> Iter<'a, &'a str> {
         i
     }
