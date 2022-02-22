@@ -7,6 +7,25 @@ use std::ptr;
 mod pre_implemented;
 
 #[derive(Debug)]
+/// A custom implementation of a [linked list]. This provides linear-time access to the front and back of the list
+/// and linear-time insertion or deletion at any point. Most of the functionality is provided by the [`Cursor`]
+/// struct. Helper functions are provided on the [`LinkedList`] struct itself. You can iterate forward or backwards
+/// through the list using the [`Iter`] struct, as provided by the [`iter`] method.
+///
+/// # Invariants
+/// - All nodes must have exactly one owner, either the previous node or the "head" of the list.
+///   - This is enforced by the ownership semantics of Rust.
+/// - All nodes must have exactly one raw pointer to itself from the next node or the "tail" of the list.
+/// - For every node `N`, the next node's "previous" pointer must point to `N`. If `N` does not have a "next" node,
+///   then the "tail" must point to `N`.
+/// - For every node `N`, the previous node must own `N`. If `N` does not have a "previous" node, then the "head"
+///   of the list must own `N`.
+///
+/// [linked list]: https://en.wikipedia.org/wiki/Linked_list
+/// [`Cursor`]: struct.Cursor.html
+/// [`LinkedList`]: struct.LinkedList.html
+/// [`LinkedList`]: struct.Iter.html
+/// [`iter`]: struct.LinkedList.html#method.iter
 pub struct LinkedList<T> {
     head: Link<T>,
     tail: *mut Node<T>,
@@ -35,7 +54,7 @@ pub struct Cursor<'a, T> {
     list: &'a mut LinkedList<T>,
 }
 
-/// Provides a iterator for a [`LinkedList`].
+/// Provides an iterator for a [`LinkedList`].
 ///
 /// [`LinkedList`]: struct.LinkedList.html
 pub struct Iter<'a, T> {
@@ -67,6 +86,7 @@ impl<T: Display> Display for LinkedList<T> {
 }
 
 impl<T> LinkedList<T> {
+    /// Create a new, empty linked list.
     #[must_use]
     pub fn new() -> Self {
         Self {
@@ -75,21 +95,19 @@ impl<T> LinkedList<T> {
         }
     }
 
-    // You may be wondering why it's necessary to have is_empty() when it can easily be determined from len().
-    // It's good custom to have both because len() can be expensive for some types, whereas is_empty() is almost always
-    // cheap.
-    // (Also ask yourself whether len() is expensive for LinkedList)
+    /// Returns `true` if the list is empty, `false` if it is not empty.
     #[must_use]
     pub fn is_empty(&self) -> bool {
         self.head.is_none()
     }
 
+    /// Returns the length of the list. Requires O(n) time.
     #[must_use]
     pub fn len(&self) -> usize {
         self.iter().count()
     }
 
-    /// Return a cursor positioned on the front element
+    /// Return a cursor positioned on the front element.
     pub fn cursor_front(&mut self) -> Cursor<'_, T> {
         let head: *mut Node<T> = match &mut self.head {
             None => ptr::null_mut(),
@@ -101,7 +119,7 @@ impl<T> LinkedList<T> {
         }
     }
 
-    /// Return a cursor positioned on the back element
+    /// Return a cursor positioned on the back element.
     pub fn cursor_back(&mut self) -> Cursor<'_, T> {
         Cursor {
             node: self.tail,
@@ -109,7 +127,7 @@ impl<T> LinkedList<T> {
         }
     }
 
-    /// Return an iterator that moves from front to back
+    /// Return an iterator that moves from front to back.
     #[must_use]
     pub fn iter(&self) -> Iter<'_, T> {
         match &self.head {
@@ -122,7 +140,7 @@ impl<T> LinkedList<T> {
 // The cursor is expected to act as if it is at the position of an element and it also has to work with and be able to
 // insert into an empty list.
 impl<T> Cursor<'_, T> {
-    /// Take an immutable reference to the current element
+    /// Take an immutable reference to the current element.
     #[must_use]
     pub fn peek(&self) -> Option<&T> {
         if self.node.is_null() {
@@ -133,7 +151,7 @@ impl<T> Cursor<'_, T> {
         }
     }
 
-    /// Take a mutable reference to the current element
+    /// Take a mutable reference to the current element.
     pub fn peek_mut(&mut self) -> Option<&mut T> {
         if self.node.is_null() {
             None
@@ -143,20 +161,10 @@ impl<T> Cursor<'_, T> {
         }
     }
 
-    /// Move one position forward (towards the back) and return a reference to the new position
+    /// Move one position forward (towards the back) and return a reference to the new position.
     #[allow(clippy::should_implement_trait)]
     #[must_use]
     pub fn next(&mut self) -> Option<&mut T> {
-        #[cfg(verbose)]
-        {
-            println!("Before next");
-            println!("\tList: {:?}", self.list);
-            println!("\tLRev: {}", self.list.reversed_str());
-            println!("\tHead: {}", self.list.head_str());
-            println!("\tTail: {}", self.list.tail_str());
-            println!("\t{}", self.list.head_tail_str());
-            println!("\tNode: {}", self.node_str());
-        }
         if self.node.is_null() {
             return None;
         }
@@ -173,18 +181,8 @@ impl<T> Cursor<'_, T> {
         }
     }
 
-    /// Move one position backward (towards the front) and return a reference to the new position
+    /// Move one position backward (towards the front) and return a reference to the new position.
     pub fn prev(&mut self) -> Option<&mut T> {
-        #[cfg(verbose)]
-        {
-            println!("Before prev");
-            println!("\tList: {:?}", self.list);
-            println!("\tLRev: {}", self.list.reversed_str());
-            println!("\tHead: {}", self.list.head_str());
-            println!("\tTail: {}", self.list.tail_str());
-            println!("\t{}", self.list.head_tail_str());
-            println!("\tNode: {}", self.node_str());
-        }
         if self.node.is_null() {
             return None;
         }
@@ -208,17 +206,6 @@ impl<T> Cursor<'_, T> {
     ///
     /// [`LinkedList`]: struct.LinkedList.html
     pub fn take(&mut self) -> Option<T> {
-        #[cfg(verbose)]
-        {
-            println!("Before take");
-            println!("\tList: {:?}", self.list);
-            println!("\tLRev: {}", self.list.reversed_str());
-            println!("\tHead: {}", self.list.head_str());
-            println!("\tTail: {}", self.list.tail_str());
-            println!("\t{}", self.list.head_tail_str());
-            println!("\tNode: {}", self.node_str());
-            std::io::stdout().flush();
-        }
         if self.node.is_null() {
             assert!(self.list.head.is_none());
             assert!(self.list.tail.is_null());
@@ -302,17 +289,6 @@ impl<T> Cursor<'_, T> {
     ///
     /// [`LinkedList`]: struct.LinkedList.html
     pub fn insert_after(&mut self, element: T) {
-        #[cfg(verbose)]
-        {
-            println!("Before calling insert_after with {:?}...", element);
-            println!("\tList: {:?}", self.list);
-            println!("\tLRev: {}", self.list.reversed_str());
-            println!("\tHead: {}", self.list.head_str());
-            println!("\tTail: {}", self.list.tail_str());
-            println!("\t{}", self.list.head_tail_str());
-            println!("\tNode: {}", self.node_str());
-            std::io::stdout().flush();
-        }
         if self.node.is_null() {
             // Before:
             //              cursor
@@ -398,17 +374,6 @@ impl<T> Cursor<'_, T> {
     ///
     /// [`LinkedList`]: struct.LinkedList.html
     pub fn insert_before(&mut self, element: T) {
-        #[cfg(verbose)]
-        {
-            println!("Before calling insert_before with {:?}...", element);
-            println!("\tList: {:?}", self.list);
-            println!("\tLRev: {}", self.list.reversed_str());
-            println!("\tHead: {}", self.list.head_str());
-            println!("\tTail: {}", self.list.tail_str());
-            println!("\t{}", self.list.head_tail_str());
-            println!("\tNode: {:?}", self.node);
-            std::io::stdout().flush();
-        }
         if self.node.is_null() {
             // Before:
             //              cursor
@@ -504,17 +469,8 @@ impl<T> Cursor<'_, T> {
     }
 }
 
-impl<T: Debug> Cursor<'_, T> {
-    #[must_use]
-    pub fn node_str(&self) -> String {
-        if self.node.is_null() {
-            format!("{:p} = NULL", self.node)
-        } else {
-            format!("{:p} = {:?}", self.node, unsafe { &*self.node })
-        }
-    }
-}
-
+// It is necessary to implement this trait manually. The default inherited implementation causes a stack overflow due
+// to recursively calling `drop` on each node in turn.
 impl<T> Drop for LinkedList<T> {
     fn drop(&mut self) {
         while !self.is_empty() {
@@ -573,63 +529,7 @@ impl<'a, T> Iter<'a, T> {
 
     fn unfinished(front: &'a Node<T>, back: *const Node<T>) -> Self {
         Iter {
-            data: IterData::Unfinished(Unfinished {
-                front,
-                back,
-            })
-        }
-    }
-}
-
-impl<T: Debug> LinkedList<T> {
-    #[must_use]
-    pub fn head_tail_str(&mut self) -> String {
-        let head_ptr: *mut _ = match &mut self.head {
-            None => ptr::null_mut(),
-            Some(head) => &mut **head,
-        };
-        let tail_ptr: *mut _ = self.tail;
-        if head_ptr == tail_ptr {
-            format!("Head: {:p}, tail: {:p} (same)", head_ptr, tail_ptr)
-        } else {
-            format!("Head: {:p}, tail: {:p} (different)", head_ptr, tail_ptr)
-        }
-    }
-
-    #[must_use]
-    pub fn reversed_str(&self) -> String {
-        let mut result = String::new();
-        result.push('[');
-        let mut iter = self.iter();
-        if let Some(first) = iter.next_back() {
-            result += &format!("{:?}", first);
-            for value in iter.rev() {
-                result += &format!(", {:?}", value);
-            }
-        }
-        result.push(']');
-        result
-    }
-
-    #[must_use]
-    pub fn head_str(&self) -> String {
-        let ptr = match &self.head {
-            None => ptr::null(),
-            Some(head) => &**head,
-        };
-        let content_str = self
-            .head
-            .as_ref()
-            .map_or_else(|| "None".to_string(), |n| format!("{:?}", n));
-        format!("{:p} = {}", ptr, content_str)
-    }
-
-    #[must_use]
-    pub fn tail_str(&self) -> String {
-        if self.tail.is_null() {
-            format!("{:p} = NULL", self.tail)
-        } else {
-            format!("{:p} = {:?}", self.tail, unsafe { &*self.tail })
+            data: IterData::Unfinished(Unfinished { front, back }),
         }
     }
 }
