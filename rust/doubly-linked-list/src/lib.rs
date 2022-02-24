@@ -135,6 +135,13 @@ impl<T> LinkedList<T> {
             Some(head) => Iter::unfinished(head, self.tail),
         }
     }
+
+    pub fn iter_mut(&mut self) -> IterMut<'_, T> {
+        IterMut {
+            front: self.head.as_deref_mut(),
+            back: self.tail,
+        }
+    }
 }
 
 // The cursor is expected to act as if it is at the position of an element and it also has to work with and be able to
@@ -531,5 +538,40 @@ impl<'a, T> Iter<'a, T> {
         Iter {
             data: IterData::Unfinished(Unfinished { front, back }),
         }
+    }
+}
+
+pub struct IterMut<'a, T> {
+    front: Option<&'a mut Node<T>>,
+    back: *mut Node<T>,
+}
+
+impl<'a, T> Iterator for IterMut<'a, T> {
+    type Item = &'a mut T;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let front = self.front.take()?;
+        if ptr::eq(front, self.back) {
+            self.front = None;
+        } else {
+            self.front = front.next.as_deref_mut();
+        }
+        Some(&mut front.data)
+    }
+}
+
+impl<'a, T> DoubleEndedIterator for IterMut<'a, T> {
+    fn next_back(&mut self) -> Option<Self::Item> {
+        let front = self.front.as_deref_mut()?;
+        if ptr::eq(front, self.back) {
+            self.front = None;
+        }
+        if self.back.is_null() {
+            return None;
+        }
+        let back = unsafe { &mut *self.back };
+        let value = &mut back.data;
+        self.back = back.prev;
+        Some(value)
     }
 }
