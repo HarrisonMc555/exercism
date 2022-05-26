@@ -1,0 +1,28 @@
+{
+  "blurb": "Implement encoding and decoding for the rail fence cipher.",
+  "authors": [
+    "coriolinus"
+  ],
+  "contributors": [
+    "cwhakes",
+    "efx",
+    "ErikSchierboom",
+    "petertseng",
+    "rofrol",
+    "stringparser",
+    "ZapAnton"
+  ],
+  "files": {
+    "solution": [
+      "src/lib.rs"
+    ],
+    "test": [
+      "tests/rail-fence-cipher.rs"
+    ],
+    "example": [
+      ".meta/example.rs"
+    ]
+  },
+  "source": "Wikipedia",
+  "source_url": "https://en.wikipedia.org/wiki/Transposition_cipher#Rail_Fence_cipher"
+}
