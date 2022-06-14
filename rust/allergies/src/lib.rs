@@ -30,16 +30,17 @@ impl Allergies {
 }
 
 impl Allergen {
+    #[rustfmt::skip]
     pub fn score(&self) -> u32 {
         match self {
-            Allergen::Eggs => 1,
-            Allergen::Peanuts => 2,
-            Allergen::Shellfish => 4,
-            Allergen::Strawberries => 8,
-            Allergen::Tomatoes => 16,
-            Allergen::Chocolate => 32,
-            Allergen::Pollen => 64,
-            Allergen::Cats => 128,
+            Allergen::Eggs =>         0b00000001,
+            Allergen::Peanuts =>      0b00000010,
+            Allergen::Shellfish =>    0b00000100,
+            Allergen::Strawberries => 0b00001000,
+            Allergen::Tomatoes =>     0b00010000,
+            Allergen::Chocolate =>    0b00100000,
+            Allergen::Pollen =>       0b01000000,
+            Allergen::Cats =>         0b10000000,
         }
     }
 
