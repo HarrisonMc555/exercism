@@ -1,7 +1,5 @@
 use std::collections::{HashMap, HashSet};
 
-use bitflags;
-use lazy_static;
 use regex::Regex;
 
 const BASE: u32 = 10;
@@ -88,7 +86,11 @@ fn helper(
     let cur_letter = match letters.first() {
         Some(c) => c,
         None => {
-            return Some(()).filter(|()| problem.is_valid_solution(solution))
+            if problem.is_valid_solution(solution) {
+                return Some(());
+            } else {
+                return None;
+            }
         }
     };
     for digit in ALL_DIGITS.iter().filter(|d| !taken.contains(**d)) {
@@ -100,6 +102,7 @@ fn helper(
     solution.remove(cur_letter);
     None
 }
+
 fn get_ordered_letters(problem: &Problem) -> Vec<char> {
     let mut letters = Vec::new();
     let mut seen = HashSet::new();
@@ -119,7 +122,7 @@ fn get_ordered_letters(problem: &Problem) -> Vec<char> {
 }
 
 impl Digits {
-    pub fn to_u8(&self) -> u8 {
+    pub fn to_u8(self) -> u8 {
         self.bits().trailing_zeros() as u8
     }
 }
@@ -130,7 +133,7 @@ impl Problem {
         if self
             .leading_letters
             .iter()
-            .any(|c| solution.get(&c) == Some(&0))
+            .any(|c| solution.get(c) == Some(&0))
         {
             println!(
                 "One of these leading digits:{:?} was zero, solution:{:?}",
