@@ -96,6 +96,10 @@ fn helper(
     };
     for digit in ALL_DIGITS.iter().filter(|d| !taken.contains(**d)) {
         solution.insert(*cur_letter, digit.to_u8());
+        // if !solution.is_empty() && solution.len() < 4 {
+        //     let prefix = "\t".repeat(solution.len() - 1);
+        //     println!("{}Solution so far: {:?}", prefix, solution);
+        // }
         if helper(problem, taken | *digit, solution, &letters[1..]).is_some() {
             return Some(());
         }
@@ -136,23 +140,23 @@ impl Problem {
             .iter()
             .any(|c| solution.get(c) == Some(&0))
         {
-            println!(
-                "One of these leading digits:{:?} was zero, solution:{:?}",
-                self.leading_letters, solution
-            );
+            // println!(
+            //     "One of these leading digits:{:?} was zero, solution:{:?}",
+            //     self.leading_letters, solution
+            // );
             return SolutionStatus::Invalid;
         }
-        if solution
-            == &IntoIterator::into_iter([
-                ('S', 2),
-                ('M', 0),
-                ('O', 9),
-                ('A', 8),
-            ])
-            .collect::<HashMap<_, _>>()
-        {
-            println!("Custom breakpoint");
-        }
+        // if solution
+        //     == &IntoIterator::into_iter([
+        //         ('S', 2),
+        //         ('M', 0),
+        //         ('O', 9),
+        //         ('A', 8),
+        //     ])
+        //     .collect::<HashMap<_, _>>()
+        // {
+        //     println!("Custom breakpoint");
+        // }
         let mut carry = 0;
         for column in self.columns.iter() {
             let sum_digit = match solution.get(&column.sum_letter) {
@@ -213,12 +217,12 @@ fn parse_alphametic(input: &str) -> Option<Problem> {
     if addend_letters_columns.len() > sum_letters.len() {
         return None;
     }
-    println!("Addends:{:?}, sum_letters:{:?}", addends, sum_letters);
-    println!(
-        "Addends firsts:{:?}, sum_letters first:{:?}",
-        addends.iter().flat_map(|a| a.last()).collect::<Vec<_>>(),
-        sum_letters.last()
-    );
+    // println!("Addends:{:?}, sum_letters:{:?}", addends, sum_letters);
+    // println!(
+    //     "Addends firsts:{:?}, sum_letters first:{:?}",
+    //     addends.iter().flat_map(|a| a.last()).collect::<Vec<_>>(),
+    //     sum_letters.last()
+    // );
     let leading_letters = addends
         .iter()
         .flat_map(|a| a.last())
