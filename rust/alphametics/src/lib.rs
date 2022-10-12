@@ -1,4 +1,5 @@
 use std::collections::{HashMap, HashSet};
+use counter::Counter;
 
 use regex::Regex;
 
@@ -13,7 +14,7 @@ struct Problem {
 #[derive(Debug)]
 struct Column {
     sum_letter: char,
-    addend_letters: Vec<char>,
+    addend_letters: Counter<char>,
 }
 
 #[derive(Debug, Eq, PartialEq)]
@@ -113,7 +114,7 @@ fn get_ordered_letters(problem: &Problem) -> Vec<char> {
         }
     };
     for column in problem.columns.iter() {
-        for addend_letter in column.addend_letters.iter() {
+        for (addend_letter, _) in column.addend_letters.iter() {
             process_letter(*addend_letter);
         }
         process_letter(column.sum_letter);
@@ -159,12 +160,12 @@ impl Problem {
                 None => return SolutionStatus::ValidIncomplete,
             };
             let mut sum: u32 = carry;
-            for letter in column.addend_letters.iter() {
-                let digit = match solution.get(&letter) {
+            for (letter, count) in column.addend_letters.iter() {
+                let digit = match solution.get(letter) {
                     Some(d) => d,
                     None => return SolutionStatus::ValidIncomplete,
                 };
-                sum += u32::from(*digit);
+                sum += u32::from(*digit) * (*count as u32);
             }
             if sum % BASE != sum_digit as u32 {
                 return SolutionStatus::Invalid;
@@ -208,7 +209,7 @@ fn parse_alphametic(input: &str) -> Option<Problem> {
                 .cloned()
                 .collect()
         })
-        .collect::<Vec<_>>();
+        .collect::<Vec<Counter<_>>>();
     if addend_letters_columns.len() > sum_letters.len() {
         return None;
     }
@@ -228,7 +229,7 @@ fn parse_alphametic(input: &str) -> Option<Problem> {
         .collect();
     let addend_letters_columns_iter = addend_letters_columns
         .into_iter()
-        .chain(std::iter::repeat_with(Vec::new));
+        .chain(std::iter::repeat_with(Counter::new));
     let columns = sum_letters
         .into_iter()
         .zip(addend_letters_columns_iter.into_iter())
@@ -259,9 +260,9 @@ mod test {
         static ref PARTIAL_SOLUTION: Solution = to_hash_map([('A', 1), ('B', 2)]);
         static ref PROBLEM: Problem = Problem {
             columns: vec![
-                Column { sum_letter: 'C', addend_letters: vec!['A', 'B']},
-                Column { sum_letter: 'B', addend_letters: vec!['A', 'A']},
-                Column { sum_letter: 'A', addend_letters: vec!['A']},
+                Column { sum_letter: 'C', addend_letters: to_counter("AB")},
+                Column { sum_letter: 'B', addend_letters: to_counter("AA")},
+                Column { sum_letter: 'A', addend_letters: to_counter("A")},
             ],
             leading_letters: vec![ 'A' ],
         };
@@ -294,15 +295,15 @@ mod test {
             columns: vec![
                 Column {
                     sum_letter: 'L',
-                    addend_letters: vec!['I', 'B'],
+                    addend_letters: to_counter("IB"),
                 },
                 Column {
                     sum_letter: 'L',
-                    addend_letters: vec!['B'],
+                    addend_letters: to_counter("B"),
                 },
                 Column {
                     sum_letter: 'I',
-                    addend_letters: vec![],
+                    addend_letters: Counter::new(),
                 },
             ],
             leading_letters: vec!['I', 'B'],
@@ -329,15 +330,15 @@ mod test {
             columns: vec![
                 Column {
                     sum_letter: 'M',
-                    addend_letters: vec!['S', 'A'],
+                    addend_letters: to_counter("SA"),
                 },
                 Column {
                     sum_letter: 'O',
-                    addend_letters: vec!['A'],
+                    addend_letters: to_counter("A"),
                 },
                 Column {
                     sum_letter: 'M',
-                    addend_letters: vec![],
+                    addend_letters: Counter::new(),
                 },
             ],
             leading_letters: vec!['A', 'M'],
@@ -364,5 +365,9 @@ mod test {
         entries: [(K, V); T],
     ) -> HashMap<K, V> {
         IntoIterator::into_iter(entries).collect()
+    }
+
+    fn to_counter(string: &str) -> Counter<char> {
+        string.chars().collect()
     }
 }
