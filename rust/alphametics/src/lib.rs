@@ -28,17 +28,18 @@ enum SolutionStatus {
 type Solution = HashMap<char, u8>;
 
 bitflags::bitflags! {
+    #[rustfmt::skip]
     struct Digits: u32 {
-        const ZERO = 0b0000000001;
-        const ONE = 0b0000000010;
-        const TWO = 0b0000000100;
+        const ZERO =  0b0000000001;
+        const ONE =   0b0000000010;
+        const TWO =   0b0000000100;
         const THREE = 0b0000001000;
-        const FOUR = 0b0000010000;
-        const FIVE = 0b0000100000;
-        const SIX = 0b0001000000;
+        const FOUR =  0b0000010000;
+        const FIVE =  0b0000100000;
+        const SIX =   0b0001000000;
         const SEVEN = 0b0010000000;
         const EIGHT = 0b0100000000;
-        const NINE = 0b1000000000;
+        const NINE =  0b1000000000;
     }
 }
 
