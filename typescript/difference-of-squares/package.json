@@ -1,8 +1,7 @@
 {
-  "name": "@exercism/typescript",
+  "name": "@exercism/typescript-difference-of-squares",
   "version": "1.0.0",
   "description": "Exercism exercises in Typescript.",
-  "author": "",
   "private": true,
   "repository": {
     "type": "git",
@@ -25,6 +24,5 @@
     "lint": "yarn lint:types && yarn lint:ci",
     "lint:types": "yarn tsc --noEmit -p .",
     "lint:ci": "eslint . --ext .tsx,.ts"
-  },
-  "dependencies": {}
+  }
 }
