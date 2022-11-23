@@ -1,7 +1,3 @@
-class HelloWorld {
-    static hello(name = 'World') {
-        return `Hello, ${name}!`
-    }
+export function hello(): string {
+  return 'Hello, World!'
 }
-
-export default HelloWorld
