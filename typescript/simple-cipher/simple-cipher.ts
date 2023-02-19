@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint no-throw-literal: "off" */
 
 enum EncodeDirection {
@@ -36,7 +37,7 @@ class SimpleCipher {
   transform(input: string, direction: EncodeDirection): string {
     const inputLetters = input.split("");
     const keyLetters = this.key.split("");
-    const transformHelper = (c1: string, c2: string) =>
+    const transformHelper = (c1: string, c2: string): string =>
       this.transformLetter(direction, c1, c2);
     const outputLetters = cycleZip(inputLetters, keyLetters, transformHelper);
     return outputLetters.join("");
@@ -50,10 +51,10 @@ class SimpleCipher {
     let combineOffsets: CombineNumber;
     switch (direction) {
       case EncodeDirection.Encode:
-        combineOffsets = (x, y) => x + y;
+        combineOffsets = (x, y): number => x + y;
         break;
       case EncodeDirection.Decode:
-        combineOffsets = (x, y) => x - y;
+        combineOffsets = (x, y): number => x - y;
         break;
       default:
         combineOffsets = assertUnreachable(direction);
