@@ -11,13 +11,12 @@ const COLOR_TO_DIGIT: Record<string, number> = {
   white: 9,
 };
 
-const PREFIX_NUMS = [1, 2, 3] as const;
-type PREFIX_NUM = typeof PREFIX_NUMS[number];
-const PREFIXES: Readonly<Record<PREFIX_NUM, string>> = {
-  3: "giga",
-  2: "mega",
-  1: "kilo",
-}
+const PREFIXES = [
+  "",
+  "kilo",
+  "mega",
+  "giga",
+] as const;
 const NUM_PREFIX_ZEROS = 3;
 
 type Color = keyof typeof COLOR_TO_DIGIT;
@@ -31,7 +30,7 @@ function numericalResistorValue(colors: [Color, Color, Color]): number {
 }
 
 function toCanonical(value: number): [number, string] {
-  for (const num of PREFIX_NUMS) {
+  for (let num = PREFIXES.length - 1; num >= 0; num--) {
     let prefix = PREFIXES[num];
     let divisor = Math.pow(BASE, num * NUM_PREFIX_ZEROS);
     if (value >= divisor) {
