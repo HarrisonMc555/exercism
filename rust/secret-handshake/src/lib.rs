@@ -80,8 +80,15 @@ impl CommandFlag {
         CommandFlag::REVERSE,
         ];
 
+    fn iter(&self) -> CommandFlagIter {
+        CommandFlagIter {
+            inner: CommandFlag::ALL.into_iter(),
+            flag: *self,
+        }
+    }
+
     fn to_commands(self) -> impl Iterator<Item = Command> {
-        self.into_iter().filter_map(|flag| {
+        self.iter().filter_map(|flag| {
             Some(match flag {
                 CommandFlag::WINK => Command::Action(Action::Wink),
                 CommandFlag::DOUBLE_BLINK => Command::Action(Action::DoubleBlink),
@@ -91,19 +98,6 @@ impl CommandFlag {
                 _ => return None,
             })
         })
-    }
-}
-
-impl IntoIterator for CommandFlag {
-    type Item = CommandFlag;
-
-    type IntoIter = CommandFlagIter;
-
-    fn into_iter(self) -> Self::IntoIter {
-        CommandFlagIter {
-            inner: CommandFlag::ALL.into_iter(),
-            flag: self,
-        }
     }
 }
 
