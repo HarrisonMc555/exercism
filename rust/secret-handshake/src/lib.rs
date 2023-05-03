@@ -27,7 +27,7 @@ pub fn actions(n: u8) -> Vec<&'static str> {
 use bitflags::bitflags;
 
 bitflags! {
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+    // #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
     struct CommandFlag: u8 {
         const WINK = 0b00001;
         const DOUBLE_BLINK = 0b00010;
@@ -72,8 +72,16 @@ impl Action {
 }
 
 impl CommandFlag {
+    const ALL: [CommandFlag; 5] = [
+        CommandFlag::WINK,
+        CommandFlag::DOUBLE_BLINK,
+        CommandFlag::CLOSE_YOUR_EYES,
+        CommandFlag::JUMP,
+        CommandFlag::REVERSE,
+        ];
+
     fn to_commands(self) -> impl Iterator<Item = Command> {
-        self.iter().filter_map(|flag| {
+        self.into_iter().filter_map(|flag| {
             Some(match flag {
                 CommandFlag::WINK => Command::Action(Action::Wink),
                 CommandFlag::DOUBLE_BLINK => Command::Action(Action::DoubleBlink),
@@ -83,5 +91,36 @@ impl CommandFlag {
                 _ => return None,
             })
         })
+    }
+}
+
+impl IntoIterator for CommandFlag {
+    type Item = CommandFlag;
+
+    type IntoIter = CommandFlagIter;
+
+    fn into_iter(self) -> Self::IntoIter {
+        CommandFlagIter {
+            inner: CommandFlag::ALL.into_iter(),
+            flag: self,
+        }
+    }
+}
+
+struct CommandFlagIter {
+    inner: std::array::IntoIter<CommandFlag, 5>,
+    flag: CommandFlag,
+}
+
+impl Iterator for CommandFlagIter {
+    type Item = CommandFlag;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        loop {
+            let single_flag = self.inner.next()?;
+            if self.flag.contains(single_flag) {
+                return Some(single_flag);
+            }
+        }
     }
 }
