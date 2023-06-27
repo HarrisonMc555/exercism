@@ -1,18 +1,19 @@
 {-# OPTIONS_GHC -fno-warn-type-defaults #-}
+{-# LANGUAGE TupleSections #-}
 
 import Test.Hspec        (Spec, it, shouldBe)
-import Test.Hspec.Runner (configFastFail, defaultConfig, hspecWith)
+import Test.Hspec.Runner (configFailFast, defaultConfig, hspecWith)
 
 import School (add, empty, grade, sorted)
 
 main :: IO ()
-main = hspecWith defaultConfig {configFastFail = True} specs
+main = hspecWith defaultConfig {configFailFast = True} specs
 
 specs :: Spec
 specs = do
 
           let fromList = foldr (uncurry add) empty
-          let fromGrade g = fromList . zip (repeat g)
+          let fromGrade g = fromList . map (g,)
 
           it "add student" $
             sorted (add 2 "Aimee" empty) `shouldBe` [(2, ["Aimee"])]
