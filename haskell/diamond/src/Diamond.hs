@@ -1,12 +1,17 @@
 module Diamond (diamond) where
 
-diamond :: Char -> [String]
+import Data.Char (isAlpha)
+
+diamond :: Char -> Maybe [String]
 diamond c = let cs          = ['A'..c]
                 totalSpaces = length cs - 1
                 leftSpaces  = [totalSpaces,totalSpaces-1..]
                 topLines    = zipWith (diamondLine totalSpaces) leftSpaces cs
                 bottomLines = drop 1 $ reverse topLines
-            in topLines ++ bottomLines
+            in
+              if isAlpha c 
+              then Just $ topLines ++ bottomLines 
+              else Nothing
 
 diamondLine :: Int -> Int -> Char -> String
 diamondLine numTotalSpaces numLeftSpaces c = left ++ right
