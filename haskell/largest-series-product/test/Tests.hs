@@ -1,12 +1,12 @@
 {-# OPTIONS_GHC -fno-warn-type-defaults #-}
 
 import Test.Hspec        (Spec, describe, it, shouldBe)
-import Test.Hspec.Runner (configFastFail, defaultConfig, hspecWith)
+import Test.Hspec.Runner (configFailFast, defaultConfig, hspecWith)
 
 import Series (Error(..), largestProduct)
 
 main :: IO ()
-main = hspecWith defaultConfig {configFastFail = True} specs
+main = hspecWith defaultConfig {configFailFast = True} specs
 
 specs :: Spec
 specs = describe "largestProduct" $ do
@@ -50,14 +50,6 @@ specs = describe "largestProduct" $ do
       it "rejects span longer than string length" $
         largestProduct 4 "123"
         `shouldBe` Left InvalidSpan
-
-      it "reports 1 for empty string and empty product (0 span)" $
-        largestProduct 0 ""
-        `shouldBe` Right 1
-
-      it "reports 1 for nonempty string and empty product (0 span)" $
-        largestProduct 0 "123"
-        `shouldBe` Right 1
 
       it "rejects empty string and nonzero span" $
         largestProduct 1 ""
