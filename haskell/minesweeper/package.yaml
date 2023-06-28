@@ -1,5 +1,5 @@
 name: minesweeper
-version: 1.1.0.4
+version: 1.1.0.5
 
 dependencies:
   - base
@@ -7,7 +7,9 @@ dependencies:
 library:
   exposed-modules: Minesweeper
   source-dirs: src
-  # dependencies:
+  ghc-options: -Wall
+  dependencies:
+    - array
   # - foo       # List here the packages you
   # - bar       # want to use in your solution.
 
