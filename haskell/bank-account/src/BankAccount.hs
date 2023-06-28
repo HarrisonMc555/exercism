@@ -6,7 +6,7 @@ module BankAccount
     , openAccount
     ) where
 
-import Data.IORef (IORef, newIORef, readIORef, writeIORef)
+import Data.IORef (IORef, newIORef, readIORef, writeIORef, atomicModifyIORef')
 
 newtype BankAccountImpl = BankAccountImpl { balance :: Maybe Integer
                                           } deriving (Show)
@@ -22,11 +22,11 @@ getBalance account = do
   return (balance b)
 
 incrementBalance :: BankAccount -> Integer -> IO (Maybe Integer)
-incrementBalance account amount = do
-  b <- readIORef account
-  let b' = incrementAccount amount b
-  writeIORef account b'
-  return (balance b')
+incrementBalance account amount =
+  let inc b =
+        let b' = incrementAccount amount b
+        in (b', balance b')
+  in atomicModifyIORef' account inc
 
 openAccount :: IO BankAccount
 openAccount = newIORef (newAccount 0)
