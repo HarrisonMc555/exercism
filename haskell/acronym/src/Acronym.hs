@@ -11,6 +11,7 @@ split s = words $ map nonLetterToSpace s
 nonLetterToSpace :: Char -> Char
 nonLetterToSpace c
   | isAlpha c = c
+  | c == '\'' = c
   | otherwise = ' '
 
 acronymLetters :: String -> String
