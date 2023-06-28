@@ -2,12 +2,12 @@
 
 import Data.Foldable     (for_)
 import Test.Hspec        (Spec, describe, it, shouldBe)
-import Test.Hspec.Runner (configFastFail, defaultConfig, hspecWith)
+import Test.Hspec.Runner (configFailFast, defaultConfig, hspecWith)
 
 import ArmstrongNumbers (armstrong)
 
 main :: IO ()
-main = hspecWith defaultConfig {configFastFail = True} specs
+main = hspecWith defaultConfig {configFailFast = True} specs
 
 specs :: Spec
 specs = describe "armstrong" $ for_ cases test
@@ -23,7 +23,11 @@ data Case = Case { description :: String
                  }
 
 cases :: [Case]
-cases = [ Case { description = "Single digit numbers are Armstrong numbers"
+cases = [ Case { description = "Zero is an Armstrong numbers"
+               , input       = 0
+               , expected    = True
+               } 
+        , Case { description = "Single digit numbers are Armstrong numbers"
                , input       = 5
                , expected    = True
                }
