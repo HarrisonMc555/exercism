@@ -1,76 +1,102 @@
 # Bob
 
-Bob is a lackadaisical teenager. In conversation, his responses are very limited.
+Welcome to Bob on Exercism's Haskell Track.
+If you need help running the tests or submitting your code, check out `HELP.md`.
 
-Bob answers 'Sure.' if you ask him a question.
+## Introduction
 
-He answers 'Whoa, chill out!' if you yell at him.
+Bob is a [lackadaisical][] teenager.
+He likes to think that he's very cool.
+And he definitely doesn't get excited about things.
+That wouldn't be cool.
 
-He answers 'Calm down, I know what I'm doing!' if you yell a question at him.
+When people talk to him, his responses are pretty limited.
 
-He says 'Fine. Be that way!' if you address him without actually saying
-anything.
+[lackadaisical]: https://www.collinsdictionary.com/dictionary/english/lackadaisical
 
-He answers 'Whatever.' to anything else.
+## Instructions
 
-Bob's conversational partner is a purist when it comes to written communication and always follows normal rules regarding sentence punctuation in English.
+Your task is to determine what Bob will reply to someone when they say something to him or ask him a question.
 
+Bob only ever answers one of five things:
 
-## Getting Started
+- **"Sure."**
+  This is his response if you ask him a question, such as "How are you?"
+  The convention used for questions is that it ends with a question mark.
+- **"Whoa, chill out!"**
+  This is his answer if you YELL AT HIM.
+  The convention used for yelling is ALL CAPITAL LETTERS.
+- **"Calm down, I know what I'm doing!"**
+  This is what he says if you yell a question at him.
+- **"Fine. Be that way!"**
+  This is how he responds to silence.
+  The convention used for silence is nothing, or various combinations of whitespace characters.
+- **"Whatever."**
+  This is what he answers to anything else.
 
-For installation and learning resources, refer to the
-[exercism help page](http://exercism.io/languages/haskell).
+You need to implement the `responseFor` function that returns Bob's response
+for a given input. You can use the provided signature if you are unsure
+about the types, but don't let it restrict your creativity:
 
-## Running the tests
-
-To run the test suite, execute the following command:
-
-```bash
-stack test
+```haskell
+responseFor :: String -> String
 ```
 
-#### If you get an error message like this...
+To solve this exercise you may read up on:
 
-```
-No .cabal file found in directory
-```
+- [Guards][guards]
 
-You are probably running an old stack version and need
-to upgrade it.
+[guards]: https://www.futurelearn.com/courses/functional-programming-haskell/0/steps/27226
 
-#### Otherwise, if you get an error message like this...
+This exercise works with textual data. For historical reasons, Haskell's
+`String` type is synonymous with `[Char]`, a list of characters. For more
+efficient handling of textual data, the `Text` type can be used.
 
-```
-No compiler found, expected minor version match with...
-Try running "stack setup" to install the correct GHC...
-```
+As an optional extension to this exercise, you can
 
-Just do as it says and it will download and install
-the correct compiler version:
+- Read about [string types](https://haskell-lang.org/tutorial/string-types) in Haskell.
+- Add `- text` to your list of dependencies in package.yaml.
+- Import `Data.Text` in [the following way](https://hackernoon.com/4-steps-to-a-better-imports-list-in-haskell-43a3d868273c):
 
-```bash
-stack setup
-```
+    ```haskell
+    import qualified Data.Text as T
+    import           Data.Text (Text)
+    ```
 
-## Running *GHCi*
+- You can now write e.g. `responseFor :: Text -> Text` and refer to `Data.Text` combinators as e.g. `T.isSuffixOf`.
+- Look up the documentation for [`Data.Text`](https://hackage.haskell.org/package/text/docs/Data-Text.html),
+- You can then replace all occurrences of `String` with `Text` in Bob.hs:
 
-If you want to play with your solution in GHCi, just run the command:
+    ```haskell
+    responseFor :: Text -> Text
+    ```
 
-```bash
-stack ghci
-```
-
-## Feedback, Issues, Pull Requests
-
-The [exercism/haskell](https://github.com/exercism/haskell) repository on
-GitHub is the home for all of the Haskell exercises.
-
-If you have feedback about an exercise, or want to help implementing a new
-one, head over there and create an issue.  We'll do our best to help you!
+This part is entirely optional.
 
 ## Source
 
-Inspired by the 'Deaf Grandma' exercise in Chris Pine's Learn to Program tutorial. [http://pine.fm/LearnToProgram/?Chapter=06](http://pine.fm/LearnToProgram/?Chapter=06)
+### Created by
 
-## Submitting Incomplete Solutions
-It's possible to submit an incomplete solution so you can see how others have completed the exercise.
+- @etrepum
+
+### Contributed to by
+
+- @austinlyons
+- @cmccandless
+- @danbst
+- @eijynagai
+- @hritchie
+- @iHiD
+- @jrib
+- @Kobata
+- @kytrinyx
+- @petertseng
+- @ppartarr
+- @rbasso
+- @sshine
+- @tejasbubane
+- @tofische
+
+### Based on
+
+Inspired by the 'Deaf Grandma' exercise in Chris Pine's Learn to Program tutorial. - https://pine.fm/LearnToProgram/?Chapter=06
