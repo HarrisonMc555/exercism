@@ -39,7 +39,7 @@ cols :: Matrix a -> Int
 cols (Matrix _ c _) = c
 
 column :: Int -> Matrix a -> Vector a
-column c (Matrix _ _ v) = map (! c) v
+column c (Matrix _ _ v) = map (! (c - 1)) v
 
 flatten :: Matrix a -> Vector a
 flatten (Matrix _ _ v) = foldr (++) empty v
@@ -66,7 +66,7 @@ reshape (nr, nc) m
           where getElem c = v ! (nc*r + c)
 
 row :: Int -> Matrix a -> Vector a
-row r (Matrix _ _ v) = v ! r
+row r (Matrix _ _ v) = v ! (r - 1)
 
 rows :: Matrix a -> Int
 rows (Matrix r _ _) = r
@@ -76,5 +76,5 @@ shape (Matrix r c _) = (r, c)
 
 transpose :: Matrix a -> Matrix a
 transpose m@(Matrix nr nc _) =
-  Matrix nc nr (Vector.fromList $ List.map getCol [0..nc-1])
+  Matrix nc nr (Vector.fromList $ List.map getCol [1..nc])
   where getCol ind = column ind m
