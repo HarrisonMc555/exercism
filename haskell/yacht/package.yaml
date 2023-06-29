@@ -9,7 +9,9 @@ library:
   source-dirs: src
   ghc-options: -Wall
   dependencies:
-  - containers
+    - containers
+  # - foo       # List here the packages you
+  # - bar       # want to use in your solution.
 
 tests:
   test:
