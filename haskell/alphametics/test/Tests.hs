@@ -4,12 +4,12 @@ import Data.Foldable     (for_)
 import Data.Function     (on)
 import Data.List         (sort)
 import Test.Hspec        (Spec, describe, it, shouldBe)
-import Test.Hspec.Runner (configFastFail, defaultConfig, hspecWith)
+import Test.Hspec.Runner (configFailFast, defaultConfig, hspecWith)
 
 import Alphametics (solve)
 
 main :: IO ()
-main = hspecWith defaultConfig {configFastFail = True} specs
+main = hspecWith defaultConfig {configFailFast = True} specs
 
 specs :: Spec
 specs = describe "solve" $ for_ cases test
@@ -37,6 +37,10 @@ cases = [ Case { description = "puzzle with three letters"
         , Case { description = "leading zero solution is invalid"
                , puzzle      = "ACA + DD == BD"
                , expected    = Nothing
+               }
+        , Case { description = "puzzle with two digits final carry"
+               , puzzle      = "A + A + A + A + A + A + A + A + A + A + A + B == BCC"
+               , expected    = Just [('A', 9), ('B', 1), ('C', 0)]
                }
         , Case { description = "puzzle with four letters"
                , puzzle      = "AS + A == MOM"
@@ -77,4 +81,3 @@ cases = [ Case { description = "puzzle with three letters"
 --               , expected     = Just [('P', 9), ('I', 6), ('R', 7), ('A', 4), ('E', 0)]
 --               }
         ]
-
