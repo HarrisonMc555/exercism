@@ -1,13 +1,13 @@
 module RotationalCipher (rotate) where
 
-import Data.Char (ord, chr, isAsciiUpper, isAscii)
+import Data.Char (ord, chr, isAsciiLower, isAsciiUpper)
 
 rotate :: Int -> String -> String
 rotate i = map (rotateChar i)
 
 rotateChar :: Int -> Char -> Char
 rotateChar i c
-  | isAscii c = i2c' . (+ i) . c2i' $ c
+  | isAsciiAlpha c = i2c' . (+ i) . c2i' $ c
   | otherwise = c
     where (i2c', c2i') = if isAsciiUpper c
                          then (i2cUpper, c2iUpper)
@@ -33,3 +33,7 @@ aOrdUpper = ord 'A'
 
 maxIndex :: Int
 maxIndex = 26
+
+isAsciiAlpha :: Char -> Bool
+isAsciiAlpha c =
+  isAsciiLower c || isAsciiUpper c
