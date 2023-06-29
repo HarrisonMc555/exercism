@@ -39,7 +39,7 @@ ordinal n = case n of
 
 day :: Int -> String
 day n = let o = ordinal n
-        in ("On the " ++ o ++ " day of Christmas my true love gave to me, " ++
+        in ("On the " ++ o ++ " day of Christmas my true love gave to me: " ++
             gifts n ++ ".")
 
 gifts :: Int -> String
