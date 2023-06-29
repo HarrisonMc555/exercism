@@ -11,8 +11,7 @@ isbn cs =
       isValid = do leadingNums <- traverse isbnLeadingCharToNum leading
                    checkNum    <- isbnCheckCharToNum check
                    return $ isValidIsbnNums leadingNums checkNum
-  in
-    length cs' == 10 && fromMaybe False isValid
+  in length cs' == 10 && fromMaybe False isValid
 
 isbnLeadingCharToNum :: Char -> Maybe Int
 isbnLeadingCharToNum c
