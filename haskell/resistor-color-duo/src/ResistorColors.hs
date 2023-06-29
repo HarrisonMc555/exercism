@@ -11,10 +11,11 @@ data Color =
   | Violet
   | Grey
   | White
-  deriving (Eq, Show, Read)
+  deriving (Eq, Show, Read, Enum, Bounded)
 
-value :: [Color] -> Int
-value = digitsToInt . map colorNum
+value :: (Color, Color) -> Int
+value (tens, ones) = 
+  colorNum tens * 10 + colorNum ones
 
 colorNum :: Color -> Int
 colorNum c = case c of
@@ -28,8 +29,3 @@ colorNum c = case c of
                Violet -> 7
                Grey -> 8
                White -> 9
-
-digitsToInt :: [Int] -> Int
-digitsToInt =
-  let addDigit acc x = 10*acc + x
-  in foldl addDigit 0
