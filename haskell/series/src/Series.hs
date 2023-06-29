@@ -1,7 +1,6 @@
 module Series (slices) where
 
 import Control.Arrow ((>>>))
-import Data.Maybe (mapMaybe)
 
 slices :: Int -> String -> [[Int]]
 slices n = intList >>> windows n
