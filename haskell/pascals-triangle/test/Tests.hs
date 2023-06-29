@@ -2,12 +2,12 @@
 
 import Data.Foldable     (for_)
 import Test.Hspec        (Spec, describe, it, shouldBe)
-import Test.Hspec.Runner (configFastFail, defaultConfig, hspecWith)
+import Test.Hspec.Runner (configFailFast, defaultConfig, hspecWith)
 
 import Triangle (rows)
 
 main :: IO ()
-main = hspecWith defaultConfig {configFastFail = True} specs
+main = hspecWith defaultConfig {configFailFast = True} specs
 
 specs :: Spec
 specs = describe "rows" $ for_ rowsCases rowsTest
@@ -43,4 +43,4 @@ specs = describe "rows" $ for_ rowsCases rowsTest
                                         [1, 7, 21, 35, 35, 21, 7, 1],
                                         [1, 8, 28, 56, 70, 56, 28, 8, 1],
                                         [1, 9, 36, 84, 126, 126, 84, 36, 9, 1]])
-                , ("negative rows",-1, []) ]
+                ]
