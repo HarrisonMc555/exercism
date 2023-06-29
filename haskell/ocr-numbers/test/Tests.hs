@@ -2,12 +2,12 @@
 
 import Data.Foldable     (for_)
 import Test.Hspec        (Spec, describe, it, shouldBe)
-import Test.Hspec.Runner (configFastFail, defaultConfig, hspecWith)
+import Test.Hspec.Runner (configFailFast, defaultConfig, hspecWith)
 
 import OCR (convert)
 
 main :: IO ()
-main = hspecWith defaultConfig {configFastFail = True} specs
+main = hspecWith defaultConfig {configFailFast = True} specs
 
 specs :: Spec
 specs = describe "convert" $ for_ cases test
@@ -46,7 +46,7 @@ cases = [ Case { description = "Recognizes 0"
                }
 
         {- In this track, the tests to determine if the input
-           has the correct format where not implemented.
+           has the correct format were not implemented.
 
         , Case { description = "Input with a number of lines that is not a multiple of four raises an error"
                , expected    = -1
