@@ -1,16 +1,16 @@
 name: connect
-version: 1.1.0.5
+version: 1.1.0.6
 
 dependencies:
   - base
-  - array
-  - containers
 
 library:
   exposed-modules: Connect
   source-dirs: src
   ghc-options: -Wall
-  # dependencies:
+  dependencies:
+    - containers
+    - array
   # - foo       # List here the packages you
   # - bar       # want to use in your solution.
 
