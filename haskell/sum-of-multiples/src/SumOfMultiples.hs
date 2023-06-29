@@ -10,6 +10,7 @@ listOfMultiples factors limit = unique allMultiples
   where allMultiples = concatMap (`multiples` limit) factors
 
 multiples :: Integer -> Integer -> [Integer]
+multiples 0 _ = []
 multiples factor limit = takeWhile (< limit) [factor,factor*2..]
 
 unique :: (Ord a) => [a] -> [a]
