@@ -11,7 +11,9 @@ decodePortion :: String -> (String, String)
 decodePortion "" = ("", "")
 decodePortion encodedText@(c:_) = (replicate num letter, rest)
   where num = if isNumber c then read digits :: Int else 1
-        (digits, letter:rest) = span isNumber encodedText
+        (digits, next) = span isNumber encodedText
+        letter = head next
+        rest = tail next
 
 encode :: String -> String
 encode "" = ""
