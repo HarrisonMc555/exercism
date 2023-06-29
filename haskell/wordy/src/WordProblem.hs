@@ -11,7 +11,9 @@ answer problem = do
   guard $ isValidPostfix lastChar
   let ws = words problem'
   guard $ isValidPrefix ws
-  let (_:_:firstS:rest) = ws
+  (firstS, rest) <- case ws of
+    (_:_:firstS:rest) -> Just (firstS, rest)
+    _ -> Nothing
   first <- stringToMInteger firstS
   numOpPairs <- toNumberMOpPairs rest
   return $ foldl applyNumOpPair first numOpPairs
@@ -50,17 +52,16 @@ applyNumOpPair :: Integer -> (Op, Integer) -> Integer
 applyNumOpPair i1 (o, i2) = let f = opToFunction o
                             in i1 `f` i2
                        
-prefixS :: [String]
-prefixS = ["What", "is"]
-
 postfixC :: Char
 postfixC = '?'
 
 isValidPrefix :: [String] -> Bool
-isValidPrefix = go
-  where go xs = xs `longerThan` 3 &&
-                prefixS == take 2 xs
-        longerThan xs n = not . null $ drop n xs
+isValidPrefix ("What":"is":_) = True
+isValidPrefix _ = False
+-- isValidPrefix = go
+--   where go xs = xs `longerThan` 3 &&
+--                 prefixS == take 2 xs
+--         longerThan xs n = not . null $ drop n xs
 
 isValidPostfix :: Char -> Bool
 isValidPostfix = (postfixC ==)
