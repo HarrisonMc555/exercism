@@ -3,11 +3,11 @@ module Frequency (frequency) where
 import Data.Map  (Map, insertWith, empty, unionWith)
 import Data.Text (Text, foldr)
 import Data.Char (toLower, isAlpha)
-import Control.Parallel (par, pseq)
+import Control.Parallel (pseq)
 import Control.Parallel.Strategies (Strategy, parMap, using, rdeepseq)
 
 frequency :: Int -> [Text] -> Map Char Int
-frequency nWorkers = mapReduce rdeepseq oneFrequency rdeepseq unionAdd
+frequency _nWorkers = mapReduce rdeepseq oneFrequency rdeepseq unionAdd
 
 oneFrequency :: Text -> Map Char Int
 oneFrequency = Data.Text.foldr increment empty
@@ -35,5 +35,5 @@ mapReduce mapStrat mapFunc reduceStrat reduceFunc input =
 
 -- Sequential
 _frequency :: Int -> [Text] -> Map Char Int
-_frequency nWorkers = Prelude.foldr addText empty
+_frequency _ = Prelude.foldr addText empty
   where addText t m = Data.Text.foldr increment m t
