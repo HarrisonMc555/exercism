@@ -10,18 +10,21 @@ data Length = Short | Long deriving (Show)
 type PalindromeIngredients = (Length, Integer)
 
 largestPalindrome, smallestPalindrome ::
-  Integer -> Integer -> (Integer, [(Integer, Integer)])
+  Integer -> Integer -> Maybe (Integer, [(Integer, Integer)])
 largestPalindrome = endPalindrome Dec
 smallestPalindrome = endPalindrome Inc
 
 endPalindrome ::
-  IncDec -> Integer -> Integer -> (Integer, [(Integer, Integer)])
+  IncDec -> Integer -> Integer -> Maybe (Integer, [(Integer, Integer)])
 endPalindrome i l h =
-  makePair . head . filter nonEmpty . map getFactors $ createPalindromes i l h
-  where makePair xs@((f1,f2):_) = (f1*f2, xs)
-        makePair [] = error "Should never happen"
-        getFactors = factorsInRange l h
+  do xs@((f1,f2):_) <- safeHead . filter nonEmpty . map getFactors $ createPalindromes i l h
+     return (f1*f2, xs)
+  where getFactors = factorsInRange l h
         nonEmpty = not . null
+
+safeHead :: [a] -> Maybe a
+safeHead (x:_) = Just x
+safeHead [] = Nothing
 
 createPalindromes :: IncDec -> Integer -> Integer -> [Integer]
 createPalindromes i minFactor maxFactor =
