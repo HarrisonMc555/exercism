@@ -1,6 +1,6 @@
 module Diamond (diamond) where
 
-import Data.Char (isAlpha)
+import Data.Char (isAsciiUpper, isAsciiLower)
 
 diamond :: Char -> Maybe [String]
 diamond c = let cs          = ['A'..c]
@@ -8,10 +8,9 @@ diamond c = let cs          = ['A'..c]
                 leftSpaces  = [totalSpaces,totalSpaces-1..]
                 topLines    = zipWith (diamondLine totalSpaces) leftSpaces cs
                 bottomLines = drop 1 $ reverse topLines
-            in
-              if isAlpha c 
-              then Just $ topLines ++ bottomLines 
-              else Nothing
+            in if isAsciiAlpha c
+               then Just $ topLines ++ bottomLines
+               else Nothing
 
 diamondLine :: Int -> Int -> Char -> String
 diamondLine numTotalSpaces numLeftSpaces c = left ++ right
@@ -20,3 +19,7 @@ diamondLine numTotalSpaces numLeftSpaces c = left ++ right
         leftSpaces     = replicate numLeftSpaces ' '
         numRightSpaces = numTotalSpaces - numLeftSpaces
         rightSpaces    = replicate numRightSpaces ' '
+
+isAsciiAlpha :: Char -> Bool
+isAsciiAlpha c =
+  isAsciiUpper c || isAsciiLower c
