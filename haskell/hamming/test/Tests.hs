@@ -3,12 +3,12 @@
 
 import Data.Foldable     (for_)
 import Test.Hspec        (Spec, describe, it, shouldBe)
-import Test.Hspec.Runner (configFastFail, defaultConfig, hspecWith)
+import Test.Hspec.Runner (configFailFast, defaultConfig, hspecWith)
 
 import Hamming (distance)
 
 main :: IO ()
-main = hspecWith defaultConfig {configFastFail = True} specs
+main = hspecWith defaultConfig {configFailFast = True} specs
 
 specs :: Spec
 specs = describe "distance" $ for_ cases test
@@ -31,62 +31,22 @@ cases = [ Case { description = "empty strands"
                , strand2     = ""
                , expected    = Just 0
                }
-        , Case { description = "identical strands"
+        , Case { description = "single letter identical strands"
                , strand1     = "A"
                , strand2     = "A"
                , expected    = Just 0
                }
+        , Case { description = "single letter different strands"
+               , strand1     = "G"
+               , strand2     = "T"
+               , expected    = Just 1
+               }
         , Case { description = "long identical strands"
-               , strand1     = "GGACTGA"
-               , strand2     = "GGACTGA"
+               , strand1     = "GGACTGAAATCTG"
+               , strand2     = "GGACTGAAATCTG"
                , expected    = Just 0
                }
-        , Case { description = "complete distance in single nucleotide strands"
-               , strand1     = "A"
-               , strand2     = "G"
-               , expected    = Just 1
-               }
-        , Case { description = "complete distance in small strands"
-               , strand1     = "AG"
-               , strand2     = "CT"
-               , expected    = Just 2
-               }
-        , Case { description = "small distance in small strands"
-               , strand1     = "AT"
-               , strand2     = "CT"
-               , expected    = Just 1
-               }
-        , Case { description = "small distance"
-               , strand1     = "GGACG"
-               , strand2     = "GGTCG"
-               , expected    = Just 1
-               }
-        , Case { description = "small distance in long strands"
-               , strand1     = "ACCAGGG"
-               , strand2     = "ACTATGG"
-               , expected    = Just 2
-               }
-        , Case { description = "non-unique character in first strand"
-               , strand1     = "AAG"
-               , strand2     = "AAA"
-               , expected    = Just 1
-               }
-        , Case { description = "non-unique character in second strand"
-               , strand1     = "AAA"
-               , strand2     = "AAG"
-               , expected    = Just 1
-               }
-        , Case { description = "same nucleotides in different positions"
-               , strand1     = "TAG"
-               , strand2     = "GAT"
-               , expected    = Just 2
-               }
-        , Case { description = "large distance"
-               , strand1     = "GATACA"
-               , strand2     = "GCATAA"
-               , expected    = Just 4
-               }
-        , Case { description = "large distance in off-by-one strand"
+        , Case { description = "long different strands"
                , strand1     = "GGACGGATTCTG"
                , strand2     = "AGGACGGATTCT"
                , expected    = Just 9
@@ -99,6 +59,16 @@ cases = [ Case { description = "empty strands"
         , Case { description = "disallow second strand longer"
                , strand1     = "ATA"
                , strand2     = "AGTG"
+               , expected    = Nothing
+               }
+        , Case { description = "disallow left empty strand"
+               , strand1     = ""
+               , strand2     = "G"
+               , expected    = Nothing
+               }
+        , Case { description = "disallow right empty strand"
+               , strand1     = "G"
+               , strand2     = ""
                , expected    = Nothing
                }
         ]
