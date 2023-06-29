@@ -1,5 +1,10 @@
 # Resistor Color Trio
 
+Welcome to Resistor Color Trio on Exercism's Haskell Track.
+If you need help running the tests or submitting your code, check out `HELP.md`.
+
+## Instructions
+
 If you want to build something using a Raspberry Pi, you'll probably use _resistors_. For this exercise, you need to know only three things about them:
 
 - Each resistor has a resistance value.
@@ -44,8 +49,6 @@ So an input of `"orange", "orange", "orange"` should return:
 
 > "33 kiloohms"
 
-## Hints
-
 You need to implement the functions `label` and `ohms`. You can use the
 provided signature for `label`, but don't let it restrict your creativity.
 
@@ -69,63 +72,17 @@ As an optional extension to this exercise, you can
 
 This part is entirely optional.
 
-
-
-## Getting Started
-
-Please refer to the [installation](https://exercism.io/tracks/haskell/installation)
-and [learning](https://exercism.io/tracks/haskell/learning) help pages.
-
-## Running the tests
-
-To run the test suite, execute the following command:
-
-```bash
-stack test
-```
-
-#### If you get an error message like this...
-
-```
-No .cabal file found in directory
-```
-
-You are probably running an old stack version and need
-to upgrade it.
-
-#### Otherwise, if you get an error message like this...
-
-```
-No compiler found, expected minor version match with...
-Try running "stack setup" to install the correct GHC...
-```
-
-Just do as it says and it will download and install
-the correct compiler version:
-
-```bash
-stack setup
-```
-
-## Running *GHCi*
-
-If you want to play with your solution in GHCi, just run the command:
-
-```bash
-stack ghci
-```
-
-## Feedback, Issues, Pull Requests
-
-The [exercism/haskell](https://github.com/exercism/haskell) repository on
-GitHub is the home for all of the Haskell exercises.
-
-If you have feedback about an exercise, or want to help implementing a new
-one, head over there and create an issue.  We'll do our best to help you!
-
 ## Source
 
-Maud de Vries, Erik Schierboom [https://github.com/exercism/problem-specifications/issues/1549](https://github.com/exercism/problem-specifications/issues/1549)
+### Created by
 
-## Submitting Incomplete Solutions
-It's possible to submit an incomplete solution so you can see how others have completed the exercise.
+- @sshine
+
+### Contributed to by
+
+- @iHiD
+- @tejasbubane
+
+### Based on
+
+Maud de Vries, Erik Schierboom - https://github.com/exercism/problem-specifications/issues/1549
