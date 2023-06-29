@@ -1,9 +1,7 @@
 module ProteinTranslation(proteins) where
 
 import Data.List (find)
-import Data.List.Split (chunksOf)
 import Control.Arrow ((>>>))
-import Control.Monad (sequence)
 
 proteins :: String -> Maybe [String]
 proteins = rnaToCodons >>> map codonToAminoAcid >>>
@@ -45,3 +43,10 @@ codonToAminoAcidMap =
 
 stopCodon :: String
 stopCodon = "STOP"
+
+chunksOf :: Int -> [a] -> [[a]]
+chunksOf len list =
+  let chunk = take len list
+  in if length chunk == len
+     then chunk : chunksOf len (drop len list)
+     else []
