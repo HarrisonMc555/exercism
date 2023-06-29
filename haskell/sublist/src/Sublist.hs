@@ -1,4 +1,4 @@
-module Sublist (Sublist(..), sublist) where
+module Sublist (sublist) where
 
 import Prelude hiding ( length
                       , any
@@ -16,14 +16,12 @@ import Data.Vector ( Vector
                    , elemIndices
                    )
 
-data Sublist = Equal | Sublist | Superlist | Unequal deriving (Eq, Show)
-
-sublist :: Eq a => [a] -> [a] -> Sublist
+sublist :: Eq a => [a] -> [a] -> Maybe Ordering
 sublist xs ys
-  | xInY && yInX = Equal
-  | xInY         = Sublist
-  | yInX         = Superlist
-  | otherwise    = Unequal
+  | xInY && yInX = Just EQ
+  | xInY         = Just LT
+  | yInX         = Just GT
+  | otherwise    = Nothing
   where xsV  = fromList xs
         ysV  = fromList ys
         xInY = isSubvector xsV ysV
