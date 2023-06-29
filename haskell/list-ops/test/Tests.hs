@@ -2,7 +2,7 @@
 
 import Control.Exception (Exception, throw, evaluate)
 import Test.Hspec        (Spec, describe, it, shouldBe, shouldThrow)
-import Test.Hspec.Runner (configFastFail, defaultConfig, hspecWith)
+import Test.Hspec.Runner (configFailFast, defaultConfig, hspecWith)
 
 import Prelude hiding
     ( (++)
@@ -28,7 +28,7 @@ import ListOps
 data StrictException = StrictException deriving (Eq, Show, Exception)
 
 main :: IO ()
-main = hspecWith defaultConfig {configFastFail = True} specs
+main = hspecWith defaultConfig {configFailFast = True} specs
 
 specs :: Spec
 specs = do
@@ -49,6 +49,8 @@ specs = do
         reverse ([] :: [Int]) `shouldBe` []
       it "of non-empty list" $
         reverse [1 .. 100 :: Int] `shouldBe` [100 , 99 .. 1]
+      it "of nested lists" $
+        reverse [[1, 2], [3], [], [4, 5, 6] :: [Int]] `shouldBe` [[4, 5, 6], [], [3], [1, 2]]
 
     describe "map" $ do
       it "of empty list" $
@@ -77,7 +79,7 @@ specs = do
         foldl' (flip (:)) [] "asdf" `shouldBe` "fdsa"
       -- Track-specific test
       it "is accumulator-strict (use seq or BangPatterns)" $
-        evaluate (foldl' (flip const) () [throw StrictException, ()])
+        evaluate (foldl' (const id) () [throw StrictException, ()])
         `shouldThrow` (== StrictException)
 
     describe "foldr" $ do
