@@ -1,5 +1,5 @@
 name: robot-name
-version: 0.1.0.3
+version: 0.1.0.4
 
 dependencies:
   - base
@@ -8,9 +8,12 @@ dependencies:
 library:
   exposed-modules: Robot
   source-dirs: src
+  ghc-options: -Wall
   dependencies:
-  - containers
-  - random
+    - containers
+    - random
+  # - foo       # List here the packages you
+  # - bar       # want to use in your solution.
 
 tests:
   test:
