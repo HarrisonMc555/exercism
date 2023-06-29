@@ -1,11 +1,9 @@
 module Robot
-    ( Bearing(East,North,South,West)
+    ( Bearing(..)
     , bearing
     , coordinates
     , mkRobot
-    , simulate
-    , turnLeft
-    , turnRight
+    , move
     ) where
 
 -- https://stackoverflow.com/a/20294331/7343786
@@ -45,8 +43,8 @@ advance b (x, y) = case b of North -> (x, y+1)
                              South -> (x, y-1)
                              West  -> (x-1, y)
 
-simulate :: Robot -> String -> Robot
-simulate = foldl instruction
+move :: Robot -> String -> Robot
+move = foldl instruction
 
 instruction :: Robot -> Char -> Robot
 instruction r c = case c of 'L' -> iLeft r
