@@ -1,13 +1,15 @@
 {-# OPTIONS_GHC -fno-warn-type-defaults #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 import Data.Foldable     (for_)
 import Test.Hspec        (Spec, describe, it, shouldBe)
-import Test.Hspec.Runner (configFastFail, defaultConfig, hspecWith)
+import Test.Hspec.Runner (configFailFast, defaultConfig, hspecWith)
+import Data.String       (fromString)
 
 import Raindrops (convert)
 
 main :: IO ()
-main = hspecWith defaultConfig {configFastFail = True} specs
+main = hspecWith defaultConfig {configFailFast = True} specs
 
 specs :: Spec
 specs = describe "convert" $ for_ cases test
@@ -16,7 +18,7 @@ specs = describe "convert" $ for_ cases test
     test (number, expected) = it description assertion
       where
         description = show number
-        assertion   = convert number `shouldBe` expected
+        assertion   = convert number `shouldBe` fromString expected
 
     cases = [ (   1, "1"              )
             , (   3, "Pling"          )
