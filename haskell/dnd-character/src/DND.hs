@@ -30,14 +30,12 @@ ability = do
 character :: Gen Character
 character = do
   name' <- nameGen
-  abilities <- vectorOf 6 ability
-  let [ strength'
-        , dexterity'
-        , constitution'
-        , intelligence'
-        , wisdom'
-        , charisma'
-        ] = abilities
+  strength' <- ability
+  dexterity' <- ability
+  constitution' <- ability
+  intelligence' <- ability
+  wisdom' <- ability
+  charisma' <- ability
   let hitpoints' = 10 + modifier constitution'
   return $ Character { name=name'
                      , strength=strength'
