@@ -3,14 +3,14 @@ module Deque (Deque, mkDeque, pop, push, shift, unshift) where
 import Data.IORef (IORef, newIORef, readIORef, writeIORef)
 
 
-data Node a = Node { prev  :: NodeRef a
-                   , value :: a
-                   , next  :: NodeRef a
+data Node a = Node { _prev  :: NodeRef a
+                   , _value :: a
+                   , _next  :: NodeRef a
                    }
             | Nil
 type NodeRef a = IORef (Node a)
-data Deque a = Deque { head :: IORef (NodeRef a)
-                     , tail :: IORef (NodeRef a)
+data Deque a = Deque { _head :: IORef (NodeRef a)
+                     , _tail :: IORef (NodeRef a)
                      }
 
 mkDeque :: IO (Deque a)
@@ -47,7 +47,7 @@ pop (Deque href tref) = do
 push :: Deque a -> a -> IO ()
 push (Deque href tref) v = do
   newNode <- mkNodeRef v
-  (Node newP _ newN) <- readIORef newNode
+  (Node newP _ _) <- readIORef newNode
   h <- readIORef href
   hval <- readIORef h
   writeIORef href newNode
@@ -61,7 +61,7 @@ push (Deque href tref) v = do
 unshift :: Deque a -> a -> IO ()
 unshift (Deque href tref) v = do
   newNode <- mkNodeRef v
-  (Node newP _ newN) <- readIORef newNode
+  (Node _ _ newN) <- readIORef newNode
   t <- readIORef tref
   tval <- readIORef t
   writeIORef tref newNode
@@ -85,9 +85,10 @@ shift (Deque href tref) = do
         Nil -> writeIORef href pref
       return (Just tv)
     Nil -> return Nothing
-deleteNode :: Node a -> IO ()
-deleteNode Nil = return ()
-deleteNode (Node pRef v nRef) = do
+
+_deleteNode :: Node a -> IO ()
+_deleteNode Nil = return ()
+_deleteNode (Node pRef _ nRef) = do
   p <- readIORef pRef
   case p of
     Node ppRef pv _ -> writeIORef pRef (Node ppRef pv nRef)
