@@ -8,10 +8,11 @@ dependencies:
 library:
   exposed-modules: Person
   source-dirs: src
-  ghc-options: -Wall
+  ghc-options: -Wall -Wno-unused-top-binds
   dependencies:
-  - lens
-  - lens-datetime
+    - lens
+    # - lens-datetime
+  # - lens-datetime == 0.3
   # - bar       # want to use in your solution.
 
 tests:
