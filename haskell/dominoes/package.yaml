@@ -1,5 +1,5 @@
 name: dominoes
-version: 2.1.0.7
+version: 2.1.0.9
 
 dependencies:
   - base
@@ -8,10 +8,9 @@ library:
   exposed-modules: Dominoes
   source-dirs: src
   ghc-options: -Wall
-  dependencies:
-  - multiset
-  - safe
-  - extra
+  # dependencies:
+  # - foo       # List here the packages you
+  # - bar       # want to use in your solution.
 
 tests:
   test:
