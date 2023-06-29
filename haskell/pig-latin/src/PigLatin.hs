@@ -67,4 +67,5 @@ consonantClusters = [ "ch"
                     , "thr"
                     , "th"
                     , "sch"
+                    , "rh"
                     ]
