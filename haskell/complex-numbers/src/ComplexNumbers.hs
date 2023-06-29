@@ -2,6 +2,7 @@ module ComplexNumbers
 (Complex,
  conjugate,
  abs,
+ exp,
  real,
  imaginary,
  mul,
@@ -10,7 +11,8 @@ module ComplexNumbers
  div,
  complex) where
 
-import Prelude hiding (div, abs)
+import Prelude hiding (div, abs, exp)
+import qualified Prelude
 
 -- Data definition -------------------------------------------------------------
 data Complex a = Complex { realPart :: a
@@ -73,6 +75,13 @@ div c1 c2 = c1 `mul` reciprocal c2
 scale :: Num a => a -> Complex a -> Complex a
 scale k c = let (r, i) = cartesian c
                 in complex (r*k, i*k)
+
+exp :: Floating a => Complex a -> Complex a
+exp c = let (r, i) = cartesian c
+            e_r = Prelude.exp r 
+            r' = e_r * cos i
+            i' = e_r * sin i
+        in complex (r', i')
 
 -- helper ----------------------------------------------------------------------
 square :: Num a => a -> a
