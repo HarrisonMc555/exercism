@@ -54,7 +54,7 @@ stack ghci
 
 ## Submitting your solution
 
-You can submit your solution using the `exercism submit src/LuciansLusciousLasagna.hs` command.
+You can submit your solution using the `exercism submit src/LuciansLusciousLasagna.hs package.yaml` command.
 This command will upload your solution to the Exercism website and print the solution page's URL.
 
 It's possible to submit an incomplete solution which allows you to:
@@ -67,7 +67,7 @@ It's possible to submit an incomplete solution which allows you to:
 If you'd like help solving the exercise, check the following pages:
 
 - The [Haskell track's documentation](https://exercism.org/docs/tracks/haskell)
-- [Exercism's support channel on gitter](https://gitter.im/exercism/support)
+- [Exercism's programming category on the forum](https://forum.exercism.org/c/programming/5)
 - The [Frequently Asked Questions](https://exercism.org/docs/using/faqs)
 
 Should those resources not suffice, you could submit your (incomplete) solution to request mentoring.
