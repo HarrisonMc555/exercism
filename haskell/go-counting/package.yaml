@@ -4,15 +4,14 @@ version: 1.0.0.4
 dependencies:
   - base
   - containers
-  - array
 
 library:
   exposed-modules: Counting
   source-dirs: src
   ghc-options: -Wall
-  dependencies:
-    - containers
-    - array
+  # dependencies:
+  # - foo       # List here the packages you
+  # - bar       # want to use in your solution.
 
 tests:
   test:

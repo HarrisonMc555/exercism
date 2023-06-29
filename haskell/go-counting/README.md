@@ -38,7 +38,7 @@ intersections that are part of that player's territory.
 
 For more information see
 [wikipedia](https://en.wikipedia.org/wiki/Go_%28game%29) or [Sensei's
-Library](http://senseis.xmp.net/).
+Library](https://senseis.xmp.net/).
 
 To complete this exercise, you need to implement the following functions:
 

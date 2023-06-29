@@ -3,14 +3,14 @@ import Data.List         (foldl')
 import Data.Set          (toAscList)
 import Data.Tuple        (swap)
 import Test.Hspec        (Spec, it, shouldBe, shouldMatchList)
-import Test.Hspec.Runner (configFastFail, defaultConfig, hspecWith)
+import Test.Hspec.Runner (configFailFast, defaultConfig, hspecWith)
 
 import qualified Data.Map as Map
 
 import Counting (Color(Black,White), territories, territoryFor)
 
 main :: IO ()
-main = hspecWith defaultConfig {configFastFail = True} specs
+main = hspecWith defaultConfig {configFailFast = True} specs
 
 specs :: Spec
 specs = do
@@ -84,5 +84,3 @@ specs = do
 
     it "5x5 non-territory (Y too high)" $
       territoryIn board5x5 (2, 6) `shouldBe` Nothing
-
--- 6a20a1a3344ba0e31a2595da696c2a939fd04599
