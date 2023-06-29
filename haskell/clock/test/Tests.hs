@@ -2,12 +2,12 @@
 
 import Data.Foldable     (for_)
 import Test.Hspec        (Spec, describe, it, shouldBe)
-import Test.Hspec.Runner (configFastFail, defaultConfig, hspecWith)
+import Test.Hspec.Runner (configFailFast, defaultConfig, hspecWith)
 
 import Clock (addDelta, fromHourMin, toString)
 
 main :: IO ()
-main = hspecWith defaultConfig {configFastFail = True} specs
+main = hspecWith defaultConfig {configFailFast = True} specs
 
 specs :: Spec
 specs = do
@@ -52,6 +52,7 @@ specs = do
       , ("negative minutes"                                     ,    1,   -40, "00:20")
       , ("negative minutes roll over"                           ,    1,  -160, "22:20")
       , ("negative minutes roll over continuously"              ,    1, -4820, "16:40")
+      , ("negative sixty minutes is previous hour"              ,    2,   -60, "01:00")
       , ("negative hour and minutes both roll over"             ,  -25,  -160, "20:20")
       , ("negative hour and minutes both roll over continuously", -121, -5810, "22:10") ]
 
@@ -90,4 +91,6 @@ specs = do
       , ("clocks with negative minute that wraps"               , ( 4, 10), (  5,  -1490), True )
       , ("clocks with negative minute that wraps multiple times", ( 6, 15), (  6,  -4305), True )
       , ("clocks with negative hours and minutes"               , ( 7, 32), (-12,   -268), True )
-      , ("clocks with negative hours and minutes that wrap"     , (18,  7), (-54, -11513), True ) ]
+      , ("clocks with negative hours and minutes that wrap"     , (18,  7), (-54, -11513), True )
+      , ("full clock and zeroed clock"                          , (24,  0), (  0,      0), True )
+      ]
