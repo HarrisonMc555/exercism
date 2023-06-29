@@ -1,7 +1,7 @@
 module Palindromes (largestPalindrome, smallestPalindrome) where
 
-import Data.Numbers.Primes (primeFactors)
-import Data.List (subsequences, (\\))
+import Data.List (find, subsequences, (\\))
+import Data.Maybe (fromJust)
 
 data IncDec = Inc | Dec
 
@@ -122,3 +122,24 @@ toggle Long = Short
 
 square :: Num a => a -> a
 square x = x * x
+
+primeFactors :: Integer -> [Integer]
+primeFactors n = getResult . find done . scanl addFactors (n, []) $ primes
+  where done = (1 ==) . fst
+        getResult = reverse . snd . fromJust
+
+addFactors :: (Integer, [Integer]) -> Integer -> (Integer, [Integer])
+addFactors nfs@(n, fs) p
+  | n == 1    = nfs
+  | composite = addFactors (q, p:fs) p
+  | otherwise = nfs
+  where (q, r)    = n `quotRem` p
+        composite = r == 0
+
+-- Inspired by haskell.org
+primes :: [Integer]
+primes = filterPrimes [2..]
+  where filterPrimes (p:xs) =
+          p : filterPrimes [x | x <- xs, x `mod` p /= 0]
+        filterPrimes [] =
+          []
