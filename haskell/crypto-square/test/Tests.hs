@@ -4,12 +4,12 @@ import Data.Char         (isSpace)
 import Data.Foldable     (for_)
 import Data.Function     (on)
 import Test.Hspec        (Spec, describe, it, shouldBe, shouldMatchList)
-import Test.Hspec.Runner (configFastFail, defaultConfig, hspecWith)
+import Test.Hspec.Runner (configFailFast, defaultConfig, hspecWith)
 
 import CryptoSquare (encode)
 
 main :: IO ()
-main = hspecWith defaultConfig {configFastFail = True} specs
+main = hspecWith defaultConfig {configFailFast = True} specs
 
 specs :: Spec
 specs = describe "encode" $ for_ cases test
@@ -17,13 +17,12 @@ specs = describe "encode" $ for_ cases test
 
     test Case{..} = describe description $ do
 
-      let shouldMatchWords  = shouldBe        `on` words
-          shouldMatchString = shouldBe        `on` filter (not . isSpace)
+      let shouldMatchString = shouldBe        `on` filter (not . isSpace)
           shouldMatchChars  = shouldMatchList `on` filter (not . isSpace)
 
       it "normalizes the input"    $ encode input `shouldMatchChars`  expected
       it "reorders the characters" $ encode input `shouldMatchString` expected
-      it "groups the output"       $ encode input `shouldMatchWords`  expected
+      it "groups the output"       $ encode input `shouldBe`          expected
 
 data Case = Case { description :: String
                  , input       :: String

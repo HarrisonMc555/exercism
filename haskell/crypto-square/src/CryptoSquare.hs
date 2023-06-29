@@ -4,9 +4,16 @@ import Data.Char (isAlphaNum, toLower)
 import Data.List (transpose)
 
 encode :: String -> String
-encode xs = unwords . transpose . groupsOf nc $ xs'
+encode xs = unwords . fmap pad . transpose . groupsOf nc $ xs'
   where xs' = normalize xs
         nc = numColumns . length $ xs'
+        nr = (length xs' + nc - 1)  `div` nc
+        pad = padWith ' ' nr
+
+padWith :: a -> Int -> [a] -> [a]
+padWith c len lst =
+  let numExtraChars = max 0 (len - length lst)
+  in lst ++ replicate numExtraChars c
 
 normalize :: String -> String
 normalize = map toLower . filter isAlphaNum
