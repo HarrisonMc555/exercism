@@ -1,5 +1,5 @@
 module DNA (nucleotideCounts, Nucleotide(..)) where
-import Data.Map (Map, fromList, alter, member)
+import Data.Map (Map, fromList, alter)
 
 data Nucleotide = A | G | C | T deriving (Eq, Ord, Show)
 
