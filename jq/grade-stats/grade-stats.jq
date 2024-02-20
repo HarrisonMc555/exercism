@@ -25,7 +25,7 @@ def letter_grade:
 # students with that grade
 
 def count_letter_grades:
-  reduce (to_entries | .[]) as $item
+  reduce (to_entries[]) as $item
          (letter_thresholds
            | map({(.letter): 0})
            | add
