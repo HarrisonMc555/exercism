@@ -18,9 +18,8 @@ def construct:
     | (.inorder | index($root)) as $root_index
     | .inorder[:$root_index] as $inorder_left
     | .inorder[$root_index + 1:] as $inorder_right
-    | (.preorder - [$root]) as $preorder
-    | ($preorder - $inorder_right) as $preorder_left
-    | ($preorder - $inorder_left) as $preorder_right
+    | .preorder[1:$root_index + 1] as $preorder_left
+    | .preorder[$root_index + 1:] as $preorder_right
     | {"preorder": $preorder_left, "inorder": $inorder_left}
     | construct as $left
     | {"preorder": $preorder_right, "inorder": $inorder_right}
